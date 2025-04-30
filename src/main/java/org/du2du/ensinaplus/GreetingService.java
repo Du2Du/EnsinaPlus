@@ -1,4 +1,4 @@
-package org.acme.getting.started;
+package org.du2du.ensinaplus;
 
 import jakarta.enterprise.context.ApplicationScoped;
 
