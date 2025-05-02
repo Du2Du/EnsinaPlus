@@ -2,11 +2,12 @@
   "name": "angular",
   "version": "0.0.0",
   "scripts": {
-    "ng": "ng",
+    "ng": "ng && npm run sentry:sourcemaps",
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "sentry:sourcemaps": "sentry-cli sourcemaps inject --org eduardo-hilario --project javascript-angular ../resources/META-INF/resources/ && sentry-cli sourcemaps upload --org eduardo-hilario --project javascript-angular ../resources/META-INF/resources/"
   },
   "private": true,
   "dependencies": {
@@ -19,6 +20,7 @@
     "@angular/router": "^19.2.0",
     "@primeng/themes": "^19.1.2",
     "@sentry/angular": "^9.15.0",
+    "@sentry/cli": "^2.43.1",
     "@tailwindcss/postcss": "^4.1.5",
     "date-fns": "^4.1.0",
     "lodash": "^4.17.21",
