@@ -6,7 +6,9 @@ import { environment } from './environments/environment';
 
 Sentry.init({
   dsn: environment.sentryDns,
-  sendDefaultPii: true
+  sendDefaultPii: true,
+  integrations: [Sentry.browserTracingIntegration()],
+  tracesSampleRate: 1.0,
 });
 
 bootstrapApplication(AppComponent, appConfig)
