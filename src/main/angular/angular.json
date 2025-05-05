@@ -18,7 +18,10 @@
           "builder": "@angular-devkit/build-angular:application",
           "options": {
             "sourceMap": true,
-            "outputPath": "dist/angular",
+            "outputPath": {
+              "base": "dist/angular",
+              "browser": ""
+            },
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [

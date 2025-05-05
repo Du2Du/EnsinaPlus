@@ -5,7 +5,7 @@ import * as Sentry from "@sentry/angular";
 import { environment } from './environments/environment';
 
 Sentry.init({
-  dsn: environment.sentryDns,
+  dsn: (environment as any)['sentryDns'],
   sendDefaultPii: true,
   integrations: [Sentry.browserTracingIntegration()],
   tracesSampleRate: 1.0,

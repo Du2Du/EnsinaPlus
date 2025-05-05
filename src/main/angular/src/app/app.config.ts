@@ -14,7 +14,8 @@ export const appConfig: ApplicationConfig = {
     theme: {
       preset: EnsinaPlusTheme,
       options: {
-        darkModeSelector: '.e-dark'
+        darkModeSelector: '.e-dark',
+        prefix: 'e'
       }
     }
   }),
