@@ -2,7 +2,7 @@ package org.du2du.ensinaplus.controller;
 
 import java.util.Set;
 
-import org.du2du.ensinaplus.model.enums.RolesEnum;
+import org.du2du.ensinaplus.model.enums.RoleEnum;
 import org.du2du.ensinaplus.utils.TokenUtils;
 
 import jakarta.annotation.security.PermitAll;
@@ -23,12 +23,12 @@ public class GreetingResource {
     @Produces(MediaType.TEXT_PLAIN)
     @PermitAll
     public String hello() {
-        return tokenUtils.generate(Set.of(RolesEnum.ROLE_ADMIN));
+        return tokenUtils.generate(Set.of(RoleEnum.ROLE_ADMIN));
     }
 
     @GET
     @Path("/secured")	
-    @RolesAllowed(RolesEnum.ROLE_ADMIN)
+    @RolesAllowed(RoleEnum.ROLE_ADMIN)
     @Produces(MediaType.TEXT_PLAIN)
     public String helloSecured() {
         return "hello secured";

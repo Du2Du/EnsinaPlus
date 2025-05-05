@@ -1,6 +1,6 @@
 package org.du2du.ensinaplus.model.enums;
 
-public enum RolesEnum {
+public enum RoleEnum {
   ADMIN("admin"),
   TEACHER("teacher"),
   STUDENT("student");
@@ -11,7 +11,7 @@ public enum RolesEnum {
 
   private final String value;
 
-  RolesEnum(String value) {
+  RoleEnum(String value) {
     this.value = value;
   }
 
