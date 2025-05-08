@@ -37,3 +37,5 @@ release.properties
 src/main/resources/privateKey.pem
 src/main/resources/publicKey.pem
 src/main/resources/rsaPrivateKey.pem
+
+src/main/resources/application.yaml
