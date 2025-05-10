@@ -1,12 +1,10 @@
 @use "tailwindcss";
-@plugin "tailwindcss-primeui";
+@import "primeicons/primeicons.css";
 
 
 * {
-  margin: 0;
-  padding: 0;
   box-sizing: border-box;
-  font-family: "Raleway", sans-serif;
+  font-family: "Nunito Sans", sans-serif !important;
   font-optical-sizing: auto;
   font-style: normal;
 }
@@ -14,4 +12,23 @@
 html,
 body {
   height: 100%;
+}
+
+
+hr{
+  border-top: 1px solid var(--e-surface-500);
+  width: 100%;
+}
+
+::-webkit-scrollbar {
+  width: 6px !important;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--e-surface-400);
+  border-radius: 8px !important;
 }

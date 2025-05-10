@@ -1,0 +1,30 @@
+:host app-card {
+    position: relative;
+
+    &.m-left-card-main {
+        left: 13px;
+        &:before{
+            left: -13px;
+            background-color: var(--e-primary-color);
+            clip-path: polygon(100% 0, 0 0, 100% 100%);
+        }
+    }
+    
+    &.m-right-card-main{
+        right: 15px;
+        &:before{
+            right: -15px;
+            background-color: var(--e-cyan-950);
+            clip-path: polygon(100% 0, 0 0, 0 100%)
+        }
+    }
+
+    &:before {
+        content: "";
+        position: absolute;
+        top: 0;
+        width: 30px;
+        height: 30px;
+        border-radius: 8px;
+    }
+}
