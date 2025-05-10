@@ -3,6 +3,7 @@ package org.du2du.ensinaplus.model.bo.impl;
 import java.util.Objects;
 
 import org.du2du.ensinaplus.model.bo.AbstractBO;
+import org.du2du.ensinaplus.model.bo.session.SessionBO;
 import org.du2du.ensinaplus.model.dao.impl.UserDAO;
 import org.du2du.ensinaplus.model.dto.UserLoginDTO;
 import org.du2du.ensinaplus.model.dto.base.ResponseDTO;
@@ -10,7 +11,6 @@ import org.du2du.ensinaplus.model.dto.base.ValidateDTO;
 import org.du2du.ensinaplus.model.dto.form.UserFormDTO;
 import org.du2du.ensinaplus.model.entity.impl.User;
 import org.du2du.ensinaplus.utils.PasswordUtils;
-import org.du2du.ensinaplus.utils.SessionUtils;
 
 import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
@@ -21,7 +21,7 @@ import jakarta.ws.rs.core.Response;
 public class UserBO extends AbstractBO<User, UserDAO> {
 
   @Inject
-  SessionUtils sessionUtils;
+  SessionBO sessionBO;
 
   @Transactional
   public Response createUser(UserFormDTO user) {
@@ -60,10 +60,11 @@ public class UserBO extends AbstractBO<User, UserDAO> {
               .description("Usuário não encontrado.").build())
           .build();
 
+    sessionBO.createSession(userEntity.toDTO());
     return Response.ok(ResponseDTO.builder()
         .title("Login realizado com sucesso!")
         .data(user).build())
-        .cookie(sessionUtils.createCookie(role))
+        .cookie(sessionBO.createAuthCookie(role))
         .build();
   }
 

@@ -3,6 +3,7 @@ package org.du2du.ensinaplus.model.entity.impl;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import org.du2du.ensinaplus.model.dto.UserDTO;
 import org.du2du.ensinaplus.model.entity.AbstractEntity;
 import org.du2du.ensinaplus.model.enums.RoleEnum;
 
@@ -61,5 +62,14 @@ public class User extends AbstractEntity {
     this.phone = phone;
     this.picture = picture;
     this.role = role;
+  }
+
+  public UserDTO toDTO() {
+    return UserDTO.builder()
+        .uuid(this.getUuid())
+        .name(this.getName())
+        .email(this.getEmail())
+        .role(this.getRole())
+        .build();
   }
 }

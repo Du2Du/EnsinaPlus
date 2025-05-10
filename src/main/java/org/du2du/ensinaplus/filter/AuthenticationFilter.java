@@ -4,11 +4,11 @@ import java.util.Objects;
 import java.util.Set;
 
 import org.du2du.ensinaplus.security.RequireRole;
+import org.du2du.ensinaplus.security.RequiredAuthentication;
 import org.du2du.ensinaplus.utils.TokenUtils;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 
 import jakarta.annotation.Priority;
-import jakarta.annotation.security.PermitAll;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Priorities;
 import jakarta.ws.rs.container.ContainerRequestContext;
@@ -30,11 +30,15 @@ public class AuthenticationFilter implements ContainerRequestFilter {
 
     @Override
     public void filter(ContainerRequestContext requestContext) {
-        if (resourceInfo.getResourceMethod().isAnnotationPresent(PermitAll.class)) {
+        if (!resourceInfo.getResourceMethod().isAnnotationPresent(RequiredAuthentication.class)
+                && !resourceInfo.getResourceClass().isAnnotationPresent(RequiredAuthentication.class)
+                && !resourceInfo.getResourceMethod().isAnnotationPresent(RequireRole.class)) {
             return;
         }
-        String authorizationHeader = !requestContext.getCookies().isEmpty() ?
-         requestContext.getCookies().get("Authorization").getValue() : null;
+
+        String authorizationHeader = !requestContext.getCookies().isEmpty()
+                ? requestContext.getCookies().get("Authorization").getValue()
+                : null;
 
         if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
             requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED)
@@ -52,6 +56,8 @@ public class AuthenticationFilter implements ContainerRequestFilter {
                         .entity("Token inválido ou expirado")
                         .build());
             }
+            if (!resourceInfo.getResourceMethod().isAnnotationPresent(RequireRole.class))
+                return;
             this.validateRoles(jwt.getGroups(), requestContext);
         } catch (Exception e) {
             requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED)
@@ -61,9 +67,6 @@ public class AuthenticationFilter implements ContainerRequestFilter {
     }
 
     private void validateRoles(Set<String> roles, ContainerRequestContext requestContext) {
-        if (!resourceInfo.getResourceMethod().isAnnotationPresent(RequireRole.class))
-            return;
-
         RequireRole requireRole = resourceInfo.getResourceMethod().getAnnotation(RequireRole.class);
         String[] requiredRoles = requireRole.value();
 
