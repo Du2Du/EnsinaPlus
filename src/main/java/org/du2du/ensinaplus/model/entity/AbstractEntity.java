@@ -1,6 +1,7 @@
 package org.du2du.ensinaplus.model.entity;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.UUID;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
@@ -42,6 +43,9 @@ public class AbstractEntity extends PanacheEntityBase {
   @PrePersist
   public void prePersist() {
     this.createdAt = LocalDateTime.now();
+    this.deleted = false;
+    if (Objects.isNull(this.updatedAt))
+      this.updatedAt = LocalDateTime.now();
   }
 
   @PreUpdate

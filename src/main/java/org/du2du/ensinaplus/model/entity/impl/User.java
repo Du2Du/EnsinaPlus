@@ -6,6 +6,7 @@ import java.util.UUID;
 import org.du2du.ensinaplus.model.entity.AbstractEntity;
 import org.du2du.ensinaplus.model.enums.RoleEnum;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -20,16 +21,20 @@ import lombok.Setter;
 @Setter
 public class User extends AbstractEntity {
 
+  @Column(name = "name", nullable = false)
   private String name;
 
+  @Column(name = "email", nullable = false)
   private String email;
 
+  @Column(name = "password", nullable = false)
   private String password;
 
   private String phone;
   private String picture;
 
   @Enumerated(EnumType.STRING)
+  @Column(name = "role", nullable = false)
   private RoleEnum role;
 
   public User() {
