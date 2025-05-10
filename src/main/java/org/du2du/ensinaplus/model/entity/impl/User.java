@@ -69,6 +69,8 @@ public class User extends AbstractEntity {
         .uuid(this.getUuid())
         .name(this.getName())
         .email(this.getEmail())
+        .phone(this.getPhone())
+        .picture(this.getPicture())
         .role(this.getRole())
         .build();
   }

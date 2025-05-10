@@ -11,11 +11,11 @@ import jakarta.enterprise.context.Dependent;
 public class UserDAO extends AbstractDAO<User>{
   
   public User findByEmail(String email) {
-    return find("email", email).firstResult();
+    return find("email = :email and deleted is false", Map.of("email", email)).firstResult();
   }
 
   public User findByEmailAndPassword(String email, String password) {
-    return find("email = :email and password = :password", Map.of("email", email, "password", password))
+    return find("email = :email and password = :password and deleted is false", Map.of("email", email, "password", password))
         .firstResult();
   }
 }
