@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng && npm run sentry:sourcemaps",
     "start": "ng serve",
-    "build": "ng build",
+    "build": "ng build  --configuration production",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "sentry:sourcemaps": "sentry-cli sourcemaps inject --org eduardo-hilario --project javascript-angular ../resources/META-INF/resources/ && sentry-cli sourcemaps upload --org eduardo-hilario --project javascript-angular ../resources/META-INF/resources/"

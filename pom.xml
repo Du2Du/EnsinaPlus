@@ -43,6 +43,11 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <groupId>io.quarkiverse.web-bundler</groupId>
+            <artifactId>quarkus-web-bundler</artifactId>
+            <version>1.8.1</version>
+        </dependency>
+        <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-jdbc-postgresql</artifactId>
             <version>3.22.1</version>
@@ -70,6 +75,11 @@
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-config-yaml</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.quarkiverse.quinoa</groupId>
+            <artifactId>quarkus-quinoa</artifactId>
+            <version>2.5.4</version>
         </dependency>
         <dependency>
             <groupId>io.quarkus</groupId>
@@ -140,8 +150,7 @@
                                 </goals>
                                 <configuration>
                                     <systemPropertyVariables>
-                                        <native.image.path>
-                                            ${project.build.directory}/${project.build.finalName}-runner</native.image.path>
+                                        <native.image.path>${project.build.directory}/${project.build.finalName}-runner</native.image.path>
                                         <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
                                         <maven.home>${maven.home}</maven.home>
                                     </systemPropertyVariables>
