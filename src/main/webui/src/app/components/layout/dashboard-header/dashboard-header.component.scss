@@ -1,0 +1,19 @@
+:host{
+    height: 60px;
+}
+
+
+.m-left-side-header__shortcuts {
+    display: inline-block;
+    &:after {
+        content: '';
+        width: 0px;
+        height: 1px;
+        display: block;
+        background: var(--color-gray-500);
+        transition: 300ms;
+    }
+    &:hover::after {
+        width: 100%;
+    }
+}
