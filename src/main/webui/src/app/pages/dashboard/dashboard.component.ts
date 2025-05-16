@@ -4,7 +4,7 @@ import { MainContentComponent } from "./components/main-content/main-content.com
 
 @Component({
   selector: 'app-dashboard',
-  host: { class: 'w-full bg-stone-100 flex flex-col h-full overflow-hidden' },
+  host: { class: 'w-full flex flex-col h-full overflow-hidden' },
   imports: [DashboardHeaderComponent, MainContentComponent],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'

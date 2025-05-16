@@ -13,7 +13,7 @@ import { ButtonModule } from 'primeng/button';
 })
 export class DashboardHeaderComponent {
 
-  constructor(private router: Router) { }
+  constructor(public router: Router) { }
 
   onLoginClick() {
     this.router.navigate(['login']);

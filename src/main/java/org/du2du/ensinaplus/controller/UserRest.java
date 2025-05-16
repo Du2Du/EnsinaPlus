@@ -1,4 +1,4 @@
-package org.du2du.ensinaplus.rest;
+package org.du2du.ensinaplus.controller;
 
 import org.du2du.ensinaplus.model.bo.impl.UserBO;
 import org.du2du.ensinaplus.model.dto.UserLoginDTO;

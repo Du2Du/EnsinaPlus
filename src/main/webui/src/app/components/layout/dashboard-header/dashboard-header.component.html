@@ -3,6 +3,10 @@
 </div>
 
 <div class="m-left-side-header flex gap-3">
-    <p-button (click)="onLoginClick()" label="Entrar" variant="outlined" severity="secondary"  />
+    @if(router.url !== '/login') {
+    <p-button (click)="onLoginClick()" label="Entrar" variant="outlined" severity="secondary" />
+    }
+    @if(router.url !== '/register') {
     <p-button (click)="onRegisterClick()" label="Cadastrar" />
+    }
 </div>
