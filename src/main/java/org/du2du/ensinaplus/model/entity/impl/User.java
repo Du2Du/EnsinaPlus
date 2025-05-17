@@ -1,6 +1,7 @@
 package org.du2du.ensinaplus.model.entity.impl;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 import org.du2du.ensinaplus.model.dto.UserDTO;
@@ -11,6 +12,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Builder;
 import lombok.Getter;
@@ -38,13 +40,16 @@ public class User extends AbstractEntity {
   @Column(name = "role", nullable = false)
   private RoleEnum role;
 
+  @OneToMany (mappedBy = "user")
+  private List<CourseStudent> userAssoc;
+
   public User() {
     super();
   }
 
   @Builder
   public User(UUID uuid, Boolean deleted, LocalDateTime createdAt, LocalDateTime updatedAt, String name, String email,
-      String password, String phone, String picture, RoleEnum role) {
+      String password, String phone, String picture, RoleEnum role, List<CourseStudent> userAssoc) {
     super(uuid, deleted, createdAt, updatedAt);
     this.name = name;
     this.email = email;
@@ -52,9 +57,10 @@ public class User extends AbstractEntity {
     this.phone = phone;
     this.picture = picture;
     this.role = role;
+    this.userAssoc = userAssoc;
   }
 
-  public User(String name, String email, String password, String phone, String picture, RoleEnum role) {
+  public User(String name, String email, String password, String phone, String picture, RoleEnum role, List<CourseStudent> userAssoc) {
     super();
     this.name = name;
     this.email = email;
@@ -62,6 +68,7 @@ public class User extends AbstractEntity {
     this.phone = phone;
     this.picture = picture;
     this.role = role;
+    this.userAssoc = userAssoc;
   }
 
   public UserDTO toDTO() {
