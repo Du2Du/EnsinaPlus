@@ -61,9 +61,7 @@ public class UserBO extends AbstractBO<User, UserDAO> {
           .build();
 
     sessionBO.createSession(userEntity.toDTO());
-    return Response.ok(ResponseDTO.builder()
-        .title("Login realizado com sucesso!")
-        .data(user).build())
+    return Response.ok(ResponseDTO.builder().title("Login realizado com sucesso!").build())
         .cookie(sessionBO.createAuthCookie(role))
         .build();
   }

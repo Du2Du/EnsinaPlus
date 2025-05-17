@@ -4,10 +4,10 @@
   "scripts": {
     "ng": "ng && npm run sentry:sourcemaps",
     "start": "ng serve",
-    "build": "ng build  --configuration production",
+    "build": "ng build  --configuration production && npm run sentry:sourcemaps",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "sentry:sourcemaps": "sentry-cli sourcemaps inject --org eduardo-hilario --project javascript-angular ../resources/META-INF/resources/ && sentry-cli sourcemaps upload --org eduardo-hilario --project javascript-angular ../resources/META-INF/resources/"
+    "sentry:sourcemaps": "sentry-cli sourcemaps inject --org eduardo-hilario --project ensinaplus ./dist && sentry-cli sourcemaps upload --org eduardo-hilario --project ensinaplus ./dist"
   },
   "private": true,
   "dependencies": {
