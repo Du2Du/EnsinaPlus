@@ -5,12 +5,9 @@ import java.util.UUID;
 
 import org.du2du.ensinaplus.model.dto.UserDTO;
 import org.du2du.ensinaplus.model.entity.AbstractEntity;
-import org.du2du.ensinaplus.model.enums.RoleEnum;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.Table;
 import lombok.Builder;
 import lombok.Getter;
@@ -34,34 +31,28 @@ public class User extends AbstractEntity {
   private String phone;
   private String picture;
 
-  @Enumerated(EnumType.STRING)
-  @Column(name = "role", nullable = false)
-  private RoleEnum role;
-
   public User() {
     super();
   }
 
   @Builder
   public User(UUID uuid, Boolean deleted, LocalDateTime createdAt, LocalDateTime updatedAt, String name, String email,
-      String password, String phone, String picture, RoleEnum role) {
+      String password, String phone, String picture) {
     super(uuid, deleted, createdAt, updatedAt);
     this.name = name;
     this.email = email;
     this.password = password;
     this.phone = phone;
     this.picture = picture;
-    this.role = role;
   }
 
-  public User(String name, String email, String password, String phone, String picture, RoleEnum role) {
+  public User(String name, String email, String password, String phone, String picture) {
     super();
     this.name = name;
     this.email = email;
     this.password = password;
     this.phone = phone;
     this.picture = picture;
-    this.role = role;
   }
 
   public UserDTO toDTO() {
@@ -71,7 +62,6 @@ public class User extends AbstractEntity {
         .email(this.getEmail())
         .phone(this.getPhone())
         .picture(this.getPicture())
-        .role(this.getRole())
         .build();
   }
 }

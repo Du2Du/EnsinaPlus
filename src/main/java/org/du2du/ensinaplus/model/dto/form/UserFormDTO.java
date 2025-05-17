@@ -1,7 +1,6 @@
 package org.du2du.ensinaplus.model.dto.form;
 
 import org.du2du.ensinaplus.model.entity.impl.User;
-import org.du2du.ensinaplus.model.enums.RoleEnum;
 import org.du2du.ensinaplus.utils.PasswordUtils;
 
 import jakarta.validation.constraints.Email;
@@ -26,15 +25,10 @@ public class UserFormDTO {
   @Size(min = 8, message = "Senha deve ter no mínimo 8 caracteres")
   private String password;
 
-  @NotBlank(message = "Tipo de usuário é obrigatório")
-  private RoleEnum role;
-
-
   public User toEntity() {
     return User.builder()
         .name(name)
         .email(email)
-        .role(role)
         .password(PasswordUtils.hashPassword(password))
         .build();
   }

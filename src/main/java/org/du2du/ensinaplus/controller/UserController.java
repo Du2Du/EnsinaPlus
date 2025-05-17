@@ -11,22 +11,14 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.core.Response;
 
 @Path("v1/user")
-public class UserRest {
+public class UserController {
 
   @Inject
   UserBO bo;
 
   @POST
-  @Path("create/teacher")
-  public Response createTeacherUser(UserFormDTO user) {
-    user.setRole(RoleEnum.TEACHER);
-    return bo.createUser(user);
-  }
-
-  @POST
-  @Path("create/student")
-  public Response createStudentUser(UserFormDTO user) {
-    user.setRole(RoleEnum.STUDENT);
+  @Path("create")
+  public Response createUser(UserFormDTO user) {
     return bo.createUser(user);
   }
 
