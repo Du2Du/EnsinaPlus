@@ -1,14 +1,14 @@
 import { bootstrapApplication } from '@angular/platform-browser';
-import { appConfig } from './app/app.config';
-import { AppComponent } from './app/app.component';
 import * as Sentry from "@sentry/angular";
-import { environment } from './environments/environment';
+import { AppComponent } from './app/app.component';
+import { appConfig } from './app/app.config';
 
 Sentry.init({
-  dsn: (environment as any)['sentryDns'],
+  dsn: 'https://@o4508059939962880.ingest.us.sentry.io/4508059941142528',
   sendDefaultPii: true,
   integrations: [Sentry.browserTracingIntegration()],
   tracesSampleRate: 1.0,
+  tracePropagationTargets: ["localhost"],
 });
 
 bootstrapApplication(AppComponent, appConfig)

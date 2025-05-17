@@ -1,4 +1,4 @@
-import { Component, model, ViewChild } from '@angular/core';
+import { Component, model, signal, ViewChild } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
@@ -9,6 +9,9 @@ import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
 import { ToastModule } from 'primeng/toast';
 import { PersistenceService } from './../../../../services/persistence.service';
+import { catchError, finalize, tap } from 'rxjs/operators';
+import { of } from 'rxjs';
+import * as Sentry from "@sentry/angular";
 
 @Component({
   selector: 'app-login-form',
@@ -16,7 +19,7 @@ import { PersistenceService } from './../../../../services/persistence.service';
     DividerModule, ButtonModule, ToastModule],
   providers: [MessageService],
   host: {
-    class: 'h-full w-full flex items-center justify-center'
+    class: 'h-full w-[90%] md:w-[60%] xl:w-[30%] m-auto flex items-center justify-center'
   },
   templateUrl: './login-form.component.html',
   styleUrl: './login-form.component.scss'
@@ -27,6 +30,7 @@ export class LoginFormComponent {
 
   @ViewChild('form') form!: NgForm;
   dto = model<{ email: string, password: string }>({ email: '', password: '' });
+  isLoading = signal(false);
 
   onBack() {
     this.router.navigate(['/']);
@@ -37,9 +41,51 @@ export class LoginFormComponent {
       return this.messageService.add({
         severity: 'error',
         key: 'toastMessage',
-        summary: 'Erro',
-        detail: 'Formulário inválido'
+        summary: 'Formulário inválido',
+        detail: this.joinFormMessages()
       });
-    this.persistenceService.postRequest('/v1/user/login/student', this.dto()).subscribe((data: any) => console.log(data))
+
+    this.isLoading.set(true);
+
+    this.persistenceService.postRequest('/v1/user/login/student', this.dto())
+      .pipe(
+        tap((response: any) => {
+          this.messageService.add({
+            severity: 'success',
+            key: 'toastMessage',
+            summary: 'Login realizado',
+            detail: 'Você foi autenticado com sucesso!'
+          });
+          setTimeout(() => {
+            this.router.navigate(['/home']);
+          }, 2000)
+        }),
+        catchError((data: any) => {
+          this.messageService.add({
+            severity: 'error',
+            key: 'toastMessage',
+            summary: data?.error?.title || 'Erro ao logar',
+            detail: data?.error?.description || 'Não foi possível realizar o login. Verifique suas credenciais.'
+          });
+
+          return of(null);
+        }),
+        finalize(() => {
+          this.isLoading.set(false);
+        })
+      )
+      .subscribe()
+  }
+
+  private joinFormMessages() {
+    let message = '';
+    if (this.form.controls['email']?.errors?.['required'])
+      message += 'Email é obrigatório. ';
+    if (this.form.controls['password']?.errors?.['required'])
+      message += 'Senha é obrigatória. ';
+    if (this.form.controls['password']?.errors?.['minlength'])
+      message += `Senha deve ter pelo menos ${this.form.controls['password']?.errors?.['minlength']?.['requiredLength']} caracteres. `;
+
+    return message;
   }
 }

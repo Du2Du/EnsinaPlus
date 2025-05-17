@@ -6,7 +6,7 @@ import { CardComponent } from "../../../../components/output/card/card.component
   selector: 'app-main-content',
   imports: [ButtonModule, CardComponent],
   host: {
-    class: 'col-span-12 flex h-full overflow-y-auto'
+    class: 'col-span-12 flex mt-5 h-full overflow-y-auto'
   },
   templateUrl: './main-content.component.html',
   styleUrl: './main-content.component.scss'
