@@ -40,8 +40,8 @@ public class User extends AbstractEntity {
   @Column(name = "role", nullable = false)
   private RoleEnum role;
 
-  @OneToMany (mappedBy = "user")
-  private List<CourseStudent> userAssoc;
+  @OneToMany (mappedBy = "student")
+  private List<CourseStudent> courses;
 
   public User() {
     super();
@@ -49,7 +49,7 @@ public class User extends AbstractEntity {
 
   @Builder
   public User(UUID uuid, Boolean deleted, LocalDateTime createdAt, LocalDateTime updatedAt, String name, String email,
-      String password, String phone, String picture, RoleEnum role, List<CourseStudent> userAssoc) {
+      String password, String phone, String picture, RoleEnum role, List<CourseStudent> courses) {
     super(uuid, deleted, createdAt, updatedAt);
     this.name = name;
     this.email = email;
@@ -57,10 +57,10 @@ public class User extends AbstractEntity {
     this.phone = phone;
     this.picture = picture;
     this.role = role;
-    this.userAssoc = userAssoc;
+    this.courses = courses;
   }
 
-  public User(String name, String email, String password, String phone, String picture, RoleEnum role, List<CourseStudent> userAssoc) {
+  public User(String name, String email, String password, String phone, String picture, RoleEnum role, List<CourseStudent> courses) {
     super();
     this.name = name;
     this.email = email;
@@ -68,7 +68,7 @@ public class User extends AbstractEntity {
     this.phone = phone;
     this.picture = picture;
     this.role = role;
-    this.userAssoc = userAssoc;
+    this.courses = courses;
   }
 
   public UserDTO toDTO() {
