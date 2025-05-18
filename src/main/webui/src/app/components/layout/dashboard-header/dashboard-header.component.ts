@@ -22,4 +22,7 @@ export class DashboardHeaderComponent {
   onRegisterClick() {
     this.router.navigate(['register']);
   }
+  onLogoClick() {
+    this.router.navigate(['/']);
+  }
 }

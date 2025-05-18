@@ -1,5 +1,6 @@
 package org.du2du.ensinaplus.filter;
 
+import java.net.URI;
 import java.util.Objects;
 import java.util.Set;
 
@@ -37,7 +38,7 @@ public class AuthenticationFilter implements ContainerRequestFilter {
         }
 
         String authorizationHeader = !requestContext.getCookies().isEmpty()
-                ? requestContext.getCookies().get("Authorization").getValue()
+                ? requestContext.getCookies().get("ensina-plus-auth").getValue()
                 : null;
 
         if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {

@@ -5,16 +5,19 @@ import java.util.Objects;
 import org.du2du.ensinaplus.model.bo.AbstractBO;
 import org.du2du.ensinaplus.model.bo.session.SessionBO;
 import org.du2du.ensinaplus.model.dao.impl.UserDAO;
+import org.du2du.ensinaplus.model.dto.UserDTO;
 import org.du2du.ensinaplus.model.dto.UserLoginDTO;
 import org.du2du.ensinaplus.model.dto.base.ResponseDTO;
 import org.du2du.ensinaplus.model.dto.base.ValidateDTO;
 import org.du2du.ensinaplus.model.dto.form.UserFormDTO;
 import org.du2du.ensinaplus.model.entity.impl.User;
+import org.du2du.ensinaplus.model.enums.RoleEnum;
 import org.du2du.ensinaplus.utils.PasswordUtils;
 
 import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
+import jakarta.ws.rs.core.NewCookie;
 import jakarta.ws.rs.core.Response;
 
 @Dependent
@@ -59,10 +62,12 @@ public class UserBO extends AbstractBO<User, UserDAO> {
           .entity(ResponseDTO.builder().title("Erro ao logar!")
               .description("Usuário não encontrado.").build())
           .build();
-
-    sessionBO.createSession(userEntity.toDTO());
-    return Response.ok(ResponseDTO.builder().title("Login realizado com sucesso!").build())
-        .cookie(sessionBO.createAuthCookie(role))
+    UserDTO userDTO = userEntity.toDTO();
+    userDTO.setRole(RoleEnum.valueOf(role.toUpperCase()));
+    sessionBO.createSession(userDTO);
+    NewCookie cookie = sessionBO.createAuthCookie(role);
+    return Response.ok(ResponseDTO.builder().title("Login realizado com sucesso!").data(cookie.getValue()).build())
+        .cookie(cookie)
         .build();
   }
 

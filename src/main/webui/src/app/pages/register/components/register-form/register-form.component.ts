@@ -62,7 +62,7 @@ export class RegisterFormComponent {
             severity: 'error',
             key: 'toastMessage',
             summary: data?.error?.title || 'Erro ao cadastrar',
-            detail: data?.error?.description || 'Não foi possível realizar o cadastro. Tente novamente mais tarde.'
+            detail: data?.error?.description || 'Não foi possível realizar o cadastro. Tente novamente mais tarde!'
           });
 
           return of(null);
