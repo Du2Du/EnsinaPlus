@@ -1,7 +1,6 @@
 package org.du2du.ensinaplus.model.dto;
 import java.util.UUID;
 
-import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

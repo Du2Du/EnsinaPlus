@@ -9,6 +9,7 @@ import jakarta.persistence.IdClass;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -32,5 +33,10 @@ public class CourseStudent {
     @Column(name = "matriculation_date")
     private LocalDate matriculationDate;
 
-
+    @Builder
+    CourseStudent (User student, Course course, LocalDate matriculationDate){
+        this.student = student;
+        this.course = course;
+        this.matriculationDate = matriculationDate;
+    }
 }
