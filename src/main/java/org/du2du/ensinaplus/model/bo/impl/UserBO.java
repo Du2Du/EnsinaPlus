@@ -3,7 +3,6 @@ package org.du2du.ensinaplus.model.bo.impl;
 import java.util.Objects;
 
 import org.du2du.ensinaplus.model.bo.AbstractBO;
-import org.du2du.ensinaplus.model.bo.session.SessionBO;
 import org.du2du.ensinaplus.model.dao.impl.UserDAO;
 import org.du2du.ensinaplus.model.dto.UserDTO;
 import org.du2du.ensinaplus.model.dto.UserLoginDTO;
@@ -15,16 +14,12 @@ import org.du2du.ensinaplus.model.enums.RoleEnum;
 import org.du2du.ensinaplus.utils.PasswordUtils;
 
 import jakarta.enterprise.context.Dependent;
-import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.core.NewCookie;
 import jakarta.ws.rs.core.Response;
 
 @Dependent
 public class UserBO extends AbstractBO<User, UserDAO> {
-
-  @Inject
-  SessionBO sessionBO;
 
   @Transactional
   public Response createUser(UserFormDTO user) {
@@ -66,9 +61,13 @@ public class UserBO extends AbstractBO<User, UserDAO> {
     userDTO.setRole(RoleEnum.valueOf(role.toUpperCase()));
     sessionBO.createSession(userDTO);
     NewCookie cookie = sessionBO.createAuthCookie(role);
-    return Response.ok(ResponseDTO.builder().title("Login realizado com sucesso!").data(cookie.getValue()).build())
+    return Response.ok(ResponseDTO.builder().title("Login realizado com sucesso!").data(userDTO).build())
         .cookie(cookie)
         .build();
+  }
+
+  public Response getUserDTO() {
+    return Response.ok().entity(Objects.isNull(sessionBO.getSession()) ? null : sessionBO.getSession().getData()).build();
   }
 
 }

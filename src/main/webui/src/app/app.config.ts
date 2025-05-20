@@ -7,10 +7,13 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { providePrimeNG } from 'primeng/config';
 import { EnsinaPlusTheme } from '../themes/theme';
 import { routes } from './app.routes';
+import { provideStore } from '@ngrx/store';
+import { userReducer } from './store/user.reducer';
 
 export const appConfig: ApplicationConfig = {
   providers: [provideZoneChangeDetection({ eventCoalescing: true }), provideRouter(routes),
   provideAnimationsAsync(),
+  provideStore({user: userReducer}),
   provideHttpClient(withInterceptorsFromDi()),
   providePrimeNG({
     theme: {

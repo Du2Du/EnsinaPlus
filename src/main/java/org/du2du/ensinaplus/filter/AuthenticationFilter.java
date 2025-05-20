@@ -37,7 +37,7 @@ public class AuthenticationFilter implements ContainerRequestFilter {
             return;
         }
 
-        String authorizationHeader = !requestContext.getCookies().isEmpty()
+        String authorizationHeader = !requestContext.getCookies().isEmpty() && Objects.nonNull(requestContext.getCookies().get("ensina-plus-auth"))
                 ? requestContext.getCookies().get("ensina-plus-auth").getValue()
                 : null;
 

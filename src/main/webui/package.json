@@ -18,6 +18,7 @@
     "@angular/platform-browser": "^19.2.0",
     "@angular/platform-browser-dynamic": "^19.2.0",
     "@angular/router": "^19.2.0",
+    "@ngrx/store": "^19.2.0",
     "@primeng/themes": "^19.1.2",
     "@sentry/angular": "^9.15.0",
     "@sentry/cli": "^2.43.1",

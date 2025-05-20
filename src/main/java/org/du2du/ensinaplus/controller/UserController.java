@@ -6,6 +6,7 @@ import org.du2du.ensinaplus.model.dto.form.UserFormDTO;
 import org.du2du.ensinaplus.model.enums.RoleEnum;
 
 import jakarta.inject.Inject;
+import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.core.Response;
@@ -32,5 +33,11 @@ public class UserController {
   @Path("login/student")
   public Response loginStudent(UserLoginDTO user) {
     return bo.login(user, RoleEnum.ROLE_STUDENT);
+  }
+
+  @GET
+  @Path("dto")
+  public Response getUserDTO() {
+    return bo.getUserDTO();
   }
 }

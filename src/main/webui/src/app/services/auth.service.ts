@@ -1,23 +1,36 @@
-import { PersistenceService } from './persistence.service';
-import { Injectable, signal } from '@angular/core';
+import { Injectable } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { Observable, catchError, map, of } from 'rxjs';
 import { UserDTO } from '../dtos/user.dto';
-import { Observable, catchError, map, of, tap } from 'rxjs';
+import { setUser } from '../store/user.actions';
+import { State, userSelector } from '../store/user.reducer';
+import { PersistenceService } from './persistence.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  constructor(private persistenceService: PersistenceService) { }
+  private requestAlredySent = false;
 
-  private _user = signal<UserDTO | null>(null);
-
-  set user(user: UserDTO) {
-    this._user.set(user);
+  constructor(private persistenceService: PersistenceService, private store: Store<State>) {
+    this.getUser().subscribe(user => !user.uuid && !this.requestAlredySent && this.persistenceService.getRequest('/v1/user/dto').pipe(
+      map(user => user),
+      catchError(() => of({} as UserDTO))
+    ).subscribe((user) => {
+      if (user) {
+        this.requestAlredySent = true;
+        this.setUser(user as UserDTO);
+      }
+    }))
   }
 
-  get user(): UserDTO | null {
-    return this._user();
+  setUser(user: UserDTO) {
+    this.store.dispatch(setUser(user));
+  }
+
+  getUser(): Observable<UserDTO> {
+    return this.store.select(userSelector);
   }
 
   isAuthenticated(): Observable<boolean> {
@@ -26,4 +39,5 @@ export class AuthService {
       catchError(() => of(false))
     )
   }
+
 }
