@@ -13,11 +13,11 @@ import jakarta.enterprise.context.Dependent;
 public class CourseDAO extends AbstractDAO<Course>{
 
     public Course findByName(String name){
-        return find("name LIKE %:name%", Map.of("name", name)).firstResult();
+        return find("name LIKE '%' || :name || '%'", Map.of("name", name)).firstResult();
     }
 
     public List<Course> listByName(String name){
-        return find("name LIKE %:name%", Map.of("name", name)).list();
+        return find("name LIKE '%' || :name || '%'", Map.of("name", name)).list();
     }
 
     public List<Course> listCreatedCourses (UUID uuidUser){

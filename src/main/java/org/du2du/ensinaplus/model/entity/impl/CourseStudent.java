@@ -33,6 +33,10 @@ public class CourseStudent {
     @Column(name = "matriculation_date")
     private LocalDate matriculationDate;
 
+    public CourseStudent(){
+
+    }
+
     @Builder
     CourseStudent (User student, Course course, LocalDate matriculationDate){
         this.student = student;
