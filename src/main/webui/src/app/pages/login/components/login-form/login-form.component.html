@@ -1,0 +1,33 @@
+<p-card class="w-full">
+    <form #form="ngForm" class="flex flex-col gap-2" (ngSubmit)="onSubmit()">
+        <div class="flex flex-wrap justify-between w-full gap-4">
+            <div class="flex flex-col items-start w-full">
+                <label for="email">Entrar como:</label>
+                <div class="flex gap-4">
+                    <div class="flex items-center">
+                        <p-radiobutton name="role" value="STUDENT" [(ngModel)]="dto().role" inputId="role1" />
+                        <label for="role1" class="ml-2 cursor-pointer mt-1">Aluno</label>
+                    </div>
+
+                    <div class="flex items-center">
+                        <p-radiobutton name="role" value="TEACHER" [(ngModel)]="dto().role" inputId="role2" />
+                        <label for="role2" class="ml-2 cursor-pointer mt-1">Professor</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="flex flex-col gap-2">
+            <label for="email">Email</label>
+            <input pInputText id="email" [required]="true" type="email" aria-describedby="email-help"
+                [(ngModel)]="dto().email" name="email" />
+        </div>
+        <div class="flex flex-col gap-2">
+            <label for="password">Senha</label>
+            <p-password [(ngModel)]="dto().password" [feedback]="false" [required]="true" minlength="8"
+                autocomplete="off" name="password" [toggleMask]="true" />
+        </div>
+        <p-button styleClass="w-full" label="Entrar" type="submit" [disabled]="isLoading()" [loading]="isLoading()" />
+        <p-button (click)="onBack()" styleClass="w-full" label="Voltar" variant="outlined" [disabled]="isLoading()" />
+    </form>
+</p-card>
+<p-toast key="toastMessage" position="top-center">

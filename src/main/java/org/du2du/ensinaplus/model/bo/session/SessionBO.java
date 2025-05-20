@@ -39,7 +39,7 @@ public class SessionBO {
 
   public NewCookie createAuthCookie(String role) {
     String token = tokenUtils.generate(Set.of(role));
-    return new NewCookie.Builder("Authorization")
+    return new NewCookie.Builder("ensina-plus-auth")
         .value("Bearer " + token)
         .path("/")
         .maxAge(86400)

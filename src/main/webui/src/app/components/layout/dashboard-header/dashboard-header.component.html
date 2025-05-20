@@ -1,8 +1,12 @@
 <div class="flex items-center m-left-side-header">
-    <img src="ensinaPlusLogo.svg" width="110px" class="mb-1 m-left-side-header__logo" alt="Logo EnsinaPlus">
+    <img (click)="onLogoClick()" src="ensinaPlusLogo.svg" width="110px" class="mb-1 cursor-pointer m-left-side-header__logo" alt="Logo EnsinaPlus">
 </div>
 
 <div class="m-left-side-header flex gap-3">
-    <p-button (click)="onLoginClick()" label="Entrar" variant="outlined" severity="secondary"  />
+    @if(router.url !== '/login') {
+    <p-button (click)="onLoginClick()" label="Entrar" variant="outlined" severity="secondary" />
+    }
+    @if(router.url !== '/register') {
     <p-button (click)="onRegisterClick()" label="Cadastrar" />
+    }
 </div>

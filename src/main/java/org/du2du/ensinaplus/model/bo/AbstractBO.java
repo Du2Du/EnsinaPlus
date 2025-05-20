@@ -3,6 +3,7 @@ package org.du2du.ensinaplus.model.bo;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.du2du.ensinaplus.model.bo.session.SessionBO;
 import org.du2du.ensinaplus.model.dao.AbstractDAO;
 import org.du2du.ensinaplus.model.dto.base.ResponseDTO;
 import org.du2du.ensinaplus.model.dto.base.ValidateDTO;
@@ -20,6 +21,9 @@ public class AbstractBO<E extends AbstractEntity, D extends AbstractDAO<E>> {
 
   @Inject
   protected Validator validator;
+
+  @Inject
+  protected SessionBO sessionBO;
 
   public <T> ValidateDTO validate(T object) {
     Set<ConstraintViolation<T>> violations = validator.validate(object);
