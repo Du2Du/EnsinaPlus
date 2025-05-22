@@ -4,11 +4,15 @@ import org.du2du.ensinaplus.model.bo.impl.UserBO;
 import org.du2du.ensinaplus.model.dto.UserLoginDTO;
 import org.du2du.ensinaplus.model.dto.form.UserFormDTO;
 import org.du2du.ensinaplus.model.enums.RoleEnum;
+import org.du2du.ensinaplus.security.RequireRole;
+import org.du2du.ensinaplus.security.RequiredAuthentication;
 
 import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.Response;
 
 @Path("v1/user")
@@ -37,7 +41,8 @@ public class UserController {
 
   @GET
   @Path("dto")
-  public Response getUserDTO() {
-    return bo.getUserDTO();
+  @RequiredAuthentication()
+  public Response getUserDTO(@Context HttpHeaders headers) {
+    return bo.getUserDTO(headers);
   }
 }

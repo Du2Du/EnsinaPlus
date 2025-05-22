@@ -15,6 +15,8 @@ import org.du2du.ensinaplus.utils.PasswordUtils;
 
 import jakarta.enterprise.context.Dependent;
 import jakarta.transaction.Transactional;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.NewCookie;
 import jakarta.ws.rs.core.Response;
 
@@ -59,15 +61,18 @@ public class UserBO extends AbstractBO<User, UserDAO> {
           .build();
     UserDTO userDTO = userEntity.toDTO();
     userDTO.setRole(RoleEnum.valueOf(role.toUpperCase()));
-    sessionBO.createSession(userDTO);
-    NewCookie cookie = sessionBO.createAuthCookie(role);
+    
+    NewCookie sessionCookie = sessionBO.createSession(userDTO);
+    NewCookie authCookie = sessionBO.createAuthCookie(role);
+    
     return Response.ok(ResponseDTO.builder().title("Login realizado com sucesso!").data(userDTO).build())
-        .cookie(cookie)
+        .cookie(sessionCookie, authCookie)
         .build();
   }
 
-  public Response getUserDTO() {
-    return Response.ok().entity(Objects.isNull(sessionBO.getSession()) ? null : sessionBO.getSession().getData()).build();
+  public Response getUserDTO(@Context HttpHeaders headers) {
+    var session = sessionBO.getSession(headers);
+    return Response.ok().entity(Objects.isNull(session) ? null : session.getData()).build();
   }
 
 }
