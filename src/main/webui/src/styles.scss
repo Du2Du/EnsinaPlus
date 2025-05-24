@@ -1,6 +1,10 @@
 @use "tailwindcss";
-@import "primeicons/primeicons.css";
 
+@use "./app/prime-icons.scss";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 * {
   box-sizing: border-box;
