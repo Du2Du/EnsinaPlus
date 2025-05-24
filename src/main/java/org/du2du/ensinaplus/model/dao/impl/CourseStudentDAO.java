@@ -11,6 +11,6 @@ import jakarta.enterprise.context.Dependent;
 @Dependent
 public class CourseStudentDAO implements PanacheRepositoryBase<CourseStudent, UUID> {
     public CourseStudent findEnrollByStudentUUID (UUID uuidStudent){
-        return find("student_uuid = :uuidStudent", Map.of("uuidStudent", uuidStudent)).firstResult();
+        return find("student = :uuidStudent", Map.of("uuidStudent", uuidStudent)).firstResult();
     }
 }

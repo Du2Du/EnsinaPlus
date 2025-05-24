@@ -3,6 +3,7 @@ package org.du2du.ensinaplus.model.entity.impl;
 import java.time.LocalDate;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
@@ -15,17 +16,19 @@ import lombok.Setter;
 
 @Entity
 @Table(name = "tbcourse_student")
-@IdClass(CourseStudentId.class)
 @Getter
 @Setter
 public class CourseStudent {
 
     @Id
+    @EmbeddedId
+    private CourseStudentId id;
+
     @ManyToOne
     @JoinColumn(name ="student_uuid", referencedColumnName = "uuid")
     private User student;
 
-    @Id
+  
     @ManyToOne
     @JoinColumn(name ="course_uuid", referencedColumnName = "uuid")
     private Course course;
@@ -38,7 +41,8 @@ public class CourseStudent {
     }
 
     @Builder
-    CourseStudent (User student, Course course, LocalDate matriculationDate){
+    CourseStudent (CourseStudentId id, User student, Course course, LocalDate matriculationDate){
+        this.id = id;
         this.student = student;
         this.course = course;
         this.matriculationDate = matriculationDate;
