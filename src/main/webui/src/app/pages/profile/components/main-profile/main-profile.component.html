@@ -1,0 +1,27 @@
+<p-card class="w-full">
+    <form #form="ngForm" class="flex flex-col gap-2" (ngSubmit)="onSubmit()">
+        <span class="text-2xl">Minha conta</span>
+        <p-divider/>
+        <div class="flex flex-col gap-2">
+            <label for="name">Nome</label>
+            <input pInputText id="name" [required]="true" aria-describedby="name-help" [(ngModel)]="userData().name"
+                name="name" />
+        </div>
+
+        <div class="flex flex-col gap-2">
+            <label for="email">Email</label>
+            <input pInputText id="email" [required]="true" type="email" aria-describedby="email-help"
+                [(ngModel)]="userData().email" name="email" />
+        </div>
+
+        <div class="flex flex-col gap-2">
+            <label for="phone">Telefone</label>
+            <p-inputmask class="w-full" [unmask]="true" [required]="false" mask="(99) 99999-9999" [(ngModel)]="userData().phone" placeholder="(99) 99999-9999" name="phone" id="phone" />
+        </div>
+
+        <p-button styleClass="w-full" label="Salvar" type="submit" [disabled]="isLoading()"
+            [loading]="isLoading()" />
+        <p-button (click)="onBack()" styleClass="w-full" label="Voltar" variant="outlined" [disabled]="isLoading()" />
+    </form>
+</p-card>
+<p-toast key="toastMessage" position="top-center">

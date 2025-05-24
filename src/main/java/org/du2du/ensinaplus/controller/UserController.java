@@ -1,8 +1,10 @@
 package org.du2du.ensinaplus.controller;
 
 import org.du2du.ensinaplus.model.bo.impl.UserBO;
+import org.du2du.ensinaplus.model.dto.UserDTO;
 import org.du2du.ensinaplus.model.dto.UserLoginDTO;
 import org.du2du.ensinaplus.model.dto.form.UserFormDTO;
+import org.du2du.ensinaplus.model.dto.form.UserUpdateFormDTO;
 import org.du2du.ensinaplus.model.enums.RoleEnum;
 import org.du2du.ensinaplus.security.RequiredAuthentication;
 
@@ -24,6 +26,13 @@ public class UserController {
   @Path("create")
   public Response createUser(UserFormDTO user) {
     return bo.createUser(user);
+  }
+
+  @POST
+  @Path("save")
+  @RequiredAuthentication()
+  public Response saveUser(UserUpdateFormDTO user, @Context HttpHeaders headers) {
+    return bo.saveUser(user, headers);
   }
 
   @POST

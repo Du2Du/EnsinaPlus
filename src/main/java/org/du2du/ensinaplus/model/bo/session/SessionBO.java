@@ -3,6 +3,7 @@ package org.du2du.ensinaplus.model.bo.session;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -67,6 +68,14 @@ public class SessionBO implements Serializable {
         } catch (IllegalArgumentException e) {
             return null;
         }
+    }
+
+
+    public void updateSession(UserDTO dto, HttpHeaders headers){
+        Session session = getSession(headers);
+        if (Objects.isNull(session))return;
+        session.setData(dto);
+        sessionMap.put(session.getUuid(), session);
     }
 
     public NewCookie deleteSession(HttpHeaders headers) {

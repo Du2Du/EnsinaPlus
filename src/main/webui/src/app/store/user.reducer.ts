@@ -10,7 +10,7 @@ const initialState: UserDTO = {} as UserDTO;
 
 export const userReducer = createReducer(
     initialState,
-    on(getUser, (state, { user }) => user),
+    on(getUser, (state, { user }) => ({...user})),
     on(setUser, (state, { user }) => user)
 );
 
