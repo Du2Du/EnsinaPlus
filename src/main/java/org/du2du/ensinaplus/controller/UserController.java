@@ -1,5 +1,7 @@
 package org.du2du.ensinaplus.controller;
 
+import java.util.UUID;
+
 import org.du2du.ensinaplus.model.bo.impl.UserBO;
 import org.du2du.ensinaplus.model.dto.UserLoginDTO;
 import org.du2du.ensinaplus.model.dto.form.UserFormDTO;
@@ -10,7 +12,9 @@ import org.du2du.ensinaplus.security.RequiredAuthentication;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
+import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.Response;
@@ -27,11 +31,11 @@ public class UserController {
     return bo.createUser(user);
   }
 
-  @POST
-  @Path("save")
+  @PUT
+  @Path("save/{uuid}")
   @RequiredAuthentication()
-  public Response saveUser(UserUpdateFormDTO user, @Context HttpHeaders headers) {
-    return bo.saveUser(user, headers);
+  public Response saveUser(@PathParam("uuid") UUID uuid, UserUpdateFormDTO user, @Context HttpHeaders headers) {
+    return bo.saveUser(uuid, user, headers);
   }
 
   @POST

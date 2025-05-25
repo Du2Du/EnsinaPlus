@@ -30,8 +30,9 @@ public class User extends AbstractEntity {
 
   @Column(name = "password", nullable = false)
   private String password;
-
+  
   private String phone;
+  @Column(name = "picture", columnDefinition = "text")
   private String picture;
 
   @OneToMany (mappedBy = "student", fetch = FetchType.LAZY)

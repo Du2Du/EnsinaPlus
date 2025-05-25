@@ -41,7 +41,7 @@ export class MainProfileComponent {
 
     }
     this.isLoading.set(true);
-    this.persistenceService.postRequest("/v1/user/save", this.userData()).pipe(tap(this.onSaveUser.bind(this)), catchError(this.onSaveUserError.bind(this))).subscribe();
+    this.persistenceService.putRequest("/v1/user/save/"+this.userData().uuid, this.userData()).pipe(tap(this.onSaveUser.bind(this)), catchError(this.onSaveUserError.bind(this))).subscribe();
   }
 
   private joinFormMessages() {
@@ -50,11 +50,6 @@ export class MainProfileComponent {
       message += 'Nome é obrigatório. ';
     if (this.form.controls['email']?.errors?.['required'])
       message += 'Email é obrigatório. ';
-    if (this.form.controls['password']?.errors?.['required'])
-      message += 'Senha é obrigatória. ';
-    if (this.form.controls['password']?.errors?.['minlength'])
-      message += `Senha deve ter pelo menos ${this.form.controls['password']?.errors?.['minlength']?.['requiredLength']} caracteres. `;
-
     return message;
   }
 
@@ -69,7 +64,7 @@ export class MainProfileComponent {
 
   private onSaveUserError(error: any){
     this.isLoading.set(false);
-    this.messageService.add({severity: 'error', summary: 'Erro', key: 'toastMessage', detail: error.message});
+    this.messageService.add({severity: 'error', summary: 'Erro', key: 'toastMessage', detail: error.description});
     return error;
   }
 

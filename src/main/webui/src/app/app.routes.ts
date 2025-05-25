@@ -6,6 +6,7 @@ import { HomeComponent } from './pages/home/home.component';
 import { authorizationGuard } from './guards/authorization.guard';
 import { redirectAuthenticationGuard } from './guards/redirect-authentication.guard';
 import { ProfileComponent } from './pages/profile/profile.component';
+import { CourseFormComponent } from './pages/course-form/course-form.component';
 
 export const routes: Routes = [
     {
@@ -36,6 +37,12 @@ export const routes: Routes = [
         path: 'profile',
         title: 'Perfil',
         component: ProfileComponent,
+        canActivate: [authorizationGuard]
+    },
+    {
+        path: 'course/form',
+        title: 'Criar curso',
+        component: CourseFormComponent,
         canActivate: [authorizationGuard]
     },
 ];

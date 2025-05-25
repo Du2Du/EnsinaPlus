@@ -1,0 +1,33 @@
+<app-main-header />
+<p-card class="mt-5 m-auto block w-[50%] h-full">
+    <form #form="ngForm" class="flex flex-col gap-2" (ngSubmit)="onSubmit()">
+        @if(courseDTO().uuid){
+        <span class="text-2xl">Modificar curso</span>
+        }@else {
+        <span class="text-2xl">Criar curso</span>
+        }
+        <p-divider />
+        <div class="flex flex-col gap-2">
+            <label for="name">Nome</label>
+            <input pInputText id="name" [required]="true" aria-describedby="name-help" [(ngModel)]="courseDTO().name"
+                name="name" />
+        </div>
+
+        <div class="flex flex-col gap-2">
+            <label for="description">Descrição</label>
+            <textarea name="description" rows="5" cols="30" pTextarea [(ngModel)]="courseDTO().description"
+                id="description"></textarea>
+        </div>
+
+        <div class="flex flex-col gap-2">
+            <label for="description">Imagem principal</label>
+            <p-fileupload name="demo[]" (onSelect)="onBasicUploadAuto($event)" [customUpload]="true" [multiple]="false"
+                accept="image/*" maxFileSize="1000000" mode="advanced">
+            </p-fileupload>
+        </div>
+
+        <p-button styleClass="w-full" label="Salvar" type="submit" [disabled]="isLoading()" [loading]="isLoading()" />
+        <p-button (click)="onBack()" styleClass="w-full" label="Voltar" variant="outlined" [disabled]="isLoading()" />
+    </form>
+</p-card>
+<p-toast key="toastMessage" position="top-center">
