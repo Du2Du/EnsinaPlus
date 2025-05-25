@@ -21,13 +21,15 @@ import lombok.Setter;
 @Setter
 public class CourseStudent {
 
-    @Id
+    @EmbeddedId
+    CourseStudentId id;
+    
     @ManyToOne
     @MapsId("student")
     @JoinColumn(name ="student_uuid")
     private User student;
 
-    @Id
+    
     @ManyToOne
     @MapsId("course")
     @JoinColumn(name ="course_uuid")

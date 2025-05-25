@@ -9,6 +9,7 @@ import org.du2du.ensinaplus.model.entity.AbstractEntity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Builder;
@@ -33,7 +34,7 @@ public class User extends AbstractEntity {
   private String phone;
   private String picture;
 
-  @OneToMany (mappedBy = "student")
+  @OneToMany (mappedBy = "student", fetch = FetchType.LAZY)
   private List<CourseStudent> courses;
 
   public User() {

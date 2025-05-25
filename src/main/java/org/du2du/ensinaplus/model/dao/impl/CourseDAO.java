@@ -25,7 +25,7 @@ public class CourseDAO extends AbstractDAO<Course>{
     }
 
     public List<Course> listMyCourses (UUID uuidUser){
-        return find("students WHERE students.uuid = :uuidUser", Map.of("uuidUser", uuidUser)).list();
+        return find("Select c from Course c  JOIN c.students s WHERE s.id.student = :uuidUser ", Map.of("uuidUser", uuidUser)).list();
     }
     
 }

@@ -12,7 +12,8 @@ import jakarta.transaction.Transactional;
 @Dependent
 public class CourseStudentDAO implements PanacheRepositoryBase<CourseStudent, UUID> {
 
-    public CourseStudent findEnrollByStudentUUID (UUID uuidStudent){
-        return find("student_uuid = :uuidStudent", Map.of("uuidStudent", uuidStudent)).firstResult();
+    public CourseStudent findEnroll (UUID uuidStudent, UUID uuidCourse){
+        return find("student.uuid = :uuidStudent AND course.uuid = :uuidCourse", Map.of("uuidStudent", uuidStudent, "uuidCourse", uuidCourse)).firstResult();
     }
+    
 }

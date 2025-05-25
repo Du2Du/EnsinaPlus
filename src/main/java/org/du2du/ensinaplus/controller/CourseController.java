@@ -4,6 +4,8 @@ import org.du2du.ensinaplus.model.bo.impl.CourseBO;
 import org.du2du.ensinaplus.model.bo.impl.CourseStudentBO;
 import org.du2du.ensinaplus.model.dto.CourseStudentDTO;
 import org.du2du.ensinaplus.model.dto.form.CourseFormDTO;
+import org.du2du.ensinaplus.model.enums.RoleEnum;
+import org.du2du.ensinaplus.security.RequireRole;
 import org.du2du.ensinaplus.security.RequiredAuthentication;
 
 import jakarta.inject.Inject;
@@ -23,6 +25,7 @@ public class CourseController {
 
     @POST
     @RequiredAuthentication
+    @RequireRole(RoleEnum.ROLE_TEACHER)
     @Path("create")
     public Response createCourse (CourseFormDTO course){
         return courseBO.createCourse(course);

@@ -14,6 +14,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @EqualsAndHashCode
+@NoArgsConstructor
 @Embeddable
 public class CourseStudentId implements Serializable {
     @Column(name = "student_uuid")

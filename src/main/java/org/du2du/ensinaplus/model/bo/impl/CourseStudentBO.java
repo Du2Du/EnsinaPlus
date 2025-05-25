@@ -29,19 +29,19 @@ public class CourseStudentBO {
     @Transactional
     public Response matriculateUser (CourseStudentDTO courseStudentDTO){
 
-        System.out.println(courseDAO.findByName(courseStudentDTO.getCourseName()).getUuid());
-        CourseStudent enrollEntity = courseStudentDAO.findEnrollByStudentUUID(sessionBO.getSession().getData().getUuid());
+        
+        CourseStudent enrollEntity = courseStudentDAO.findEnroll(sessionBO.getSession().getData().getUuid(), courseStudentDTO.getCourseUuid());
         if(Objects.nonNull(enrollEntity))
             return Response.status(Response.Status.CONFLICT).entity(ResponseDTO.builder().title("Error ao matricular-se no curso")
             .description("Usuário já matriculado").build()).build();
         
-        enrollEntity = courseStudentDTO.toEntity(sessionBO.getSession().getUuid(), courseDAO.findByName(courseStudentDTO.getCourseName()).getUuid());
+        enrollEntity = courseStudentDTO.toEntity(sessionBO.getSession().getData().getUuid());
         
         try{
             enrollEntity = courseStudentDAO.getEntityManager().merge(enrollEntity);
             courseStudentDAO.persistAndFlush(enrollEntity);
         return Response.status(Response.Status.CREATED)
-                .entity(ResponseDTO.builder().title("Sua matricula no curso foi concluída!").data(enrollEntity).build())
+                .entity(ResponseDTO.builder().title("Sua matricula no curso foi concluída!").data(courseStudentDTO).build())
                 .build();
         } catch(Exception e){
             e.printStackTrace();
@@ -51,4 +51,5 @@ public class CourseStudentBO {
         }
 
     }
+    
 }

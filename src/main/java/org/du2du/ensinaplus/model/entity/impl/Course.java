@@ -39,7 +39,7 @@ public class Course extends AbstractEntity{
     @JoinColumn(referencedColumnName = "uuid", name = "owner_uuid", nullable = false, columnDefinition = "uuid references tbuser(uuid)")
     private User owner;
     
-    @OneToMany (mappedBy = "course", cascade = CascadeType.REMOVE)
+    @OneToMany (mappedBy = "course", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY )
     private List<CourseStudent> students;
 
     public Course(){
