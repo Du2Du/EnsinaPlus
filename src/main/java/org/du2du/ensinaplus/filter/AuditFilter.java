@@ -7,8 +7,7 @@ import org.du2du.ensinaplus.model.bo.impl.LogBO;
 import org.du2du.ensinaplus.model.bo.session.SessionBO;
 import org.du2du.ensinaplus.model.dto.LogDTO;
 import org.du2du.ensinaplus.security.NotRequiredAudit;
-import org.du2du.ensinaplus.security.RequireRole;
-import org.du2du.ensinaplus.security.RequiredAuthentication;
+
 
 import jakarta.inject.Inject;
 import jakarta.ws.rs.container.ContainerRequestContext;

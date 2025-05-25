@@ -12,7 +12,7 @@ import jakarta.enterprise.context.Dependent;
 public class CourseStudentDAO implements PanacheRepositoryBase<CourseStudent, UUID> {
 
     public CourseStudent findEnroll (UUID uuidStudent, UUID uuidCourse){
-        return find("student.uuid = :uuidStudent AND course.uuid = :uuidCourse", Map.of("uuidStudent", uuidStudent, "uuidCourse", uuidCourse)).firstResult();
+        return find("student.uuid = :uuidStudent AND course.uuid = :uuidCourse AND course.deleted = false", Map.of("uuidStudent", uuidStudent, "uuidCourse", uuidCourse)).firstResult();
     }
     
 }

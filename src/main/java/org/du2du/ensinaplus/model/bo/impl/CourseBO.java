@@ -56,7 +56,7 @@ public class CourseBO extends AbstractBO<Course, CourseDAO>{
     }
 
     public Response listAllCourses(){
-        List<Course> coursesEntity = dao.listAll();
+        List<Course> coursesEntity = dao.listAllNotDeleted();
         List<CourseDTO> coursesDTO = new ArrayList<>();
         coursesEntity.forEach((course)->{coursesDTO.add(course.toDTO());});
         try {
