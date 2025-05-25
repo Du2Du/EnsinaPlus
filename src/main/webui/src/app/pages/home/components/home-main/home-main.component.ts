@@ -24,7 +24,7 @@ export class HomeMainComponent {
 
   searchCourses() {
     this.searchingCourses.set(true);
-    this.persistenceService.getRequest("/v1/course/search").pipe(tap((response: any) => {
+    this.persistenceService.getRequest("/v1/course/enrollment").pipe(tap((response: any) => {
       this.courses.set(response.data);
     }), catchError(error => {
       this.courses.set([]);

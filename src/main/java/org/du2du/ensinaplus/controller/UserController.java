@@ -1,7 +1,6 @@
 package org.du2du.ensinaplus.controller;
 
 import org.du2du.ensinaplus.model.bo.impl.UserBO;
-import org.du2du.ensinaplus.model.dto.UserDTO;
 import org.du2du.ensinaplus.model.dto.UserLoginDTO;
 import org.du2du.ensinaplus.model.dto.form.UserFormDTO;
 import org.du2du.ensinaplus.model.dto.form.UserUpdateFormDTO;

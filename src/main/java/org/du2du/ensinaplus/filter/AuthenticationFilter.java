@@ -1,6 +1,5 @@
 package org.du2du.ensinaplus.filter;
 
-import java.net.URI;
 import java.util.Objects;
 import java.util.Set;
 

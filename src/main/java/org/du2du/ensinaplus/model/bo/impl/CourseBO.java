@@ -16,6 +16,7 @@ import org.du2du.ensinaplus.model.entity.impl.Course;
 import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
+import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.Response;
 
 @Dependent
@@ -25,7 +26,7 @@ public class CourseBO extends AbstractBO<Course, CourseDAO>{
     SessionBO sessionBO;
 
     @Transactional
-    public Response createCourse(CourseFormDTO course){
+    public Response createCourse(CourseFormDTO course, HttpHeaders headers){
         ValidateDTO validateResp = validate(course);
         if(!validateResp.isOk()) 
             return Response.status(Response.Status.BAD_REQUEST).entity(validateResp).build();
@@ -37,7 +38,7 @@ public class CourseBO extends AbstractBO<Course, CourseDAO>{
                 .description("Já existe um curso com esse nome cadastrado!").build())
             .build();
 
-        courseEntity = course.toEntity(sessionBO.getSession().getData().getUuid());
+        courseEntity = course.toEntity(sessionBO.getSession(headers).getData().getUuid());
         try{
             courseEntity.persistAndFlush();
             return Response.status(Response.Status.CREATED)
@@ -66,8 +67,8 @@ public class CourseBO extends AbstractBO<Course, CourseDAO>{
         }
     }
 
-    public Response listEnrollmentCourses(){
-        List<Course> coursesEntity = dao.listMyCourses(sessionBO.getSession().getData().getUuid());
+    public Response listEnrollmentCourses(HttpHeaders headers){
+        List<Course> coursesEntity = dao.listMyCourses(sessionBO.getSession(headers).getData().getUuid());
         List<CourseDTO> coursesDTO = new ArrayList<>();
         coursesEntity.forEach((course)->{coursesDTO.add(course.toDTO());});
         try {
@@ -81,8 +82,8 @@ public class CourseBO extends AbstractBO<Course, CourseDAO>{
         }
     }
 
-    public Response listCreatedCourses(){
-        List<Course> coursesEntity = dao.listCreatedCourses(sessionBO.getSession().getData().getUuid());
+    public Response listCreatedCourses(HttpHeaders headers){
+        List<Course> coursesEntity = dao.listCreatedCourses(sessionBO.getSession(headers).getData().getUuid());
         List<CourseDTO> coursesDTO = new ArrayList<>();
         coursesEntity.forEach((course)->{coursesDTO.add(course.toDTO());});
         try {
