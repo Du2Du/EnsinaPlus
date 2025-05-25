@@ -12,6 +12,7 @@ import org.du2du.ensinaplus.model.entity.impl.CourseStudent;
 import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
+import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.Response;
 
 @Dependent
@@ -26,16 +27,18 @@ public class CourseStudentBO {
     @Inject
     SessionBO sessionBO;
 
+    private static final String SESSION_COOKIE_NAME = "ensina-plus-session";
+
     @Transactional
-    public Response matriculateUser (CourseStudentDTO courseStudentDTO){
+    public Response matriculateUser (CourseStudentDTO courseStudentDTO, HttpHeaders headers){
 
         
-        CourseStudent enrollEntity = courseStudentDAO.findEnroll(sessionBO.getSession().getData().getUuid(), courseStudentDTO.getCourseUuid());
+        CourseStudent enrollEntity = courseStudentDAO.findEnroll(sessionBO.getSession(headers.getCookies().get((SESSION_COOKIE_NAME))).getData().getUuid(), courseStudentDTO.getCourseUuid());
         if(Objects.nonNull(enrollEntity))
             return Response.status(Response.Status.CONFLICT).entity(ResponseDTO.builder().title("Error ao matricular-se no curso")
             .description("Usuário já matriculado").build()).build();
         
-        enrollEntity = courseStudentDTO.toEntity(sessionBO.getSession().getData().getUuid());
+        enrollEntity = courseStudentDTO.toEntity(sessionBO.getSession(headers.getCookies().get((SESSION_COOKIE_NAME))).getData().getUuid());
         
         try{
             enrollEntity = courseStudentDAO.getEntityManager().merge(enrollEntity);

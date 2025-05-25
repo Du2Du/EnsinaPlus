@@ -15,7 +15,6 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.ws.rs.core.Cookie;
-import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.NewCookie;
 
 @ApplicationScoped
@@ -55,8 +54,7 @@ public class SessionBO implements Serializable {
     /**
      * Recupera a sessão do usuário a partir do cookie de sessão
      */
-    public Session getSession(HttpHeaders headers) {
-        Cookie sessionCookie = headers.getCookies().get(SESSION_COOKIE_NAME);
+    public Session getSession(Cookie sessionCookie) {
         if (sessionCookie == null) {
             return null;
         }
@@ -69,8 +67,7 @@ public class SessionBO implements Serializable {
         }
     }
 
-    public NewCookie deleteSession(HttpHeaders headers) {
-        Cookie sessionCookie = headers.getCookies().get(SESSION_COOKIE_NAME);
+    public NewCookie deleteSession( Cookie sessionCookie) {
         if (sessionCookie != null) {
             try {
                 UUID sessionId = UUID.fromString(sessionCookie.getValue());

@@ -5,14 +5,13 @@ import java.util.stream.Collectors;
 
 import org.du2du.ensinaplus.model.bo.session.SessionBO;
 import org.du2du.ensinaplus.model.dao.AbstractDAO;
-import org.du2du.ensinaplus.model.dto.base.ResponseDTO;
+
 import org.du2du.ensinaplus.model.dto.base.ValidateDTO;
 import org.du2du.ensinaplus.model.entity.AbstractEntity;
 
 import jakarta.inject.Inject;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
-import jakarta.ws.rs.core.Response;
 
 public class AbstractBO<E extends AbstractEntity, D extends AbstractDAO<E>> {
 

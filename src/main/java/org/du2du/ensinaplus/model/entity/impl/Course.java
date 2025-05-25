@@ -6,7 +6,6 @@ import java.util.UUID;
 
 import org.du2du.ensinaplus.model.dto.CourseDTO;
 import org.du2du.ensinaplus.model.entity.AbstractEntity;
-import org.hibernate.annotations.ManyToAny;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -32,7 +31,7 @@ public class Course extends AbstractEntity{
     @Column(name = "description", nullable = false)
     private String description;
 
-    @Column(name = "main_picture", nullable = true)
+    @Column(name = "main_picture", nullable = true, columnDefinition = "text")
     private String mainPicture;
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -1,8 +1,5 @@
 package org.du2du.ensinaplus.model.dto.base;
 
-import java.util.Objects;
-
-import jakarta.ws.rs.core.Response.Status;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
