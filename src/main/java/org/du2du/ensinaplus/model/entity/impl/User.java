@@ -1,6 +1,7 @@
 package org.du2du.ensinaplus.model.entity.impl;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 import org.du2du.ensinaplus.model.dto.UserDTO;
@@ -8,6 +9,8 @@ import org.du2du.ensinaplus.model.entity.AbstractEntity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Builder;
 import lombok.Getter;
@@ -30,6 +33,9 @@ public class User extends AbstractEntity {
 
   private String phone;
   private String picture;
+
+  @OneToMany (mappedBy = "student", fetch = FetchType.LAZY)
+  private List<CourseStudent> courses;
 
   public User() {
     super();

@@ -87,18 +87,23 @@ public class UserBO extends AbstractBO<User, UserDAO> {
   }
 
   public Response login(UserLoginDTO user, String role) {
-    User userEntity = dao.findByEmailAndPassword(user.getEmail(), PasswordUtils.hashPassword(user.getPassword()));
+    User userEntity = dao.findByEmail(user.getEmail());
     if (Objects.isNull(userEntity))
       return Response.status(Response.Status.NOT_FOUND)
           .entity(ResponseDTO.builder().title("Erro ao logar!")
               .description("Usuário não encontrado.").build())
           .build();
+    if (!PasswordUtils.comparePassword(user.getPassword(), userEntity.getPassword()))
+      return Response.status(Response.Status.NOT_FOUND)
+          .entity(ResponseDTO.builder().title("Erro ao logar!")
+              .description("Senha incorreta.").build())
+          .build();
     UserDTO userDTO = userEntity.toDTO();
     userDTO.setRole(RoleEnum.valueOf(role.toUpperCase()));
-    
+
     NewCookie sessionCookie = sessionBO.createSession(userDTO);
     NewCookie authCookie = sessionBO.createAuthCookie(role);
-    
+
     return Response.ok(ResponseDTO.builder().title("Login realizado com sucesso!").data(userDTO).build())
         .cookie(sessionCookie, authCookie)
         .build();
