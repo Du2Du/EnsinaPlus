@@ -11,6 +11,7 @@ import org.du2du.ensinaplus.model.entity.impl.CourseStudent;
 
 import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 import jakarta.ws.rs.core.Response;
 
 @Dependent
@@ -25,14 +26,16 @@ public class CourseStudentBO {
     @Inject
     SessionBO sessionBO;
 
+    @Transactional
     public Response matriculateUser (CourseStudentDTO courseStudentDTO){
 
-        CourseStudent enrollEntity = courseStudentDAO.findEnrollByStudentUUID(sessionBO.getSession().getUuid());
+        System.out.println(courseDAO.findByName(courseStudentDTO.getCourseName()).getUuid());
+        CourseStudent enrollEntity = courseStudentDAO.findEnrollByStudentUUID(sessionBO.getSession().getData().getUuid());
         if(Objects.nonNull(enrollEntity))
             return Response.status(Response.Status.CONFLICT).entity(ResponseDTO.builder().title("Error ao matricular-se no curso: " + courseStudentDTO.getCourseName())
             .description("Usuário já matriculado").build()).build();
         
-        enrollEntity = courseStudentDTO.toEntity(sessionBO.getSession().getUuid(), courseDAO.findByName(courseStudentDTO.getCourseName()).getUuid());
+        enrollEntity = courseStudentDTO.toEntity(sessionBO.getSession().getData().getUuid(), courseDAO.findByName(courseStudentDTO.getCourseName()).getUuid());
         
         try{
             courseStudentDAO.persistAndFlush(enrollEntity);

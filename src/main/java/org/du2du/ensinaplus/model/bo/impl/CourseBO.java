@@ -34,7 +34,7 @@ public class CourseBO extends AbstractBO<Course, CourseDAO>{
                 .description("Já existe um curso com esse nome cadastrado!").build())
             .build();
 
-        courseEntity = course.toEntity(sessionBO.getSession().getUuid());
+        courseEntity = course.toEntity(sessionBO.getSession().getData().getUuid());
         try{
             courseEntity.persistAndFlush();
             return Response.status(Response.Status.CREATED)

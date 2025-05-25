@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import org.du2du.ensinaplus.model.entity.impl.Course;
 import org.du2du.ensinaplus.model.entity.impl.CourseStudent;
+import org.du2du.ensinaplus.model.entity.impl.CourseStudentId;
 import org.du2du.ensinaplus.model.entity.impl.User;
 
 import lombok.AllArgsConstructor;
