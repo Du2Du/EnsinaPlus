@@ -8,6 +8,7 @@ import org.du2du.ensinaplus.model.dto.LogDTO;
 import org.du2du.ensinaplus.model.dto.base.ResponseDTO;
 import org.du2du.ensinaplus.model.entity.impl.Log;
 
+import io.quarkus.panache.common.Sort;
 import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -28,8 +29,8 @@ public class LogBO {
         }
     }
 
-    public Response listAllCourses(){
-        List<Log> logsEntity = logDAO.listAll();
+    public Response listAllLogs(){
+        List<Log> logsEntity = logDAO.listAll(Sort.descending("createdAt"));
         List<LogDTO> logsDTO = new ArrayList<>();
         logsEntity.forEach((log)->{logsDTO.add(log.toDTO());});
         try {
