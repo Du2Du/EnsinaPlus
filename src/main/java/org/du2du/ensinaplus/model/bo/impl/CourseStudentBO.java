@@ -32,15 +32,16 @@ public class CourseStudentBO {
         System.out.println(courseDAO.findByName(courseStudentDTO.getCourseName()).getUuid());
         CourseStudent enrollEntity = courseStudentDAO.findEnrollByStudentUUID(sessionBO.getSession().getData().getUuid());
         if(Objects.nonNull(enrollEntity))
-            return Response.status(Response.Status.CONFLICT).entity(ResponseDTO.builder().title("Error ao matricular-se no curso: " + courseStudentDTO.getCourseName())
+            return Response.status(Response.Status.CONFLICT).entity(ResponseDTO.builder().title("Error ao matricular-se no curso")
             .description("Usuário já matriculado").build()).build();
         
-        enrollEntity = courseStudentDTO.toEntity(sessionBO.getSession().getData().getUuid(), courseDAO.findByName(courseStudentDTO.getCourseName()).getUuid());
+        enrollEntity = courseStudentDTO.toEntity(sessionBO.getSession().getUuid(), courseDAO.findByName(courseStudentDTO.getCourseName()).getUuid());
         
         try{
+            enrollEntity = courseStudentDAO.getEntityManager().merge(enrollEntity);
             courseStudentDAO.persistAndFlush(enrollEntity);
         return Response.status(Response.Status.CREATED)
-                .entity(ResponseDTO.builder().title("Sua matricula no curso "+courseStudentDTO.getCourseName()+" foi concluída!").data(enrollEntity).build())
+                .entity(ResponseDTO.builder().title("Sua matricula no curso foi concluída!").data(enrollEntity).build())
                 .build();
         } catch(Exception e){
             e.printStackTrace();

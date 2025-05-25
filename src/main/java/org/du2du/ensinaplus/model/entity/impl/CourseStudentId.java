@@ -13,7 +13,6 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @EqualsAndHashCode
 @Embeddable
 public class CourseStudentId implements Serializable {

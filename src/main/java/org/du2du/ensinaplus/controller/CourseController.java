@@ -7,6 +7,7 @@ import org.du2du.ensinaplus.model.dto.form.CourseFormDTO;
 import org.du2du.ensinaplus.security.RequiredAuthentication;
 
 import jakarta.inject.Inject;
+import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.core.Response;
@@ -32,5 +33,26 @@ public class CourseController {
     @Path("enroll")
     public Response matriculateCourse(CourseStudentDTO courseStudentDTO){
         return courseStudentBO.matriculateUser(courseStudentDTO);
+    }
+
+    @GET
+    @RequiredAuthentication
+    @Path("list")
+    public Response listAllCourses(){
+        return courseBO.listAllCourses();
+    }
+
+    @GET
+    @RequiredAuthentication
+    @Path("enrollment")
+    public Response listEnrollmentCourses(){
+        return courseBO.listEnrollmentCourses();
+    }
+
+    @GET
+    @RequiredAuthentication
+    @Path("list/created")
+    public Response listCreatedCourses(){
+        return courseBO.listCreatedCourses();
     }
 }

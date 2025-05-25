@@ -13,6 +13,6 @@ import jakarta.transaction.Transactional;
 public class CourseStudentDAO implements PanacheRepositoryBase<CourseStudent, UUID> {
 
     public CourseStudent findEnrollByStudentUUID (UUID uuidStudent){
-        return find("student.uuid = :uuidStudent", Map.of("uuidStudent", uuidStudent)).firstResult();
+        return find("student_uuid = :uuidStudent", Map.of("uuidStudent", uuidStudent)).firstResult();
     }
 }

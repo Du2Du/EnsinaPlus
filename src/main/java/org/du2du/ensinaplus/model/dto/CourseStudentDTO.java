@@ -20,12 +20,13 @@ import lombok.NoArgsConstructor;
 @Builder
 public class CourseStudentDTO {
 
-    private String courseName;
+    private UUID courseUuid;
 
-    public CourseStudent toEntity(UUID uuidStudent,UUID uuidCourse){
+    public CourseStudent toEntity(UUID uuidStudent){
         return CourseStudent.builder()
+        .id(CourseStudentId.builder().student(uuidStudent).course(courseUuid).build())
         .student(User.builder().uuid(uuidStudent).build())
-        .course(Course.builder().uuid(uuidCourse).build())
+        .course(Course.builder().uuid(courseUuid).build())
         .matriculationDate(LocalDate.now())
         .build();
     }

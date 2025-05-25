@@ -21,15 +21,13 @@ import lombok.Setter;
 @Setter
 public class CourseStudent {
 
-    @EmbeddedId
-    private CourseStudentId id;
-
+    @Id
     @ManyToOne
     @MapsId("student")
     @JoinColumn(name ="student_uuid")
     private User student;
 
-
+    @Id
     @ManyToOne
     @MapsId("course")
     @JoinColumn(name ="course_uuid")
@@ -43,7 +41,8 @@ public class CourseStudent {
     }
 
     @Builder
-    CourseStudent (User student, Course course, LocalDate matriculationDate){
+    CourseStudent (CourseStudentId id, User student, Course course, LocalDate matriculationDate){
+        this.id = id;
         this.student = student;
         this.course = course;
         this.matriculationDate = matriculationDate;
