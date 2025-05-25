@@ -1,17 +1,24 @@
 package org.du2du.ensinaplus.utils;
 
-import java.security.MessageDigest;
+import com.password4j.Hash;
+import com.password4j.Password;
 
 public class PasswordUtils {
 
   public static String hashPassword(String password) {
     try {
-      MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
-      messageDigest.update(password.getBytes());
-      String stringHash = new String(messageDigest.digest());
-      return stringHash;
+      Hash hash = Password.hash(password).addSalt("ensina-plus").withScrypt();
+      return hash.getResult();
     } catch (Exception e) {
       return null;
+    }
+  }
+
+  public static Boolean comparePassword(String password, String hash) {
+    try {
+      return Password.check(password, hash).addSalt("ensina-plus").withScrypt();
+    } catch (Exception e) {
+      return false;
     }
   }
 }

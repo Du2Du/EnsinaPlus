@@ -15,6 +15,8 @@ import org.du2du.ensinaplus.utils.PasswordUtils;
 
 import jakarta.enterprise.context.Dependent;
 import jakarta.transaction.Transactional;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.NewCookie;
 import jakarta.ws.rs.core.Response;
 
@@ -51,23 +53,31 @@ public class UserBO extends AbstractBO<User, UserDAO> {
   }
 
   public Response login(UserLoginDTO user, String role) {
-    User userEntity = dao.findByEmailAndPassword(user.getEmail(), PasswordUtils.hashPassword(user.getPassword()));
+    User userEntity = dao.findByEmail(user.getEmail());
     if (Objects.isNull(userEntity))
       return Response.status(Response.Status.NOT_FOUND)
           .entity(ResponseDTO.builder().title("Erro ao logar!")
               .description("Usuário não encontrado.").build())
           .build();
+    if (!PasswordUtils.comparePassword(user.getPassword(), userEntity.getPassword()))
+      return Response.status(Response.Status.NOT_FOUND)
+          .entity(ResponseDTO.builder().title("Erro ao logar!")
+              .description("Senha incorreta.").build())
+          .build();
     UserDTO userDTO = userEntity.toDTO();
     userDTO.setRole(RoleEnum.valueOf(role.toUpperCase()));
-    sessionBO.createSession(userDTO);
-    NewCookie cookie = sessionBO.createAuthCookie(role);
+
+    NewCookie sessionCookie = sessionBO.createSession(userDTO);
+    NewCookie authCookie = sessionBO.createAuthCookie(role);
+
     return Response.ok(ResponseDTO.builder().title("Login realizado com sucesso!").data(userDTO).build())
-        .cookie(cookie)
+        .cookie(sessionCookie, authCookie)
         .build();
   }
 
-  public Response getUserDTO() {
-    return Response.ok().entity(Objects.isNull(sessionBO.getSession()) ? null : sessionBO.getSession().getData()).build();
+  public Response getUserDTO(@Context HttpHeaders headers) {
+    var session = sessionBO.getSession(headers);
+    return Response.ok().entity(Objects.isNull(session) ? null : session.getData()).build();
   }
 
 }
