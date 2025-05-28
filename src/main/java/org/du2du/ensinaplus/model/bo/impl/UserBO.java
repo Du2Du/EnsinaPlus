@@ -55,7 +55,7 @@ public class UserBO extends AbstractBO<User, UserDAO> {
   }
 
   @Transactional
-  public Response saveUser(UUID uuid, UserUpdateFormDTO dto, HttpHeaders headers){
+  public Response saveUser(UUID uuid, UserUpdateFormDTO dto, HttpHeaders headers) {
     ValidateDTO validateResp = validate(dto);
     if (!validateResp.isOk())
       return Response.status(Response.Status.BAD_REQUEST).entity(validateResp).build();
@@ -73,7 +73,9 @@ public class UserBO extends AbstractBO<User, UserDAO> {
     userEntity.setPhone(dto.getPhone());
     try {
       dao.persistAndFlush(userEntity);
-      sessionBO.updateSession(userEntity.toDTO(), headers);
+      UserDTO userDTO = userEntity.toDTO();
+      userDTO.setRole(sessionBO.getSession(headers).getData().getRole());
+      sessionBO.updateSession(userDTO, headers);
       return Response.status(Response.Status.CREATED)
           .entity(ResponseDTO.builder().title("Usuário salvo com sucesso!").data(dto).build())
           .build();

@@ -7,6 +7,7 @@ import { authorizationGuard } from './guards/authorization.guard';
 import { redirectAuthenticationGuard } from './guards/redirect-authentication.guard';
 import { ProfileComponent } from './pages/profile/profile.component';
 import { CourseFormComponent } from './pages/course-form/course-form.component';
+import { teacherAuthGuard } from './guards/teacher-auth.guard';
 
 export const routes: Routes = [
     {
@@ -43,6 +44,6 @@ export const routes: Routes = [
         path: 'course/form',
         title: 'Criar curso',
         component: CourseFormComponent,
-        canActivate: [authorizationGuard]
+        canActivate: [authorizationGuard, teacherAuthGuard]
     },
 ];
