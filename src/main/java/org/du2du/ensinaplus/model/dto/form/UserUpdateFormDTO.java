@@ -16,7 +16,6 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 public class UserUpdateFormDTO {
-  private UUID uuid;
   @NotBlank(message = "Nome é obrigatório")
   private String name;
   @NotBlank(message = "Email é obrigatório")

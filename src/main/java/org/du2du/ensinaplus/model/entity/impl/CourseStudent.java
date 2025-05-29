@@ -9,12 +9,17 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MapsId;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Table(name = "tbcourse_student")
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 public class CourseStudent {
@@ -38,16 +43,8 @@ public class CourseStudent {
     @Column(name = "conclusion_date")
     private LocalDate conclusionDate;
 
-    public CourseStudent() {
+    @Column(name = "avaliation", columnDefinition = "text")
+    private String avaliation;
 
-    }
-
-    @Builder
-    CourseStudent(CourseStudentId id, User student, Course course, LocalDate matriculationDate, LocalDate conclusionDate) {
-        this.id = id;
-        this.student = student;
-        this.course = course;
-        this.matriculationDate = matriculationDate;
-        this.conclusionDate = conclusionDate;
-    }
+    private Integer stars;
 }

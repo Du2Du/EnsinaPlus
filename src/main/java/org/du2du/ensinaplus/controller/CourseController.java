@@ -5,6 +5,7 @@ import java.util.UUID;
 import org.du2du.ensinaplus.model.bo.impl.CourseBO;
 import org.du2du.ensinaplus.model.bo.impl.CourseStudentBO;
 import org.du2du.ensinaplus.model.dto.CourseStudentDTO;
+import org.du2du.ensinaplus.model.dto.form.CourseAvaliationFormDTO;
 import org.du2du.ensinaplus.model.dto.form.CourseFormDTO;
 import org.du2du.ensinaplus.model.enums.RoleEnum;
 import org.du2du.ensinaplus.security.RequireRole;
@@ -77,4 +78,11 @@ public class CourseController {
         return courseBO.generateCertification(headers, uuid);
     }
 
+    @POST
+    @Path("avaliate")
+    @RequireRole(RoleEnum.ROLE_STUDENT)
+    public Response avaliateCourse(CourseAvaliationFormDTO courseStudentDTO,
+            @Context HttpHeaders headers) {
+        return courseBO.avaliateCourse(courseStudentDTO, headers);
+    }
 }

@@ -19,6 +19,7 @@ import org.du2du.ensinaplus.model.dto.CourseDTO;
 import org.du2du.ensinaplus.model.dto.UserDTO;
 import org.du2du.ensinaplus.model.dto.base.ResponseDTO;
 import org.du2du.ensinaplus.model.dto.base.ValidateDTO;
+import org.du2du.ensinaplus.model.dto.form.CourseAvaliationFormDTO;
 import org.du2du.ensinaplus.model.dto.form.CourseFormDTO;
 import org.du2du.ensinaplus.model.entity.impl.Course;
 import org.du2du.ensinaplus.model.entity.impl.CourseStudent;
@@ -117,6 +118,45 @@ public class CourseBO extends AbstractBO<Course, CourseDAO> {
         } catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                     .entity(ResponseDTO.builder().title("Erro ao listar cursos").description(e.getMessage()).build())
+                    .build();
+        }
+    }
+
+    @Transactional
+    public Response avaliateCourse(CourseAvaliationFormDTO courseStudentDTO, HttpHeaders headers) {
+        ValidateDTO validateResp = validate(courseStudentDTO);
+        if (!validateResp.isOk())
+            return Response.status(Response.Status.BAD_REQUEST).entity(validateResp).build();
+
+        Course course = dao.findById(courseStudentDTO.getCourseUUID());
+        if (Objects.isNull(course))
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity(ResponseDTO.builder().title("Curso não encontrado").build())
+                    .build();
+
+        UserDTO userDTO = sessionBO.getSession(headers).getData();
+        CourseStudent courseStudent = courseStudentDAO.findEnroll(userDTO.getUuid(), course.getUuid());
+        if (Objects.isNull(courseStudent))
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity(ResponseDTO.builder().title("Você não está matriculado nesse curso").build())
+                    .build();
+
+        if (Objects.nonNull(courseStudent.getStars()))
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity(ResponseDTO.builder().title("Você já avaliou esse curso").build())
+                    .build();
+
+        courseStudent.setStars(courseStudentDTO.getStars());
+        courseStudent.setAvaliation(courseStudentDTO.getComment());
+        try {
+            courseStudentDAO.persistAndFlush(courseStudent);
+            return Response.status(Response.Status.OK)
+                    .entity(ResponseDTO.builder().title("Avaliação realizada com sucesso").build())
+                    .build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity(ResponseDTO.builder().title("Erro ao realizar avaliação").description(e.getMessage())
+                            .build())
                     .build();
         }
     }
