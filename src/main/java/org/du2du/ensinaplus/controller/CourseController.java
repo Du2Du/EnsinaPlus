@@ -1,5 +1,7 @@
 package org.du2du.ensinaplus.controller;
 
+import java.util.UUID;
+
 import org.du2du.ensinaplus.model.bo.impl.CourseBO;
 import org.du2du.ensinaplus.model.bo.impl.CourseStudentBO;
 import org.du2du.ensinaplus.model.dto.CourseStudentDTO;
@@ -12,6 +14,7 @@ import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.HttpHeaders;
@@ -65,4 +68,13 @@ public class CourseController {
     public Response listCreatedCourses(@Context HttpHeaders headers) {
         return courseBO.listCreatedCourses(headers);
     }
+
+    @GET
+    @Path("generate/{uuid}/certification")
+    @Produces("application/pdf")
+    @RequireRole(RoleEnum.ROLE_STUDENT)
+    public Response generateCertification(@PathParam("uuid") UUID uuid, @Context HttpHeaders headers) {
+        return courseBO.generateCertification(headers, uuid);
+    }
+
 }

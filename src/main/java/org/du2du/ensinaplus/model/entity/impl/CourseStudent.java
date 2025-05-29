@@ -5,8 +5,6 @@ import java.time.LocalDate;
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.IdClass;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MapsId;
@@ -23,30 +21,33 @@ public class CourseStudent {
 
     @EmbeddedId
     CourseStudentId id;
-    
+
     @ManyToOne
     @MapsId("student")
-    @JoinColumn(name ="student_uuid")
+    @JoinColumn(name = "student_uuid")
     private User student;
 
-    
     @ManyToOne
     @MapsId("course")
-    @JoinColumn(name ="course_uuid")
+    @JoinColumn(name = "course_uuid")
     private Course course;
 
     @Column(name = "matriculation_date")
     private LocalDate matriculationDate;
 
-    public CourseStudent(){
+    @Column(name = "conclusion_date")
+    private LocalDate conclusionDate;
+
+    public CourseStudent() {
 
     }
 
     @Builder
-    CourseStudent (CourseStudentId id, User student, Course course, LocalDate matriculationDate){
+    CourseStudent(CourseStudentId id, User student, Course course, LocalDate matriculationDate, LocalDate conclusionDate) {
         this.id = id;
         this.student = student;
         this.course = course;
         this.matriculationDate = matriculationDate;
+        this.conclusionDate = conclusionDate;
     }
 }
