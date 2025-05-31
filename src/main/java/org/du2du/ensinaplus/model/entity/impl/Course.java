@@ -28,7 +28,7 @@ public class Course extends AbstractEntity{
     @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "description", nullable = false)
+    @Column(name = "description", nullable = false, columnDefinition = "text")
     private String description;
 
     @Column(name = "main_picture", nullable = true, columnDefinition = "text")

@@ -3,6 +3,7 @@ package org.du2du.ensinaplus.model.bo.session;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -15,6 +16,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.ws.rs.core.Cookie;
+import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.NewCookie;
 
 @ApplicationScoped
@@ -67,7 +69,14 @@ public class SessionBO implements Serializable {
         }
     }
 
-    public NewCookie deleteSession( Cookie sessionCookie) {
+      public void updateSession(UserDTO dto, HttpHeaders headers){
+        Session session = getSession(headers.getCookies().get(SESSION_COOKIE_NAME));
+        if (Objects.isNull(session))return;
+        session.setData(dto);
+        sessionMap.put(session.getUuid(), session);
+    }
+
+        public NewCookie deleteSession( Cookie sessionCookie) {
         if (sessionCookie != null) {
             try {
                 UUID sessionId = UUID.fromString(sessionCookie.getValue());

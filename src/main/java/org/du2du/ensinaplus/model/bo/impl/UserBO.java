@@ -1,6 +1,7 @@
 package org.du2du.ensinaplus.model.bo.impl;
 
 import java.util.Objects;
+import java.util.UUID;
 
 import org.du2du.ensinaplus.model.bo.AbstractBO;
 import org.du2du.ensinaplus.model.dao.impl.UserDAO;
@@ -9,6 +10,7 @@ import org.du2du.ensinaplus.model.dto.UserLoginDTO;
 import org.du2du.ensinaplus.model.dto.base.ResponseDTO;
 import org.du2du.ensinaplus.model.dto.base.ValidateDTO;
 import org.du2du.ensinaplus.model.dto.form.UserFormDTO;
+import org.du2du.ensinaplus.model.dto.form.UserUpdateFormDTO;
 import org.du2du.ensinaplus.model.entity.impl.User;
 import org.du2du.ensinaplus.model.enums.RoleEnum;
 import org.du2du.ensinaplus.utils.PasswordUtils;
@@ -52,6 +54,41 @@ public class UserBO extends AbstractBO<User, UserDAO> {
               .description(e.getMessage()).build())
           .build();
     }
+  }
+
+  @Transactional
+  public Response saveUser(UUID uuid, UserUpdateFormDTO dto, HttpHeaders headers) {
+    ValidateDTO validateResp = validate(dto);
+    if (!validateResp.isOk())
+      return Response.status(Response.Status.BAD_REQUEST).entity(validateResp).build();
+
+    User userEntity = dao.findById(uuid);
+    if (Objects.isNull(userEntity))
+      return Response.status(Response.Status.CONFLICT)
+          .entity(ResponseDTO.builder().title("Erro ao salvar usuário!")
+              .description("Usuário não encontrado.").build())
+          .build();
+
+    userEntity.setName(dto.getName());
+    userEntity.setEmail(dto.getEmail());
+    userEntity.setPicture(dto.getPicture());
+    userEntity.setPhone(dto.getPhone());
+    try {
+      dao.persistAndFlush(userEntity);
+      UserDTO userDTO = userEntity.toDTO();
+      userDTO.setRole(sessionBO.getSession(headers).getData().getRole());
+      sessionBO.updateSession(userDTO, headers);
+      return Response.status(Response.Status.CREATED)
+          .entity(ResponseDTO.builder().title("Usuário salvo com sucesso!").data(dto).build())
+          .build();
+    } catch (Exception e) {
+      e.printStackTrace();
+      return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+          .entity(ResponseDTO.builder().title("Erro ao salvar usuário!")
+              .description(e.getMessage()).build())
+          .build();
+    }
+
   }
 
   public Response login(UserLoginDTO user, String role) {

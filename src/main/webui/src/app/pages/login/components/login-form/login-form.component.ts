@@ -64,6 +64,7 @@ export class LoginFormComponent {
           }, 2000)
         }),
         catchError((data: any) => {
+          this.isLoading.set(false);
           this.messageService.add({
             severity: 'error',
             key: 'toastMessage',
@@ -72,9 +73,6 @@ export class LoginFormComponent {
           });
 
           return of(null);
-        }),
-        finalize(() => {
-          this.isLoading.set(false);
         })
       )
       .subscribe()

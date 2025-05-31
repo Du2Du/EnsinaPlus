@@ -9,42 +9,42 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MapsId;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Table(name = "tbcourse_student")
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 public class CourseStudent {
 
     @EmbeddedId
     CourseStudentId id;
-    
+
     @ManyToOne
     @MapsId("student")
-    @JoinColumn(name ="student_uuid")
+    @JoinColumn(name = "student_uuid")
     private User student;
 
-    
     @ManyToOne
     @MapsId("course")
-    @JoinColumn(name ="course_uuid")
+    @JoinColumn(name = "course_uuid")
     private Course course;
 
     @Column(name = "matriculation_date")
     private LocalDate matriculationDate;
 
-    public CourseStudent(){
+    @Column(name = "conclusion_date")
+    private LocalDate conclusionDate;
 
-    }
+    @Column(name = "avaliation", columnDefinition = "text")
+    private String avaliation;
 
-    @Builder
-    CourseStudent (CourseStudentId id, User student, Course course, LocalDate matriculationDate){
-        this.id = id;
-        this.student = student;
-        this.course = course;
-        this.matriculationDate = matriculationDate;
-    }
+    private Integer stars;
 }

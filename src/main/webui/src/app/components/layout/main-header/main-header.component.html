@@ -1,0 +1,27 @@
+<div class="flex items-center m-left-side-header">
+    <img (click)="onLogoClick()" src="ensinaPlusLogo.svg" width="110px"
+        class="mb-1 cursor-pointer m-left-side-header__logo" alt="Logo EnsinaPlus">
+</div>
+
+<input type="text" pInputText class="w-[70%]" placeholder="Buscar novos cursos" (ngModelChange)="searchCourses($event)" [(ngModel)]="search" />
+
+<div class="m-left-side-header flex gap-3">
+    <p-avatar (click)="op.toggle($event)" [label]="user().name | spliceName" shape="circle" class="cursor-pointer" />
+    <p-popover #op>
+        <div class="flex user-panel flex-col">
+            <div class="user-panel__data gap-3 flex items-center">
+                <p-avatar [label]="user().name | spliceName" shape="circle" />
+                <div class="flex flex-col">
+                    <span class="text-sm text-stone-500">{{ user().name }}</span>
+                    <span class="text-sm text-stone-400">{{ user().email }}</span>
+                </div>
+            </div>
+            <p-divider />
+            <p-button icon="pi pi-user" label="Minha conta" variant="text" severity="secondary" class="w-full user-panel__buttons" (click)="redirectProfile()" />
+            <p-button icon="pi pi-sign-out" label="Sair" variant="text" severity="secondary" class="w-full user-panel__buttons" (click)="blockedPanel.set(true);authService.logout()" />
+        </div>
+    </p-popover>
+    <p-blockui [blocked]="blockedPanel()" />
+
+</div>
+

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Certificado de Conclusão</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="true"/>
+    <style>
+        @font-face {
+            font-family: 'Playfair Display';
+            src: url('../fonts/PlayfairDisplay-Medium.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+        
+        @page {
+            size: A4 landscape;
+            margin: 0;
+        }
+
+        body {
+            font-family: 'Playfair Display', serif;
+            width: 297mm;
+            height: 210mm;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .certificate-container {
+            width: 277mm;
+            height: 190mm;
+            padding: 10mm;
+            border: 2px solid #d4af37;
+            background-color: white;
+            text-align: center;
+            position: relative;
+        }
+
+        .certificate-border {
+            position: absolute;
+            top: 5mm;
+            left: 5mm;
+            right: 5mm;
+            bottom: 5mm;
+            border: 1px solid #d4af37;
+            pointer-events: none;
+        }
+
+        .certificate-title {
+            font-size: 48px;
+            font-weight: 700;
+            color: #333;
+            margin-top: 20mm;
+            margin-bottom: 15mm;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+        }
+
+        .certificate-text {
+            font-size: 20px;
+            line-height: 1.6;
+            color: #333;
+            margin-bottom: 10mm;
+        }
+
+        .student-name {
+            font-size: 32px;
+            font-weight: 700;
+            color: #333;
+            margin: 10mm 0;
+        }
+
+        .course-name {
+            font-weight: 700;
+        }
+
+        .certificate-footer {
+            margin-top: 15mm;
+            font-size: 16px;
+            color: #666;
+        }
+
+        .signature-line {
+            width: 60mm;
+            border-top: 1px solid #333;
+            margin: 20mm auto 5mm;
+        }
+
+        .signature-text {
+            font-size: 14px;
+            color: #666;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="certificate-container">
+        <div class="certificate-border"></div>
+        <div class="certificate-title">CERTIFICADO</div>
+        <div class="certificate-text">Este certificado comprova que</div>
+        <div class="student-name">__nome_estudante__</div>
+        <div class="certificate-text">
+            Concluiu com êxito o curso <span class="course-name">__nome_curso__</span> entre <br/>
+            __data_inicio__ e __data_final__.
+        </div>
+        <div class="certificate-footer">
+            Emitido em __data_emissao__.
+        </div>
+    </div>
+</body>
+
+</html>

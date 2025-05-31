@@ -20,14 +20,17 @@ export class PersistenceService {
 
   postRequest(url: string, body: any): Observable<Object> {
     return this.http.post(
-      this.baseUrl +url,
-      body
+      this.baseUrl + url,
+      body,
+      {
+        withCredentials: true
+      }
     )
   }
 
   putRequest(url: string, body: any): Observable<Object> {
     return this.http.put(
-      this.baseUrl +  url,
+      this.baseUrl + url,
       body,
       {
         withCredentials: true
