@@ -1,17 +1,17 @@
-import { PersistenceService } from './../../../services/persistence.service';
-import { Component, OnDestroy, OnInit, signal } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, Renderer2, signal, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AvatarModule } from 'primeng/avatar';
+import { BlockUIModule } from 'primeng/blockui';
+import { ButtonModule } from 'primeng/button';
+import { DividerModule } from 'primeng/divider';
 import { InputTextModule } from 'primeng/inputtext';
 import { PopoverModule } from 'primeng/popover';
-import { AuthService } from '../../../services/auth.service';
+import { catchError, debounceTime, fromEvent, Subscription, tap } from 'rxjs';
 import { UserDTO } from '../../../dtos/user.dto';
 import { SpliceNamePipe } from '../../../pipes/splice-name.pipe';
-import { DividerModule } from 'primeng/divider';
-import { ButtonModule } from 'primeng/button';
-import { BlockUIModule } from 'primeng/blockui';
-import { catchError, Subscriber, Subscription, tap } from 'rxjs';
+import { AuthService } from '../../../services/auth.service';
+import { PersistenceService } from './../../../services/persistence.service';
 
 @Component({
   selector: 'app-main-header',
@@ -22,9 +22,9 @@ import { catchError, Subscriber, Subscription, tap } from 'rxjs';
   templateUrl: './main-header.component.html',
   styleUrl: './main-header.component.scss'
 })
-export class MainHeaderComponent implements OnInit, OnDestroy {
+export class MainHeaderComponent implements OnInit, AfterViewInit, OnDestroy {
 
-  constructor(public router: Router, public authService: AuthService, private persistenceService: PersistenceService) {
+  constructor(private r2: Renderer2, public router: Router, public authService: AuthService, private persistenceService: PersistenceService) {
     this.subscriber = authService.getUser().subscribe(user => this.user.set(user));
   }
 
@@ -33,13 +33,21 @@ export class MainHeaderComponent implements OnInit, OnDestroy {
   user = signal<UserDTO>({} as UserDTO);
   blockedPanel = signal(false);
   private subscriber: Subscription;
+  private inputSubscriber!: Subscription;
 
   ngOnInit(): void {
     this.loadTabs();
   }
 
+  ngAfterViewInit(): void {
+    this.inputSubscriber = fromEvent(this.r2.selectRootElement('#inputSearch', true), 'input').pipe(debounceTime(500)).subscribe((event: any) => {
+      this.searchCourses(event.target.value);
+    });
+  }
+
   ngOnDestroy(): void {
     this.subscriber.unsubscribe();
+    this.inputSubscriber.unsubscribe();
   }
 
   private loadTabs() {

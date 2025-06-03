@@ -8,6 +8,8 @@ import { redirectAuthenticationGuard } from './guards/redirect-authentication.gu
 import { ProfileComponent } from './pages/profile/profile.component';
 import { CourseFormComponent } from './pages/course-form/course-form.component';
 import { teacherAuthGuard } from './guards/teacher-auth.guard';
+import { CourseSearchComponent } from './pages/course-search/course-search.component';
+import { studentAuthGuard } from './guards/student-auth.guard';
 
 export const routes: Routes = [
     {
@@ -39,6 +41,12 @@ export const routes: Routes = [
         title: 'Perfil',
         component: ProfileComponent,
         canActivate: [authorizationGuard]
+    },
+    {
+        path: 'search/:search',
+        title: 'Buscar Cursos',
+        component: CourseSearchComponent,
+        canActivate: [authorizationGuard, studentAuthGuard]
     },
     {
         path: 'course/form',
