@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { Observable, catchError, map, of, tap } from 'rxjs';
+import { Observable, catchError, map, of, switchMap, tap } from 'rxjs';
 import { UserDTO } from '../dtos/user.dto';
 import { setUser } from '../store/user.actions';
 import { State, userSelector } from '../store/user.reducer';
 import { PersistenceService } from './persistence.service';
-import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -13,20 +13,8 @@ import { Router } from '@angular/router';
 export class AuthService {
 
 
-  constructor(private persistenceService: PersistenceService, private store: Store<State>, private router: Router) {    
-    this.isAuthenticated().pipe(
-      tap(isAuthenticated => {
-        if (!isAuthenticated) return;
-        this.getUser().subscribe(user => !user.uuid && this.persistenceService.getRequest('/v1/user/dto').pipe(
-          map(user => user),
-          catchError(() => of({} as UserDTO))
-        ).subscribe((user) => {
-          if (user) {
-            this.setUser(user as UserDTO);
-          }
-        }))
-      })
-    ).subscribe()
+  constructor(private persistenceService: PersistenceService, private store: Store<State>, private router: Router) {
+    this.findUser();
   }
 
   setUser(user: UserDTO) {
@@ -34,7 +22,14 @@ export class AuthService {
   }
 
   getUser(): Observable<UserDTO> {
-    return this.store.select(userSelector);
+    return this.store.select(userSelector).pipe(
+      switchMap(userDTO => {
+        if (!userDTO.uuid) {
+          return this.searchUser();
+        }
+        return of(userDTO);
+      })
+    );
   }
 
   isAuthenticated(): Observable<boolean> {
@@ -44,7 +39,7 @@ export class AuthService {
     )
   }
 
-  logout(){
+  logout() {
     this.persistenceService.getRequest('/v1/auth/logout').pipe(
       map(() => true),
       catchError(() => of(false))
@@ -53,4 +48,24 @@ export class AuthService {
     })
   }
 
+  private findUser() {
+    return this.isAuthenticated().pipe(
+      tap(isAuthenticated => {
+        if (!isAuthenticated) return;
+        return this.searchUser();
+      })
+    ).subscribe();
+  }
+
+  searchUser(): Observable<UserDTO> {
+    return this.persistenceService.getRequest('/v1/user/dto').pipe(
+      tap(userDTO => {
+        if (userDTO) {
+          this.setUser(userDTO as UserDTO);
+        }
+      }),
+      map(userDTO => userDTO as UserDTO),
+      catchError(() => of({} as UserDTO))
+    );
+  }
 }
