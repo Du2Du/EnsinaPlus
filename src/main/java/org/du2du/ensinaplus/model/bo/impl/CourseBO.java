@@ -45,7 +45,7 @@ public class CourseBO extends AbstractBO<Course, CourseDAO> {
     CourseStudentDAO courseStudentDAO;
 
     @Transactional
-    public Response createCourse(CourseFormDTO course){
+    public Response createCourse(CourseFormDTO course,  HttpHeaders headers){
         ValidateDTO validateResp = validate(course);
         if (!validateResp.isOk())
             return Response.status(Response.Status.BAD_REQUEST).entity(validateResp).build();
@@ -231,7 +231,7 @@ public class CourseBO extends AbstractBO<Course, CourseDAO> {
                         .build();
             }
 
-            UserDTO userDTO = sessionBO.getSession(headers).getData();
+            UserDTO userDTO = sessionBO.getSession(headers.getCookies().get((SESSION_COOKIE_NAME))).getData();
             CourseStudent courseStudent = courseStudentDAO.findEnroll(userDTO.getUuid(), course.getUuid());
             String htmlContent = replaceCertificateVariables(htmlTemplate, userDTO.getName(), course,
                     courseStudent.getMatriculationDate(), courseStudent.getConclusionDate());

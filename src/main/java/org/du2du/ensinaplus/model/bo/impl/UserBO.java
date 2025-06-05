@@ -76,7 +76,7 @@ public class UserBO extends AbstractBO<User, UserDAO> {
     try {
       dao.persistAndFlush(userEntity);
       UserDTO userDTO = userEntity.toDTO();
-      userDTO.setRole(sessionBO.getSession(headers).getData().getRole());
+      userDTO.setRole(sessionBO.getSession(headers.getCookies().get((SESSION_COOKIE_NAME))).getData().getRole());
       sessionBO.updateSession(userDTO, headers);
       return Response.status(Response.Status.CREATED)
           .entity(ResponseDTO.builder().title("Usuário salvo com sucesso!").data(dto).build())

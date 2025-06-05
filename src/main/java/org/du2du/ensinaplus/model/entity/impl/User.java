@@ -6,7 +6,6 @@ import java.util.UUID;
 
 import org.du2du.ensinaplus.model.dto.UserDTO;
 import org.du2du.ensinaplus.model.entity.AbstractEntity;
-import org.du2du.ensinaplus.model.enums.RoleEnum;
 import org.du2du.ensinaplus.model.enums.UserTypeEnum;
 
 import jakarta.persistence.Column;

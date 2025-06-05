@@ -29,6 +29,7 @@ public class UserController {
 
   @POST
   @Path("create")
+  @NotRequiredAudit
   public Response createUser(UserFormDTO user) {
     return bo.createUser(user);
   }

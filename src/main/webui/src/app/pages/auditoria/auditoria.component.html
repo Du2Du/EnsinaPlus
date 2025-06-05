@@ -1,1 +1,26 @@
-<p>auditoria works!</p>
+<app-main-header/>
+<main class="mainContent">
+    <div class="card">
+        <p-table [value]="logs()" [tableStyle]="{ 'min-width': '50rem'}">
+            <ng-template #header>
+                <tr>
+                    <th pSortableColumn="method" > MÉTODO <p-sortIcon field="method"/> </th>
+                    <th pSortableColumn="url">URL <p-sortIcon field="url"/></th>
+                    <th pSortableColumn="user">USUÁRIO <p-sortIcon field="user"/></th>
+                    <th pSortableColumn="description">DESCRIÇÃO <p-sortIcon field="description"/></th>
+                    <th pSortableColumn="date">DATA <p-sortIcon field="date"/></th>
+                </tr>
+            </ng-template>
+            <ng-template #body let-log>
+                    <tr>
+                        <td>{{ log.method }}</td>
+                        <td>{{ log.url }}</td>
+                        <td>{{ log.uuidUser }}</td>
+                        <td>{{ log.description }}</td>
+                        <td>{{ log.createdAt | date: 'short'}}</td>
+                    </tr>
+            </ng-template>
+        </p-table>
+        <!-- <p-paginator (onPageChange)="onPageChange($event)" [first]="first" [rows]="rows" [totalRecords]="120" [rowsPerPageOptions]="[10, 20, 30]" /> -->
+    </div>
+</main>

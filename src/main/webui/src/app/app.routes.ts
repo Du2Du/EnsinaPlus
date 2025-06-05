@@ -8,6 +8,8 @@ import { redirectAuthenticationGuard } from './guards/redirect-authentication.gu
 import { ProfileComponent } from './pages/profile/profile.component';
 import { CourseFormComponent } from './pages/course-form/course-form.component';
 import { teacherAuthGuard } from './guards/teacher-auth.guard';
+import { AuditoriaComponent } from './pages/auditoria/auditoria.component';
+import { adminAuthGuard } from './guards/admin-auth.guard';
 
 export const routes: Routes = [
     {
@@ -46,4 +48,10 @@ export const routes: Routes = [
         component: CourseFormComponent,
         canActivate: [authorizationGuard, teacherAuthGuard]
     },
+    {
+        path:'audit',
+        title: 'Auditoria',
+        component: AuditoriaComponent,
+        canActivate: [authorizationGuard]
+    }
 ];

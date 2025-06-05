@@ -49,7 +49,14 @@ public class Log {
         this.description = description;
         this.createdAt = createdAt;
     }
-
+    
+    public Log( String method, String url, UUID uuidUser, String description, LocalDateTime createdAt) {
+        this.method = method;
+        this.url = url;
+        this.uuidUser = uuidUser;
+        this.description = description;
+        this.createdAt = createdAt;
+    }
     public Log() {
     }
 
