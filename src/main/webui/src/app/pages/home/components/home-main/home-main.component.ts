@@ -1,13 +1,12 @@
-import { catchError, finalize, tap } from 'rxjs';
-import { PersistenceService } from './../../../../services/persistence.service';
 import { Component, signal } from '@angular/core';
 import { MessageModule } from 'primeng/message';
+import { catchError, finalize, tap } from 'rxjs';
 import { CourseCardComponent } from "../../../../components/output/course-card/course-card.component";
-import { MoreItemsLoaderComponent } from '../../../../components/help/more-items-loader/more-items-loader.component';
+import { PersistenceService } from './../../../../services/persistence.service';
 
 @Component({
   selector: 'app-home-main',
-  imports: [MessageModule, CourseCardComponent, MoreItemsLoaderComponent],
+  imports: [MessageModule, CourseCardComponent],
   host: { class: 'mt-3 block w-[80%] h-full' },
   templateUrl: './home-main.component.html',
   styleUrl: './home-main.component.scss'
