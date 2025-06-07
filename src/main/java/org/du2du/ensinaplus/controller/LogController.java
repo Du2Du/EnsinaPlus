@@ -8,6 +8,7 @@ import org.du2du.ensinaplus.security.RequiredAuthentication;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.Response;
 
 @Path("v1/log")
@@ -19,7 +20,7 @@ public class LogController {
     @Path("list")
     @RequiredAuthentication
     @RequireRole(RoleEnum.ROLE_TEACHER)
-    public Response listAllLogs(){
-        return logBO.listAllLogs();
+    public Response listAllLogs(@QueryParam("page") Integer page){
+        return logBO.listAllLogs(page);
     }
 }

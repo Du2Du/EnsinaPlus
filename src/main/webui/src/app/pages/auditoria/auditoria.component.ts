@@ -18,20 +18,28 @@ export class AuditoriaComponent {
 
   searchingLogs = signal(false);
   logs = signal <any[]> ([]);
+  totalElements: number = 0;
 
   ngOnInit(): void {
-    this.searchLogs();
+    this.searchLogs(0);
   }
 
-  searchLogs() {
+  searchLogs(page:number) {
+    console.log(page)
     this.searchingLogs.set(true);
-    this.persistenceService.getRequest("/v1/log/list").pipe(tap((response: any) => {
-      this.logs.set(response.data);
+    this.persistenceService.getRequest("/v1/log/list?page="+page).pipe(tap((response: any) => {
+      this.logs.set(response.data.dtos);
+      this.totalElements = response.data.totalElements;
     }), catchError(error => {
       this.logs.set([]);
       return error;
     }), finalize(() => {
       this.searchingLogs.set(false);
     })).subscribe();
+  }
+
+  onPageChange($event: any){
+      this.searchLogs($event.page)
+      console.log($event)
   }
 }

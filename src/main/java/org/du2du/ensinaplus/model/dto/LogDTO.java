@@ -27,7 +27,15 @@ public class LogDTO {
     private String description;
 
     private LocalDateTime createdAt;
+    public LogDTO(Log log) {
+        this.uuid = log.getUuid();
+        this.method = log.getMethod();
+        this.url = log.getUrl();
+        this.uuidUser = log.getUuidUser();
+        this.description = log.getDescription();
+        this.createdAt = log.getCreatedAt();
 
+    }
     public Log toEntity(){
         return Log.builder()
             .method(method)
