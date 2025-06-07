@@ -25,7 +25,6 @@ export class AuditoriaComponent {
   }
 
   searchLogs(page:number) {
-    console.log(page)
     this.searchingLogs.set(true);
     this.persistenceService.getRequest("/v1/log/list?page="+page).pipe(tap((response: any) => {
       this.logs.set(response.data.dtos);
@@ -40,6 +39,5 @@ export class AuditoriaComponent {
 
   onPageChange($event: any){
       this.searchLogs($event.page)
-      console.log($event)
   }
 }
