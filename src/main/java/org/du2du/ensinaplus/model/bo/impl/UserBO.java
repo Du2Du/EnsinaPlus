@@ -25,6 +25,8 @@ import jakarta.ws.rs.core.Response;
 @Dependent
 public class UserBO extends AbstractBO<User, UserDAO> {
 
+  private static final String SESSION_COOKIE_NAME = "ensina-plus-session";
+
   @Transactional
   public Response createUser(UserFormDTO user) {
     ValidateDTO validateResp = validate(user);
@@ -74,7 +76,7 @@ public class UserBO extends AbstractBO<User, UserDAO> {
     try {
       dao.persistAndFlush(userEntity);
       UserDTO userDTO = userEntity.toDTO();
-      userDTO.setRole(sessionBO.getSession(headers).getData().getRole());
+      userDTO.setRole(sessionBO.getSession(headers.getCookies().get((SESSION_COOKIE_NAME))).getData().getRole());
       sessionBO.updateSession(userDTO, headers);
       return Response.status(Response.Status.CREATED)
           .entity(ResponseDTO.builder().title("Usuário salvo com sucesso!").data(dto).build())
@@ -113,7 +115,7 @@ public class UserBO extends AbstractBO<User, UserDAO> {
   }
 
   public Response getUserDTO(@Context HttpHeaders headers) {
-    var session = sessionBO.getSession(headers);
+    var session = sessionBO.getSession(headers.getCookies().get((SESSION_COOKIE_NAME)));
     return Response.ok().entity(Objects.isNull(session) ? null : session.getData()).build();
   }
 

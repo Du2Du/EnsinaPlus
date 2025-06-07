@@ -12,8 +12,10 @@ import org.du2du.ensinaplus.security.RequireRole;
 
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
+import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
@@ -31,7 +33,7 @@ public class CourseController {
 
     @Inject
     CourseStudentBO courseStudentBO;
-
+    
     @POST
     @RequireRole(RoleEnum.ROLE_TEACHER)
     @Path("create")
@@ -77,6 +79,20 @@ public class CourseController {
     @RequireRole(RoleEnum.ROLE_TEACHER)
     public Response listCreatedCourses(@Context HttpHeaders headers) {
         return courseBO.listCreatedCourses(headers);
+    }
+
+     @PUT
+    @RequireRole(RoleEnum.ROLE_TEACHER)
+    @Path("update/{uuid}")
+    public Response updateCourse(@PathParam("uuid") UUID uuid, CourseFormDTO course, @Context HttpHeaders headers){
+        return courseBO.updateCourse(course, headers, uuid);
+    }
+
+    @DELETE
+    @RequireRole(RoleEnum.ROLE_TEACHER)
+    @Path("delete/{uuid}")
+    public Response updateCourse(@PathParam("uuid") UUID uuid,  @Context HttpHeaders headers){
+        return courseBO.deleteCourse(uuid, headers);
     }
 
     @GET

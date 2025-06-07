@@ -7,6 +7,7 @@ import org.du2du.ensinaplus.model.dto.UserLoginDTO;
 import org.du2du.ensinaplus.model.dto.form.UserFormDTO;
 import org.du2du.ensinaplus.model.dto.form.UserUpdateFormDTO;
 import org.du2du.ensinaplus.model.enums.RoleEnum;
+import org.du2du.ensinaplus.security.NotRequiredAudit;
 import org.du2du.ensinaplus.security.RequiredAuthentication;
 
 import jakarta.inject.Inject;
@@ -27,6 +28,7 @@ public class UserController {
 
   @POST
   @Path("create")
+  @NotRequiredAudit
   public Response createUser(UserFormDTO user) {
     return bo.createUser(user);
   }
@@ -40,12 +42,14 @@ public class UserController {
 
   @POST
   @Path("login/teacher")
+  @NotRequiredAudit
   public Response loginTeacher(UserLoginDTO user) {
     return bo.login(user, RoleEnum.ROLE_TEACHER);
   }
 
   @POST
   @Path("login/student")
+  @NotRequiredAudit
   public Response loginStudent(UserLoginDTO user) {
     return bo.login(user, RoleEnum.ROLE_STUDENT);
   }

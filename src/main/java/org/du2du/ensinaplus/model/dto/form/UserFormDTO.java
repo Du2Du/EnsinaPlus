@@ -1,7 +1,6 @@
 package org.du2du.ensinaplus.model.dto.form;
 
 import org.du2du.ensinaplus.model.entity.impl.User;
-import org.du2du.ensinaplus.model.enums.RoleEnum;
 import org.du2du.ensinaplus.model.enums.UserTypeEnum;
 import org.du2du.ensinaplus.utils.PasswordUtils;
 

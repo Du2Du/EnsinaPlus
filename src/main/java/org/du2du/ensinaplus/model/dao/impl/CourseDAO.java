@@ -14,21 +14,24 @@ import jakarta.enterprise.context.Dependent;
 @Dependent
 public class CourseDAO extends AbstractDAO<Course> {
 
-    public Course findByName(String name) {
-        return find("name LIKE '%' || :name || '%'", Map.of("name", name)).firstResult();
+     public List<Course> listAllNotDeleted(){
+        return find("deleted = false ").list();
     }
 
-    public List<Course> listByName(String name) {
-        return find("name LIKE '%' || :name || '%'", Map.of("name", name)).list();
+    public Course findByName(String name){
+        return find("name LIKE '%' || :name || '%' AND deleted = false", Map.of("name", name)).firstResult();
     }
 
-    public List<Course> listCreatedCourses(UUID uuidUser) {
-        return find("owner.uuid = :uuidUser", Map.of("uuidUser", uuidUser)).list();
+    public List<Course> listByName(String name){
+        return find("name LIKE '%' || :name || '%' AND deleted = false ", Map.of("name", name)).list();
+    }
+   
+    public List<Course> listCreatedCourses (UUID uuidUser){
+        return find("owner.uuid = :uuidUser AND deleted = false", Map.of("uuidUser", uuidUser)).list();
     }
 
-    public List<Course> listMyCourses(UUID uuidUser) {
-        return find("Select c from Course c  JOIN c.students s WHERE s.id.student = :uuidUser ",
-                Map.of("uuidUser", uuidUser)).list();
+    public List<Course> listMyCourses (UUID uuidUser){
+        return find("Select c from Course c  JOIN c.students s WHERE s.id.student = :uuidUser AND c.deleted = false", Map.of("uuidUser", uuidUser)).list();
     }
 
     public List<CourseDTO> search(String search, Integer page, Integer limit) {

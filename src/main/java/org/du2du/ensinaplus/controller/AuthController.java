@@ -13,6 +13,8 @@ import jakarta.ws.rs.core.Response;
 @Path("v1/auth")
 public class AuthController {
 
+    private static final String SESSION_COOKIE_NAME = "ensina-plus-session";
+
     @Inject
     SessionBO sessionBO;
 
@@ -20,7 +22,7 @@ public class AuthController {
     @RequiredAuthentication
     @Path("/validate")
     public Response validate(@Context HttpHeaders headers) {
-        return sessionBO.getSession(headers) != null ? Response.ok().build()
+        return sessionBO.getSession(headers.getCookies().get((SESSION_COOKIE_NAME))) != null ? Response.ok().build()
                 : Response.status(Response.Status.UNAUTHORIZED).build();
     }
 
@@ -28,6 +30,6 @@ public class AuthController {
     @RequiredAuthentication
     @Path("/logout")
     public Response logout(@Context HttpHeaders headers) {
-        return Response.ok(sessionBO.deleteSession(headers)).build();
+        return Response.ok(sessionBO.deleteSession(headers.getCookies().get((SESSION_COOKIE_NAME)))).build();
     }
 }

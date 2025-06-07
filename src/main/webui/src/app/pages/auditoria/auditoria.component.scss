@@ -1,0 +1,14 @@
+.mainContent{
+    width: 100%;
+    margin-top: 2%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    & .card{
+        padding:2rem;
+        border-radius: 8px;
+        color: var(--e-emerald-500);
+        background-color: white;
+    }
+}

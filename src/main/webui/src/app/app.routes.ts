@@ -10,6 +10,8 @@ import { CourseFormComponent } from './pages/course-form/course-form.component';
 import { teacherAuthGuard } from './guards/teacher-auth.guard';
 import { CourseSearchComponent } from './pages/course-search/course-search.component';
 import { studentAuthGuard } from './guards/student-auth.guard';
+import { AuditoriaComponent } from './pages/auditoria/auditoria.component';
+import { adminAuthGuard } from './guards/admin-auth.guard';
 
 export const routes: Routes = [
     {
@@ -54,4 +56,10 @@ export const routes: Routes = [
         component: CourseFormComponent,
         canActivate: [authorizationGuard, teacherAuthGuard]
     },
+    {
+        path:'audit',
+        title: 'Auditoria',
+        component: AuditoriaComponent,
+        canActivate: [authorizationGuard]
+    }
 ];

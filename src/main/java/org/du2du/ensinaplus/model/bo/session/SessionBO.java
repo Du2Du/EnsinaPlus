@@ -56,8 +56,7 @@ public class SessionBO implements Serializable {
     /**
      * Recupera a sessão do usuário a partir do cookie de sessão
      */
-    public Session getSession(HttpHeaders headers) {
-        Cookie sessionCookie = headers.getCookies().get(SESSION_COOKIE_NAME);
+    public Session getSession(Cookie sessionCookie) {
         if (sessionCookie == null) {
             return null;
         }
@@ -70,16 +69,14 @@ public class SessionBO implements Serializable {
         }
     }
 
-
-    public void updateSession(UserDTO dto, HttpHeaders headers){
-        Session session = getSession(headers);
+      public void updateSession(UserDTO dto, HttpHeaders headers){
+        Session session = getSession(headers.getCookies().get(SESSION_COOKIE_NAME));
         if (Objects.isNull(session))return;
         session.setData(dto);
         sessionMap.put(session.getUuid(), session);
     }
 
-    public NewCookie deleteSession(HttpHeaders headers) {
-        Cookie sessionCookie = headers.getCookies().get(SESSION_COOKIE_NAME);
+        public NewCookie deleteSession( Cookie sessionCookie) {
         if (sessionCookie != null) {
             try {
                 UUID sessionId = UUID.fromString(sessionCookie.getValue());
