@@ -72,7 +72,7 @@ public class CourseController {
         return courseBO.listCreatedCourses(headers);
     }
 
-     @PUT
+    @PUT
     @RequireRole(RoleEnum.ROLE_TEACHER)
     @Path("update/{uuid}")
     public Response updateCourse(@PathParam("uuid") UUID uuid, CourseFormDTO course, @Context HttpHeaders headers){

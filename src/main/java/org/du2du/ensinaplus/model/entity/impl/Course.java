@@ -41,6 +41,9 @@ public class Course extends AbstractEntity{
     @OneToMany (mappedBy = "course", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY )
     private List<CourseStudent> students;
 
+    @OneToMany(mappedBy = "course", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    private List<Module> modules;
+
     public Course(){
         super();
     }
