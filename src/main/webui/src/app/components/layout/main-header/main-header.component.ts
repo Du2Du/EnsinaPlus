@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, Renderer2, signal, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, input, model, OnChanges, OnDestroy, OnInit, output, Renderer2, signal, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AvatarModule } from 'primeng/avatar';
@@ -22,14 +22,16 @@ import { PersistenceService } from './../../../services/persistence.service';
   templateUrl: './main-header.component.html',
   styleUrl: './main-header.component.scss'
 })
-export class MainHeaderComponent implements OnInit, AfterViewInit, OnDestroy {
+export class MainHeaderComponent implements OnInit, AfterViewInit, OnDestroy, OnChanges {
 
   constructor(private r2: Renderer2, public router: Router, public authService: AuthService, private persistenceService: PersistenceService) {
     this.subscriber = authService.getUser().subscribe(user => this.user.set(user));
   }
 
+  searchCoursesEvent = output<string>();
   tabs = signal<any[]>([]);
-  search = signal<string>('');
+  search = input<string>('');
+  searchInput = signal<string>('');
   user = signal<UserDTO>({} as UserDTO);
   blockedPanel = signal(false);
   private subscriber: Subscription;
@@ -39,8 +41,13 @@ export class MainHeaderComponent implements OnInit, AfterViewInit, OnDestroy {
     this.loadTabs();
   }
 
+  ngOnChanges(): void {
+    if (this.search() !== this.searchInput()) this.searchInput.set(this.search());
+  }
+
   ngAfterViewInit(): void {
     this.inputSubscriber = fromEvent(this.r2.selectRootElement('#inputSearch', true), 'input').pipe(debounceTime(500)).subscribe((event: any) => {
+      this.searchCoursesEvent.emit(this.searchInput())
       this.searchCourses(event.target.value);
     });
   }
@@ -64,7 +71,8 @@ export class MainHeaderComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   searchCourses(event: string) {
-    this.router.navigate(['/search', event]);
+    if (!this.router.url.includes('/search'))
+      this.router.navigate(['/search', event]);
   }
 
   redirectProfile() {

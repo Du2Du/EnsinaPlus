@@ -8,7 +8,7 @@ import { MoreItemsLoaderComponent } from '../../../../components/help/more-items
 @Component({
   selector: 'app-home-main',
   imports: [MessageModule, CourseCardComponent, MoreItemsLoaderComponent],
-  host: { class: 'mt-3 block w-[50%] h-full' },
+  host: { class: 'mt-3 block w-[80%] h-full' },
   templateUrl: './home-main.component.html',
   styleUrl: './home-main.component.scss'
 })

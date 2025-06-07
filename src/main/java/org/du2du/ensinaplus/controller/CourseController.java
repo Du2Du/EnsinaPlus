@@ -17,6 +17,7 @@ import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MediaType;
@@ -54,6 +55,14 @@ public class CourseController {
     @RequireRole(RoleEnum.ROLE_STUDENT)
     public Response listAllCourses() {
         return courseBO.listAllCourses();
+    }
+
+    @GET
+    @Path("search")
+    @RequireRole(RoleEnum.ROLE_STUDENT)
+    public Response searchCourses(@QueryParam("search") String search, @QueryParam("page") Integer page,
+            @QueryParam("limit") Integer limit) {
+        return courseBO.searchCourse(search, page, limit);
     }
 
     @GET

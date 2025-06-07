@@ -1,22 +1,14 @@
-<span class="text-2xl"><b>Cursos matriculados</b></span>
+<span class="text-2xl mt-4"><b>Cursos matriculados</b></span>
 
 <div class="item-list">
 
   @if(courses().length === 0){
   <p-message severity="info" class="mt-5 block">Nenhum curso matriculado</p-message>
   }@else{
-  @for (course of courses(); track course.uuid) {
-  <app-course-card [course]="course" />
-  }
+  <div class="flex gap-4 flex-wrap">
+    @for (course of courses(); track course.uuid) {
+    <app-course-card [matriculated]="true" [course]="course" />
+    }
+  </div>
   }
 </div>
-
-@if (hasMoreItems()) {
-@defer (on viewport; prefetch on idle) {
-<app-more-items-loader (load)="loadMore()"></app-more-items-loader>
-} @placeholder {
-<div #loader class="loader-placeholder">
-  Carregando mais itens...
-</div>
-}
-}

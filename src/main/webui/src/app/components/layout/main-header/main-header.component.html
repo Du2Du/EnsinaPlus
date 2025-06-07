@@ -3,8 +3,7 @@
         class="mb-1 cursor-pointer m-left-side-header__logo" alt="Logo EnsinaPlus">
 </div>
 
-<input type="text" pInputText class="w-[70%]" placeholder="Buscar novos cursos" id="inputSearch"
-    [(ngModel)]="search" />
+<input type="text" pInputText class="w-[70%]" placeholder="Buscar novos cursos" id="inputSearch" [(ngModel)]="searchInput" />
 
 <div class="m-left-side-header flex gap-3">
     <p-avatar (click)="op.toggle($event)" [label]="user().name | spliceName" shape="circle" class="cursor-pointer" />

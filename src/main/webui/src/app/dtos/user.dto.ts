@@ -7,5 +7,4 @@ export interface UserDTO {
     uuid: string,
     phone?: string,
     picture?: string;
-    token?: string; // Token de autenticação JWT
 }

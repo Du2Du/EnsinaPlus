@@ -16,4 +16,5 @@ public class ResponseDTO<T> {
   private String title;
   private String description;
   private T data;
+  private Long total;
 }
