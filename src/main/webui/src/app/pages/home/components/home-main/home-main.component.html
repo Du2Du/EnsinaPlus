@@ -1,13 +1,14 @@
-<span class="text-2xl"><b>Cursos matriculados</b></span>
+<span class="text-2xl mt-4"><b>Cursos matriculados</b></span>
 
-@if(courses().length === 0){
-<p-message severity="info" class="mt-5 block">Nenhum curso matriculado</p-message>
-}@else{
-@defer(on viewport){
-@for(course of courses(); track $index){
-<app-course-card [course]="course" />
-}
-}@placeholder {
-  <div>Large component placeholder</div>
-}
-}
+<div class="item-list">
+
+  @if(courses().length === 0){
+  <p-message severity="info" class="mt-5 block">Nenhum curso matriculado</p-message>
+  }@else{
+  <div class="flex gap-4 flex-wrap">
+    @for (course of courses(); track course.uuid) {
+    <app-course-card [matriculated]="true" [course]="course" />
+    }
+  </div>
+  }
+</div>

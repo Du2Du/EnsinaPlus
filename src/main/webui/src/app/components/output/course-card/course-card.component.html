@@ -1,1 +1,18 @@
-<p>course-card works!</p>
+<p-card [style]="{ width: '25rem', overflow: 'hidden' }">
+  <ng-template #header>
+    <img alt="Curso" [src]="course().mainPicture" width="400px" height="225px" />
+  </ng-template>
+  <ng-template #title> {{course().name}} </ng-template>
+  <p tooltipPosition="bottom" [pTooltip]="course().description" class="course-description">
+    {{course().description}}
+  </p>
+  <ng-template #footer>
+    <div class="flex gap-4 mt-1">
+      @if(!matriculated() && !course().matriculado){
+      <p-button label="Matricular-se" class="w-full" styleClass="w-full" (click)="enroll.emit(course())" />
+      }@else {
+      <p-button label="Acessar" class="w-full" styleClass="w-full" (click)="accessCourse()" />
+      }
+    </div>
+  </ng-template>
+</p-card>

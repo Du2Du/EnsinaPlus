@@ -90,7 +90,20 @@ public class CourseBO extends AbstractBO<Course, CourseDAO> {
         }
     }
 
-    public Response listEnrollmentCourses(HttpHeaders headers){
+    public Response searchCourse(String search, Integer page, Integer limit) {
+        List<CourseDTO> coursesDTO = dao.search(search, page, limit);
+        if (coursesDTO.isEmpty())
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity(ResponseDTO.builder().title("Nenhum curso encontrado").data(List.of()).total(0L).build())
+                    .build();
+
+        return Response.status(Response.Status.OK)
+                .entity(ResponseDTO.builder().title("Cursos encontrados com sucesso").data(coursesDTO)
+                        .total(dao.countOfSearch(search)).build())
+                .build();
+    }
+
+    public Response listEnrollmentCourses(HttpHeaders headers) {
         List<Course> coursesEntity = dao.listMyCourses(sessionBO.getSession(headers.getCookies().get((SESSION_COOKIE_NAME))).getData().getUuid());
         List<CourseDTO> coursesDTO = new ArrayList<>();
         coursesEntity.forEach((course) -> {

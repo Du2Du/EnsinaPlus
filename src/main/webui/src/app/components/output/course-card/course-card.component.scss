@@ -1,0 +1,25 @@
+:host img{
+    width: 400px;
+    height: 225px;
+    object-fit: cover;
+}
+
+:host{
+  height: 450px;
+  overflow: hidden;
+}
+
+:host p.course-description{
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+:host ::ng-deep .p-card{
+  height: 100%;
+
+  & .p-card-body, & .p-card-content{
+    height: 100%;
+  }
+}

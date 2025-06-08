@@ -1,0 +1,22 @@
+<app-main-header [search]="search()" (searchCoursesEvent)="searchCoursesEvent($event)" />
+<div class="mt-5 w-[80%] m-auto">
+  <span class="text-2xl mt-4"><b>Busca de cursos</b></span>
+  @if(courses().length === 0) {
+  <p-message severity="info">
+    Nenhum curso encontrado.
+  </p-message>
+  }@else{
+  <div class="flex gap-4 flex-wrap">
+    @for(course of courses(); track course.uuid) {
+    <app-course-card (enroll)="enroll($event)" [course]="course" />
+    }
+  </div>
+  <p-paginator class="mt-5 block" [alwaysShow]="false" (onPageChange)="onPageChange($event)" [first]="page"
+    [rows]="limit" [totalRecords]="totalRecords" />
+  }
+</div>
+
+<p-blockui [autoZIndex]="999999" [blocked]="blockPage()" styleClass="flex items-center justify-center">
+  <i class="pi pi-spin pi-spinner" style="font-size: 2rem"></i>
+</p-blockui>
+<p-toast key="message" position="top-center"/>

@@ -23,7 +23,7 @@ import { Router } from '@angular/router';
 })
 export class CourseFormComponent {
 
-  constructor(private fileService: FileUtilsService, private persistenceService: PersistenceService, 
+  constructor(private fileService: FileUtilsService, private persistenceService: PersistenceService,
     private router: Router,
     private messageService: MessageService, private location: Location) { }
 
@@ -54,14 +54,12 @@ export class CourseFormComponent {
   private onSaveCourse(response: any) {
     this.isLoading.set(false);
     this.messageService.add({ severity: 'success', summary: 'Sucesso', key: 'toastMessage', detail: 'Curso salvo com sucesso!' });
-
-    if(!this.courseDTO().uuid)
-      this.router.navigate(['/course', response.data.uuid]);
+    this.router.navigate(['/course', response.data.uuid]);
   }
 
   private onSaveCourseError(error: any) {
     this.isLoading.set(false);
-    this.messageService.add({ severity: 'error', summary: 'Erro', key: 'toastMessage', detail: error.description });
+    this.messageService.add({ severity: 'error', summary: error.error.title, key: 'toastMessage', detail: error.error.description });
     return error;
   }
 

@@ -59,6 +59,13 @@ public class UserController {
   }
 
   @POST
+  @Path("login/admin")
+  @NotRequiredAudit
+  public Response loginAdmin(UserLoginDTO user) {
+    return bo.login(user, RoleEnum.ROLE_ADMIN);
+  }
+
+  @POST
   @Path("login/student")
   @NotRequiredAudit
   @Produces(MediaType.APPLICATION_JSON)

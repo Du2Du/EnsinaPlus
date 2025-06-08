@@ -13,6 +13,7 @@ import org.du2du.ensinaplus.model.dto.form.UserFormDTO;
 import org.du2du.ensinaplus.model.dto.form.UserUpdateFormDTO;
 import org.du2du.ensinaplus.model.entity.impl.User;
 import org.du2du.ensinaplus.model.enums.RoleEnum;
+import org.du2du.ensinaplus.model.enums.UserTypeEnum;
 import org.du2du.ensinaplus.utils.PasswordUtils;
 
 import jakarta.enterprise.context.Dependent;
@@ -98,6 +99,13 @@ public class UserBO extends AbstractBO<User, UserDAO> {
           .entity(ResponseDTO.builder().title("Erro ao logar!")
               .description("Usuário não encontrado.").build())
           .build();
+
+    if (role.equals(RoleEnum.ROLE_ADMIN) && !UserTypeEnum.ADMIN.equals(userEntity.getType()))
+      return Response.status(Response.Status.NOT_FOUND)
+          .entity(ResponseDTO.builder().title("Erro ao logar!")
+              .description("Usuário não é administrador.").build())
+          .build();
+
     if (!PasswordUtils.comparePassword(user.getPassword(), userEntity.getPassword()))
       return Response.status(Response.Status.NOT_FOUND)
           .entity(ResponseDTO.builder().title("Erro ao logar!")

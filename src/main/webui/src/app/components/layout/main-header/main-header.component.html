@@ -3,7 +3,7 @@
         class="mb-1 cursor-pointer m-left-side-header__logo" alt="Logo EnsinaPlus">
 </div>
 
-<input type="text" pInputText class="w-[70%]" placeholder="Buscar novos cursos" (ngModelChange)="searchCourses($event)" [(ngModel)]="search" />
+<input type="text" pInputText class="w-[70%]" placeholder="Buscar novos cursos" id="inputSearch" [(ngModel)]="searchInput" />
 
 <div class="m-left-side-header flex gap-3">
     <p-avatar (click)="op.toggle($event)" [label]="user().name | spliceName" shape="circle" class="cursor-pointer" />
@@ -17,11 +17,16 @@
                 </div>
             </div>
             <p-divider />
-            <p-button icon="pi pi-user" label="Minha conta" variant="text" severity="secondary" class="w-full user-panel__buttons" (click)="redirectProfile()" />
-            <p-button icon="pi pi-sign-out" label="Sair" variant="text" severity="secondary" class="w-full user-panel__buttons" (click)="blockedPanel.set(true);authService.logout()" />
+            @for (tab of tabs(); track tab.uuid) {
+            <p-button [icon]="tab.icon" [label]="tab.label" variant="text" severity="secondary"
+                class="w-full user-panel__buttons" (click)="redirectTab(tab.url)" />
+            }
+            <p-button icon="pi pi-user" label="Minha conta" variant="text" severity="secondary"
+                class="w-full user-panel__buttons" (click)="redirectProfile()" />
+            <p-button icon="pi pi-sign-out" label="Sair" variant="text" severity="secondary"
+                class="w-full user-panel__buttons" (click)="blockedPanel.set(true);authService.logout()" />
         </div>
     </p-popover>
     <p-blockui [blocked]="blockedPanel()" />
 
 </div>
-
