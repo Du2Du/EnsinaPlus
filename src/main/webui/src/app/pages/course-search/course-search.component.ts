@@ -59,6 +59,7 @@ export class CourseSearchComponent implements OnInit {
       courseUuid: course.uuid
     }).subscribe((response: any) => {
       this.blockPage.set(false);
+      course.matriculado = true;
       this.messageService.add({
         key: 'message',
         severity: 'success',

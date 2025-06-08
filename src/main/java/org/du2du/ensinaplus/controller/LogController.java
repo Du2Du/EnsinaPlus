@@ -19,7 +19,7 @@ public class LogController {
     @GET
     @Path("list")
     @RequiredAuthentication
-    @RequireRole(RoleEnum.ROLE_TEACHER)
+    @RequireRole(RoleEnum.ROLE_ADMIN)
     public Response listAllLogs(@QueryParam("page") Integer page){
         return logBO.listAllLogs(page);
     }
