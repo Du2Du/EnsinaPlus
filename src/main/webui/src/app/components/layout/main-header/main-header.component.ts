@@ -15,6 +15,7 @@ import { PersistenceService } from './../../../services/persistence.service';
 
 @Component({
   selector: 'app-main-header',
+  providers: [PersistenceService, AuthService, Router],
   imports: [AvatarModule, ButtonModule, BlockUIModule, SpliceNamePipe, DividerModule, InputTextModule, FormsModule, PopoverModule],
   host: {
     class: 'w-full bg-stone-50 gap-2 !pr-2 !pl-2 flex shadow-md items-center justify-between'
@@ -58,7 +59,7 @@ export class MainHeaderComponent implements OnInit, AfterViewInit, OnDestroy, On
   }
 
   private loadTabs() {
-    this.persistenceService.getRequest('/v1/tabs').pipe(tap((response: any) => {
+    this.persistenceService.getRequest('/v1/tab/list').pipe(tap((response: any) => {
       this.tabs.set(response.data);
     }), catchError(error => {
       this.tabs.set([]);
@@ -67,7 +68,7 @@ export class MainHeaderComponent implements OnInit, AfterViewInit, OnDestroy, On
   }
 
   onLogoClick() {
-    this.router.navigate(['/']);
+    this.router.navigate(['/home']);
   }
 
   searchCourses(event: string) {

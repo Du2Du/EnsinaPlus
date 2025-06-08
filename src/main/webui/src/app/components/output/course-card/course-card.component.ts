@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-course-card',
   imports: [CardModule, ButtonModule, TooltipModule],
+  providers: [Router],
   templateUrl: './course-card.component.html',
   styleUrl: './course-card.component.scss'
 })
