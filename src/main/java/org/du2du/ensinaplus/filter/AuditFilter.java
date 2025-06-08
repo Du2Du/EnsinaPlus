@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import org.du2du.ensinaplus.model.bo.impl.LogBO;
 import org.du2du.ensinaplus.model.bo.session.SessionBO;
 import org.du2du.ensinaplus.model.dto.LogDTO;
+import org.du2du.ensinaplus.security.ActionDescription;
 import org.du2du.ensinaplus.security.NotRequiredAudit;
 
 
@@ -27,18 +28,19 @@ public class AuditFilter implements ContainerRequestFilter{
     @Inject
     ResourceInfo resourceInfo;
 
+    private static final String SESSION_COOKIE_NAME = "ensina-plus-session";
+
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {
-         if (resourceInfo.getResourceMethod().isAnnotationPresent(NotRequiredAudit.class)) {
+         if (resourceInfo.getResourceMethod().isAnnotationPresent(NotRequiredAudit.class) || sessionBO.getSession(requestContext.getCookies().get(SESSION_COOKIE_NAME)) == null) {
             return;
         }
-        LogDTO logDTO = new LogDTO(null, 
-            requestContext.getMethod(), 
-            requestContext.getUriInfo().getAbsolutePath().toString(), 
-            sessionBO.getSession(requestContext.getCookies().get(("ensina-plus-session"))).getData().getUuid(), 
-            "teste", 
-            LocalDateTime.now());
-
+        LogDTO logDTO = LogDTO.builder().uuid(null).method(requestContext.getMethod())
+            .url(requestContext.getUriInfo().getAbsolutePath().toString())
+            .uuidUser(sessionBO.getSession(requestContext.getCookies().get(SESSION_COOKIE_NAME)).getData().getUuid())
+            .nameUser(sessionBO.getSession(requestContext.getCookies().get(SESSION_COOKIE_NAME)).getData().getName())
+            .description(resourceInfo.getResourceMethod().getAnnotation(ActionDescription.class).value()[0])
+            .createdAt(LocalDateTime.now()).build();
         logBO.createLog(logDTO);
     }
 }

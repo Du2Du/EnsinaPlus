@@ -4,20 +4,25 @@
         <p-table [value]="logs()" [tableStyle]="{ 'min-width': '50rem'}">
             <ng-template #header>
                 <tr>
+                    <th pSortableColumn="uuid" > UUID <p-sortIcon field="uuid"/> </th>
                     <th pSortableColumn="method" > MÉTODO <p-sortIcon field="method"/> </th>
                     <th pSortableColumn="url">URL <p-sortIcon field="url"/></th>
                     <th pSortableColumn="user">USUÁRIO <p-sortIcon field="user"/></th>
+                    <th pSortableColumn="nameUser">NOME USUÁRIO <p-sortIcon field="nameUser"/></th>
                     <th pSortableColumn="description">DESCRIÇÃO <p-sortIcon field="description"/></th>
                     <th pSortableColumn="date">DATA <p-sortIcon field="date"/></th>
                 </tr>
             </ng-template>
             <ng-template #body let-log>
                     <tr>
+                        <td>{{ log.uuid }}</td>
                         <td>{{ log.method }}</td>
                         <td>{{ log.url }}</td>
                         <td>{{ log.uuidUser }}</td>
+                        <td>{{ log.nameUser}}</td>
                         <td>{{ log.description }}</td>
-                        <td>{{ log.createdAt | date: 'short'}}</td>
+                        <td>{{ log.createdAt | date: 'short' }}</td>
+                        
                     </tr>
             </ng-template>
         </p-table>

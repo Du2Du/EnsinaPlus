@@ -24,6 +24,8 @@ public class LogDTO {
 
     private UUID uuidUser;
 
+    private String nameUser;
+
     private String description;
 
     private LocalDateTime createdAt;
@@ -32,6 +34,7 @@ public class LogDTO {
         this.method = log.getMethod();
         this.url = log.getUrl();
         this.uuidUser = log.getUuidUser();
+        this.nameUser = log.getNameUser();
         this.description = log.getDescription();
         this.createdAt = log.getCreatedAt();
 
@@ -41,6 +44,7 @@ public class LogDTO {
             .method(method)
             .url(url)
             .uuidUser(uuidUser)
+            .nameUser(nameUser)
             .description(description)
             .createdAt(createdAt)
             .build();
