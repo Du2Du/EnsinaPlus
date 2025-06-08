@@ -12,7 +12,7 @@ import { MessageService } from 'primeng/api';
 import { Location } from '@angular/common';
 import { FileUploadModule } from 'primeng/fileupload';
 import { FileUtilsService } from '../../services/file-utils.service';
-import { catchError, tap } from 'rxjs';
+import { catchError, of, tap } from 'rxjs';
 import { Router } from '@angular/router';
 
 @Component({
@@ -60,7 +60,7 @@ export class CourseFormComponent {
   private onSaveCourseError(error: any) {
     this.isLoading.set(false);
     this.messageService.add({ severity: 'error', summary: error.error.title, key: 'toastMessage', detail: error.error.description });
-    return error;
+    return of(error);
   }
 
   onBasicUploadAuto(event: any) {

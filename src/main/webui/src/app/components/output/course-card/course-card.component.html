@@ -1,6 +1,6 @@
 <p-card [style]="{ width: '25rem', overflow: 'hidden' }">
   <ng-template #header>
-    <img alt="Curso" [src]="course().mainPicture" width="400px" height="225px" />
+    <img alt="Curso" [src]="course().mainPicture || '/default-image.jpg'" width="400px" height="225px" />
   </ng-template>
   <ng-template #title> {{course().name}} </ng-template>
   <p tooltipPosition="bottom" [pTooltip]="course().description" class="course-description">

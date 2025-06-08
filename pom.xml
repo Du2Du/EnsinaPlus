@@ -111,6 +111,15 @@
             <artifactId>password4j</artifactId>
             <version>1.8.3</version>
         </dependency>
+        <!-- Adicione estas dependências na seção <dependencies> -->
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-redis-client</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

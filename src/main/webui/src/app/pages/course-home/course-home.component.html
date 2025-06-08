@@ -1,0 +1,11 @@
+<app-main-header />
+
+<div class="flex mt-5 flex-col w-[80%] m-auto">
+  <img [src]="course().mainPicture || '/default-image.jpg'" class="w-full course-image"/>
+  <h1 class="font-semibold text-2xl">{{course().name}}</h1>
+</div>
+
+<p-blockui [autoZIndex]="999999" [blocked]="blockPage()" styleClass="flex items-center justify-center">
+  <i class="pi pi-spin pi-spinner" style="font-size: 2rem"></i>
+</p-blockui>
+<p-toast key="message" position="top-center" />

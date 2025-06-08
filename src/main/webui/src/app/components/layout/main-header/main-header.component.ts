@@ -7,7 +7,7 @@ import { ButtonModule } from 'primeng/button';
 import { DividerModule } from 'primeng/divider';
 import { InputTextModule } from 'primeng/inputtext';
 import { PopoverModule } from 'primeng/popover';
-import { catchError, debounceTime, fromEvent, Subscription, tap } from 'rxjs';
+import { catchError, debounceTime, fromEvent, of, Subscription, tap } from 'rxjs';
 import { UserDTO } from '../../../dtos/user.dto';
 import { SpliceNamePipe } from '../../../pipes/splice-name.pipe';
 import { AuthService } from '../../../services/auth.service';
@@ -62,7 +62,7 @@ export class MainHeaderComponent implements OnInit, AfterViewInit, OnDestroy, On
       this.tabs.set(response.data);
     }), catchError(error => {
       this.tabs.set([]);
-      return error;
+      return of(error);
     })).subscribe();
   }
 

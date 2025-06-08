@@ -1,13 +1,13 @@
-import { APP_INITIALIZER, ApplicationConfig, ErrorHandler, provideZoneChangeDetection } from '@angular/core';
+import { APP_INITIALIZER, ApplicationConfig, ErrorHandler, LOCALE_ID, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter, Router } from '@angular/router';
 import * as Sentry from "@sentry/angular";
 
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { provideStore } from '@ngrx/store';
 import { providePrimeNG } from 'primeng/config';
 import { EnsinaPlusTheme } from '../themes/theme';
 import { routes } from './app.routes';
-import { provideStore } from '@ngrx/store';
 import { userReducer } from './store/user.reducer';
 
 export const appConfig: ApplicationConfig = {
@@ -15,6 +15,7 @@ export const appConfig: ApplicationConfig = {
   provideAnimationsAsync(),
   provideStore({user: userReducer}),
   provideHttpClient(withInterceptorsFromDi()),
+  { provide: LOCALE_ID, useValue: 'pt-BR' },
   providePrimeNG({
     theme: {
       preset: EnsinaPlusTheme,

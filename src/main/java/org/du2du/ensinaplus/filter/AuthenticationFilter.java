@@ -27,7 +27,7 @@ public class AuthenticationFilter implements ContainerRequestFilter {
 
     @Context
     ResourceInfo resourceInfo;
-
+    
     @Override
     public void filter(ContainerRequestContext requestContext) {
         if (!resourceInfo.getResourceMethod().isAnnotationPresent(RequiredAuthentication.class)

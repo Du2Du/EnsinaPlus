@@ -1,6 +1,6 @@
 import { Component, signal } from '@angular/core';
 import { MessageModule } from 'primeng/message';
-import { catchError, finalize, tap } from 'rxjs';
+import { catchError, finalize, of, tap } from 'rxjs';
 import { CourseCardComponent } from "../../../../components/output/course-card/course-card.component";
 import { PersistenceService } from './../../../../services/persistence.service';
 
@@ -35,7 +35,7 @@ export class HomeMainComponent {
       }
     }), catchError(error => {
       this.courses.set([]);
-      return error;
+      return of(error);
     }), finalize(() => {
       this.searchingCourses.set(false);
     })).subscribe();

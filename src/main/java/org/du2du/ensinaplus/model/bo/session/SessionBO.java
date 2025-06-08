@@ -2,14 +2,14 @@ package org.du2du.ensinaplus.model.bo.session;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 
 import org.du2du.ensinaplus.model.dto.UserDTO;
 import org.du2du.ensinaplus.model.entity.session.Session;
+import org.du2du.ensinaplus.service.RedisSessionService;
 import org.du2du.ensinaplus.utils.TokenUtils;
 
 import jakarta.enterprise.context.ApplicationScoped;
@@ -24,15 +24,14 @@ import jakarta.ws.rs.core.NewCookie;
 public class SessionBO implements Serializable {
     private static final long serialVersionUID = 1L;
     private static final String SESSION_COOKIE_NAME = "ensina-plus-session";
-
-    private final Map<UUID, Session> sessionMap = new ConcurrentHashMap<>();
     
     @Inject
     TokenUtils tokenUtils;
+    
+    @Inject
+    RedisSessionService redisSessionService;
 
-    /**
-     * Cria uma nova sessão para o usuário e retorna o cookie de sessão
-     */
+
     public NewCookie createSession(UserDTO user) {
         UUID sessionId = UUID.randomUUID();
         
@@ -42,7 +41,7 @@ public class SessionBO implements Serializable {
             .uuid(sessionId)
             .build();
             
-        sessionMap.put(sessionId, session);
+        redisSessionService.saveSession(session);
         
         return new NewCookie.Builder(SESSION_COOKIE_NAME)
             .value(sessionId.toString())
@@ -53,9 +52,7 @@ public class SessionBO implements Serializable {
             .build();
     }
 
-    /**
-     * Recupera a sessão do usuário a partir do cookie de sessão
-     */
+
     public Session getSession(Cookie sessionCookie) {
         if (sessionCookie == null) {
             return null;
@@ -63,26 +60,30 @@ public class SessionBO implements Serializable {
         
         try {
             UUID sessionId = UUID.fromString(sessionCookie.getValue());
-            return sessionMap.get(sessionId);
+            Optional<Session> sessionOpt = redisSessionService.getSession(sessionId);
+            if (sessionOpt.isPresent()) {
+                redisSessionService.updateSessionExpiry(sessionId);
+                return sessionOpt.get();
+            }
+            return null;
         } catch (IllegalArgumentException e) {
             return null;
         }
     }
 
-      public void updateSession(UserDTO dto, HttpHeaders headers){
+    public void updateSession(UserDTO dto, HttpHeaders headers) {
         Session session = getSession(headers.getCookies().get(SESSION_COOKIE_NAME));
-        if (Objects.isNull(session))return;
+        if (Objects.isNull(session)) return;
         session.setData(dto);
-        sessionMap.put(session.getUuid(), session);
+        redisSessionService.saveSession(session);
     }
 
-        public NewCookie deleteSession( Cookie sessionCookie) {
+    public NewCookie deleteSession(Cookie sessionCookie) {
         if (sessionCookie != null) {
             try {
                 UUID sessionId = UUID.fromString(sessionCookie.getValue());
-                sessionMap.remove(sessionId);
+                redisSessionService.deleteSession(sessionId);
             } catch (IllegalArgumentException e) {
-                // Ignora erro de parsing
             }
         }
         
@@ -105,4 +106,5 @@ public class SessionBO implements Serializable {
             .secure(true)
             .build();
     }
+
 }

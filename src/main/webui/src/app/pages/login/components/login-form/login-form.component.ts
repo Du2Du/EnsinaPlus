@@ -72,7 +72,7 @@ export class LoginFormComponent {
             detail: data?.error?.description || 'Não foi possível realizar o login. Tente novamente mais tarde!'
           });
 
-          return of(null);
+          return of(data);
         })
       )
       .subscribe()

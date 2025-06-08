@@ -9,6 +9,7 @@ import org.du2du.ensinaplus.model.dto.form.CourseAvaliationFormDTO;
 import org.du2du.ensinaplus.model.dto.form.CourseFormDTO;
 import org.du2du.ensinaplus.model.enums.RoleEnum;
 import org.du2du.ensinaplus.security.RequireRole;
+import org.du2du.ensinaplus.security.RequiredAuthentication;
 
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
@@ -33,7 +34,7 @@ public class CourseController {
 
     @Inject
     CourseStudentBO courseStudentBO;
-    
+
     @POST
     @RequireRole(RoleEnum.ROLE_TEACHER)
     @Path("create")
@@ -60,6 +61,13 @@ public class CourseController {
     }
 
     @GET
+    @Path("{uuid}")
+    @RequiredAuthentication
+    public Response find(@PathParam("uuid") UUID uuid) {
+        return courseBO.findCourse(uuid);
+    }
+
+    @GET
     @Path("search")
     @RequireRole(RoleEnum.ROLE_STUDENT)
     public Response searchCourses(@QueryParam("search") String search, @QueryParam("page") Integer page,
@@ -81,17 +89,17 @@ public class CourseController {
         return courseBO.listCreatedCourses(headers);
     }
 
-     @PUT
+    @PUT
     @RequireRole(RoleEnum.ROLE_TEACHER)
     @Path("update/{uuid}")
-    public Response updateCourse(@PathParam("uuid") UUID uuid, CourseFormDTO course, @Context HttpHeaders headers){
+    public Response updateCourse(@PathParam("uuid") UUID uuid, CourseFormDTO course, @Context HttpHeaders headers) {
         return courseBO.updateCourse(course, headers, uuid);
     }
 
     @DELETE
     @RequireRole(RoleEnum.ROLE_TEACHER)
     @Path("delete/{uuid}")
-    public Response updateCourse(@PathParam("uuid") UUID uuid,  @Context HttpHeaders headers){
+    public Response updateCourse(@PathParam("uuid") UUID uuid, @Context HttpHeaders headers) {
         return courseBO.deleteCourse(uuid, headers);
     }
 

@@ -65,7 +65,7 @@ export class RegisterFormComponent {
             detail: data?.error?.description || 'Não foi possível realizar o cadastro. Tente novamente mais tarde!'
           });
 
-          return of(null);
+          return of(data);
         }),
         finalize(() => {
           this.isLoading.set(false);

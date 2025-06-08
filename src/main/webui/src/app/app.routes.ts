@@ -12,6 +12,7 @@ import { LoginComponent } from './pages/login/login.component';
 import { ProfileComponent } from './pages/profile/profile.component';
 import { RegisterComponent } from './pages/register/register.component';
 import { adminAuthGuard } from './guards/admin-auth.guard';
+import { CourseHomeComponent } from './pages/course-home/course-home.component';
 
 export const routes: Routes = [
     {
@@ -45,10 +46,17 @@ export const routes: Routes = [
         canActivate: [authorizationGuard]
     },
     {
+        path: 'course/:uuid',
+        title: 'Curso',
+        component: CourseHomeComponent,
+        canActivate: [authorizationGuard]
+    },
+    {
         path: 'search/:search',
         title: 'Buscar Cursos',
         component: CourseSearchComponent,
-        canActivate: [authorizationGuard, studentAuthGuard]
+        canActivate: [authorizationGuard],
+        canDeactivate: [teacherAuthGuard]
     },
     {
         path: 'course/form',

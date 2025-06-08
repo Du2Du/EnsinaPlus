@@ -8,6 +8,7 @@ import { BlockUIModule } from 'primeng/blockui';
 import { CourseDTO } from '../../dtos/course.dto';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
+import { catchError, of, tap } from 'rxjs';
 
 @Component({
   selector: 'app-course-search',
@@ -37,11 +38,18 @@ export class CourseSearchComponent implements OnInit {
   private loadCourses() {
     this.blockPage.set(true);
     this.persistenceService.getRequest(`/v1/course/search?search=${this.search()}&page=${this.page}&limit=${this.limit}`)
-      .subscribe((response: any) => {
+      .pipe(tap((response: any) => {
         this.blockPage.set(false);
         this.courses.set(response.data ?? []);
         this.totalRecords = response.total ?? 0;
-      });
+      }),
+        catchError((error: any) => {
+          this.blockPage.set(false);
+          this.courses.set([]);
+          this.totalRecords = 0
+          this.messageService.add({ severity: 'error', summary: error.error.title, key: 'message', detail: error.error.description });
+          return of(error);
+        })).subscribe();
   }
 
   searchCoursesEvent(search: string) {
@@ -57,7 +65,8 @@ export class CourseSearchComponent implements OnInit {
     this.blockPage.set(true);
     this.persistenceService.postRequest('/v1/course/enroll', {
       courseUuid: course.uuid
-    }).subscribe((response: any) => {
+    })
+    .pipe(tap((response: any) => {
       this.blockPage.set(false);
       course.matriculado = true;
       this.messageService.add({
@@ -65,7 +74,12 @@ export class CourseSearchComponent implements OnInit {
         severity: 'success',
         summary: 'Matricula efetuada com sucesso!',
       })
-    })
+    }),
+      catchError((error: any) => {
+        this.blockPage.set(false);
+        this.messageService.add({ severity: 'error', summary: error.error.title, key: 'message', detail: error.error.description });
+        return of(error);
+      })).subscribe();
     this.loadCourses();
   }
 }
