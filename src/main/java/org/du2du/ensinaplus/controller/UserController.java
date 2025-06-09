@@ -1,7 +1,5 @@
 package org.du2du.ensinaplus.controller;
 
-import java.util.UUID;
-
 import org.du2du.ensinaplus.model.bo.impl.UserBO;
 import org.du2du.ensinaplus.model.dto.UserLoginDTO;
 import org.du2du.ensinaplus.model.dto.form.UserFormDTO;
@@ -9,15 +7,14 @@ import org.du2du.ensinaplus.model.dto.form.UserUpdateFormDTO;
 import org.du2du.ensinaplus.model.enums.RoleEnum;
 import org.du2du.ensinaplus.security.ActionDescription;
 import org.du2du.ensinaplus.security.NotRequiredAudit;
-import org.du2du.ensinaplus.security.RequiredAuthentication;
 
+import io.quarkus.security.Authenticated;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.HttpHeaders;
@@ -41,7 +38,7 @@ public class UserController {
 
   @PUT
   @Path("save")
-  @RequiredAuthentication()
+  @Authenticated
   @ActionDescription("Atualizou os seus dados básicos")
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
@@ -77,7 +74,7 @@ public class UserController {
   @GET
   @Path("dto")
   @Produces(MediaType.APPLICATION_JSON)
-  @RequiredAuthentication()
+  @Authenticated
   @ActionDescription("Buscou dto do usuário logado")
   public Response getUserDTO(@Context HttpHeaders headers) {
     return bo.getUserDTO(headers);

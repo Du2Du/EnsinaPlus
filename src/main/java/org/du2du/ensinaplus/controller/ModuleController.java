@@ -6,9 +6,9 @@ import org.du2du.ensinaplus.model.bo.impl.ModuleBO;
 import org.du2du.ensinaplus.model.dto.form.ModuleFormDTO;
 import org.du2du.ensinaplus.model.enums.RoleEnum;
 import org.du2du.ensinaplus.security.ActionDescription;
-import org.du2du.ensinaplus.security.RequireRole;
-import org.du2du.ensinaplus.security.RequiredAuthentication;
 
+import io.quarkus.security.Authenticated;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
@@ -31,8 +31,7 @@ public class ModuleController {
 
     @POST
     @Path("create")
-    @RequiredAuthentication
-    @RequireRole(RoleEnum.ROLE_TEACHER)
+    @RolesAllowed(RoleEnum.ROLE_TEACHER)
     @ActionDescription("Criou um módulo")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -42,8 +41,7 @@ public class ModuleController {
 
     @PUT
     @Path("update")
-    @RequiredAuthentication
-    @RequireRole(RoleEnum.ROLE_TEACHER)
+    @RolesAllowed(RoleEnum.ROLE_TEACHER)
     @ActionDescription("Atualizou os dados básicos de um módulo")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -53,8 +51,7 @@ public class ModuleController {
 
     @DELETE
     @Path("delete/{uuid}")
-    @RequiredAuthentication
-    @RequireRole(RoleEnum.ROLE_TEACHER)
+    @RolesAllowed(RoleEnum.ROLE_TEACHER)
     @ActionDescription("Deletou um módulo")
     @Produces(MediaType.APPLICATION_JSON)
     public Response deleteModule(@PathParam ("uuid") UUID uuid,  @Context HttpHeaders headers){
@@ -63,7 +60,7 @@ public class ModuleController {
 
     @GET
     @Path("list/{course_uuid}")
-    @RequiredAuthentication
+    @Authenticated
     @ActionDescription("Listou os módulos de um curso")
     @Produces(MediaType.APPLICATION_JSON)
     public Response listModulesOfCourse(@PathParam("course_uuid") UUID courseUuid){

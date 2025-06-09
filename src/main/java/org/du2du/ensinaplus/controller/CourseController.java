@@ -9,9 +9,9 @@ import org.du2du.ensinaplus.model.dto.form.CourseAvaliationFormDTO;
 import org.du2du.ensinaplus.model.dto.form.CourseFormDTO;
 import org.du2du.ensinaplus.model.enums.RoleEnum;
 import org.du2du.ensinaplus.security.ActionDescription;
-import org.du2du.ensinaplus.security.RequireRole;
-import org.du2du.ensinaplus.security.RequiredAuthentication;
 
+import io.quarkus.security.Authenticated;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
@@ -37,7 +37,7 @@ public class CourseController {
     CourseStudentBO courseStudentBO;
 
     @POST
-    @RequireRole(RoleEnum.ROLE_TEACHER)
+    @RolesAllowed(RoleEnum.ROLE_TEACHER)
     @ActionDescription("Criando um curso")
     @Path("create")
     @Produces(MediaType.APPLICATION_JSON)
@@ -48,7 +48,7 @@ public class CourseController {
 
     @POST
     @Path("enroll")
-    @RequireRole(RoleEnum.ROLE_STUDENT)
+    @RolesAllowed(RoleEnum.ROLE_STUDENT)
     @ActionDescription("Matriculou-se em um curso")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -58,7 +58,7 @@ public class CourseController {
 
     @GET
     @Path("list")
-    @RequireRole(RoleEnum.ROLE_STUDENT)
+    @RolesAllowed(RoleEnum.ROLE_STUDENT)
     @ActionDescription("Listou todos os cursos")
     @Produces(MediaType.APPLICATION_JSON)
     public Response listAllCourses() {
@@ -67,14 +67,14 @@ public class CourseController {
 
     @GET
     @Path("{uuid}")
-    @RequiredAuthentication
+    @Authenticated
     public Response find(@PathParam("uuid") UUID uuid) {
         return courseBO.findCourse(uuid);
     }
 
     @GET
     @Path("search")
-    @RequireRole(RoleEnum.ROLE_STUDENT)
+    @RolesAllowed(RoleEnum.ROLE_STUDENT)
     public Response searchCourses(@QueryParam("search") String search, @QueryParam("page") Integer page,
             @QueryParam("limit") Integer limit) {
         return courseBO.searchCourse(search, page, limit);
@@ -82,7 +82,7 @@ public class CourseController {
 
     @GET
     @Path("enrollment")
-    @RequireRole(RoleEnum.ROLE_STUDENT)
+    @RolesAllowed(RoleEnum.ROLE_STUDENT)
     @ActionDescription("Listou todos os cursos que está matriculado")
     @Produces(MediaType.APPLICATION_JSON)
     public Response listEnrollmentCourses(@Context HttpHeaders headers) {
@@ -91,7 +91,7 @@ public class CourseController {
 
     @GET
     @Path("list/created")
-    @RequireRole(RoleEnum.ROLE_TEACHER)
+    @RolesAllowed(RoleEnum.ROLE_TEACHER)
     @ActionDescription("Listou todos os cursos de sua autoria")
     @Produces(MediaType.APPLICATION_JSON)
     public Response listCreatedCourses(@Context HttpHeaders headers) {
@@ -99,7 +99,7 @@ public class CourseController {
     }
 
     @PUT
-    @RequireRole(RoleEnum.ROLE_TEACHER)
+    @RolesAllowed(RoleEnum.ROLE_TEACHER)
     @ActionDescription("Atualizou os dados básicos do curso")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -109,7 +109,7 @@ public class CourseController {
     }
 
     @DELETE
-    @RequireRole(RoleEnum.ROLE_TEACHER)
+    @RolesAllowed(RoleEnum.ROLE_TEACHER)
     @ActionDescription("Deleteou um curso")
     @Produces(MediaType.APPLICATION_JSON)
     @Path("delete/{uuid}")
@@ -120,7 +120,7 @@ public class CourseController {
     @GET
     @Path("generate/{uuid}/certification")
     @Produces("application/pdf")
-    @RequireRole(RoleEnum.ROLE_STUDENT)
+    @RolesAllowed(RoleEnum.ROLE_STUDENT)
     @ActionDescription("Gerou um certificado de conclusão de um curso")
     public Response generateCertification(@PathParam("uuid") UUID uuid, @Context HttpHeaders headers) {
         return courseBO.generateCertification(headers, uuid);
@@ -128,7 +128,7 @@ public class CourseController {
 
     @POST
     @Path("avaliate")
-    @RequireRole(RoleEnum.ROLE_STUDENT)
+    @RolesAllowed(RoleEnum.ROLE_STUDENT)
     @ActionDescription("Avaliou um curso")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)

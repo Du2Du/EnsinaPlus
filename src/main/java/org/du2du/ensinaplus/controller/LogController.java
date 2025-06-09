@@ -3,9 +3,8 @@ package org.du2du.ensinaplus.controller;
 import org.du2du.ensinaplus.model.bo.impl.LogBO;
 import org.du2du.ensinaplus.model.enums.RoleEnum;
 import org.du2du.ensinaplus.security.ActionDescription;
-import org.du2du.ensinaplus.security.RequireRole;
-import org.du2du.ensinaplus.security.RequiredAuthentication;
 
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
@@ -21,10 +20,9 @@ public class LogController {
 
     @GET
     @Path("list")
-    @RequiredAuthentication
     @ActionDescription("Listou os logs")
     @Produces(MediaType.APPLICATION_JSON)
-    @RequireRole(RoleEnum.ROLE_ADMIN)
+    @RolesAllowed(RoleEnum.ROLE_ADMIN)
     public Response listAllLogs(@QueryParam("page") Integer page){
         return logBO.listAllLogs(page);
     }

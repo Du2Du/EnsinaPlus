@@ -1,8 +1,8 @@
 package org.du2du.ensinaplus.controller;
 
-import org.du2du.ensinaplus.security.RequiredAuthentication;
+import io.quarkus.security.Authenticated;
 
-@RequiredAuthentication
+@Authenticated
 public class ResourceController {
   
   

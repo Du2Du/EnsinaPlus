@@ -41,7 +41,9 @@ export class AuthService {
 
   logout() {
     this.persistenceService.getRequest('/v1/auth/logout').pipe(
-      map(() => true),
+      map(() => {
+        localStorage.removeItem('ensina-plus-token');
+        return true}),
       catchError(() => of(false))
     ).subscribe(() => {
       this.router.navigate(['/']);

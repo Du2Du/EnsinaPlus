@@ -2,7 +2,6 @@ package org.du2du.ensinaplus.controller;
 
 import org.du2du.ensinaplus.model.bo.session.SessionBO;
 import org.du2du.ensinaplus.security.NotRequiredAudit;
-import org.du2du.ensinaplus.security.RequiredAuthentication;
 
 import io.quarkus.security.Authenticated;
 import jakarta.inject.Inject;
