@@ -27,8 +27,8 @@ export class AuditoriaComponent {
   searchLogs(page:number) {
     this.searchingLogs.set(true);
     this.persistenceService.getRequest("/v1/log/list?page="+page).pipe(tap((response: any) => {
-      this.logs.set(response.data.dtos);
-      this.totalElements = response.data.totalElements;
+      this.logs.set(response.data);
+      this.totalElements = response.total;
     }), catchError(error => {
       this.logs.set([]);
       return of(error);

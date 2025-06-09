@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -57,8 +58,7 @@ public class CourseBO extends AbstractBO<Course, CourseDAO> {
                             .description("Já existe um curso com esse nome cadastrado!").build())
                     .build();
 
-        courseEntity = course
-                .toEntity(sessionBO.getSession(headers.getCookies().get((SESSION_COOKIE_NAME))).getData().getUuid());
+        courseEntity = course.toEntity(sessionBO.getSession(headers.getCookies().get((SESSION_COOKIE_NAME))).getData().getUuid());
         try {
             courseEntity.persistAndFlush();
             return Response.status(Response.Status.CREATED)
@@ -163,9 +163,9 @@ public class CourseBO extends AbstractBO<Course, CourseDAO> {
         courseEntity.setName(course.getName());
         courseEntity.setDescription(course.getDescription());
         courseEntity.setMainPicture(course.getMainPicture());
+        courseEntity.setUpdatedAt(LocalDateTime.now());
 
-        if (!dao.findById(uuid).getOwner().getUuid()
-                .equals((sessionBO.getSession(headers.getCookies().get((SESSION_COOKIE_NAME))).getData().getUuid()))) {
+         if (!courseEntity.getOwner().getUuid().equals((sessionBO.getSession(headers.getCookies().get((SESSION_COOKIE_NAME))).getData().getUuid()))){
             return Response.status(Response.Status.FORBIDDEN)
                     .entity(ResponseDTO.builder().title("Somente o dono do curso pode alterar dados do curso").build())
                     .build();
@@ -206,6 +206,9 @@ public class CourseBO extends AbstractBO<Course, CourseDAO> {
                     .build();
         }
     }
+
+
+    
 
     @Transactional
     public Response avaliateCourse(CourseAvaliationFormDTO courseStudentDTO, HttpHeaders headers) {
