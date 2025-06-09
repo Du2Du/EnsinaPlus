@@ -8,6 +8,7 @@ import org.du2du.ensinaplus.model.dto.CourseStudentDTO;
 import org.du2du.ensinaplus.model.dto.form.CourseAvaliationFormDTO;
 import org.du2du.ensinaplus.model.dto.form.CourseFormDTO;
 import org.du2du.ensinaplus.model.enums.RoleEnum;
+import org.du2du.ensinaplus.security.ActionDescription;
 import org.du2du.ensinaplus.security.RequireRole;
 import org.du2du.ensinaplus.security.RequiredAuthentication;
 
@@ -37,6 +38,7 @@ public class CourseController {
 
     @POST
     @RequireRole(RoleEnum.ROLE_TEACHER)
+    @ActionDescription("Criando um curso")
     @Path("create")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -47,6 +49,7 @@ public class CourseController {
     @POST
     @Path("enroll")
     @RequireRole(RoleEnum.ROLE_STUDENT)
+    @ActionDescription("Matriculou-se em um curso")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response matriculateCourse(CourseStudentDTO courseStudentDTO, @Context HttpHeaders headers) {
@@ -56,6 +59,8 @@ public class CourseController {
     @GET
     @Path("list")
     @RequireRole(RoleEnum.ROLE_STUDENT)
+    @ActionDescription("Listou todos os cursos")
+    @Produces(MediaType.APPLICATION_JSON)
     public Response listAllCourses() {
         return courseBO.listAllCourses();
     }
@@ -78,6 +83,8 @@ public class CourseController {
     @GET
     @Path("enrollment")
     @RequireRole(RoleEnum.ROLE_STUDENT)
+    @ActionDescription("Listou todos os cursos que está matriculado")
+    @Produces(MediaType.APPLICATION_JSON)
     public Response listEnrollmentCourses(@Context HttpHeaders headers) {
         return courseBO.listEnrollmentCourses(headers);
     }
@@ -85,12 +92,17 @@ public class CourseController {
     @GET
     @Path("list/created")
     @RequireRole(RoleEnum.ROLE_TEACHER)
+    @ActionDescription("Listou todos os cursos de sua autoria")
+    @Produces(MediaType.APPLICATION_JSON)
     public Response listCreatedCourses(@Context HttpHeaders headers) {
         return courseBO.listCreatedCourses(headers);
     }
 
     @PUT
     @RequireRole(RoleEnum.ROLE_TEACHER)
+    @ActionDescription("Atualizou os dados básicos do curso")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
     @Path("update/{uuid}")
     public Response updateCourse(@PathParam("uuid") UUID uuid, CourseFormDTO course, @Context HttpHeaders headers) {
         return courseBO.updateCourse(course, headers, uuid);
@@ -98,8 +110,10 @@ public class CourseController {
 
     @DELETE
     @RequireRole(RoleEnum.ROLE_TEACHER)
+    @ActionDescription("Deleteou um curso")
+    @Produces(MediaType.APPLICATION_JSON)
     @Path("delete/{uuid}")
-    public Response updateCourse(@PathParam("uuid") UUID uuid, @Context HttpHeaders headers) {
+    public Response deleteCourse(@PathParam("uuid") UUID uuid,  @Context HttpHeaders headers){
         return courseBO.deleteCourse(uuid, headers);
     }
 
@@ -107,6 +121,7 @@ public class CourseController {
     @Path("generate/{uuid}/certification")
     @Produces("application/pdf")
     @RequireRole(RoleEnum.ROLE_STUDENT)
+    @ActionDescription("Gerou um certificado de conclusão de um curso")
     public Response generateCertification(@PathParam("uuid") UUID uuid, @Context HttpHeaders headers) {
         return courseBO.generateCertification(headers, uuid);
     }
@@ -114,6 +129,9 @@ public class CourseController {
     @POST
     @Path("avaliate")
     @RequireRole(RoleEnum.ROLE_STUDENT)
+    @ActionDescription("Avaliou um curso")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
     public Response avaliateCourse(CourseAvaliationFormDTO courseStudentDTO,
             @Context HttpHeaders headers) {
         return courseBO.avaliateCourse(courseStudentDTO, headers);

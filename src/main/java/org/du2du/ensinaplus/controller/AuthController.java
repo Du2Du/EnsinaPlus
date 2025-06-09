@@ -1,6 +1,7 @@
 package org.du2du.ensinaplus.controller;
 
 import org.du2du.ensinaplus.model.bo.session.SessionBO;
+import org.du2du.ensinaplus.security.NotRequiredAudit;
 import org.du2du.ensinaplus.security.RequiredAuthentication;
 
 import jakarta.inject.Inject;
@@ -20,6 +21,7 @@ public class AuthController {
 
     @GET
     @RequiredAuthentication
+    @NotRequiredAudit
     @Path("/validate")
     public Response validate(@Context HttpHeaders headers) {
         return sessionBO.getSession(headers.getCookies().get((SESSION_COOKIE_NAME))) != null ? Response.ok().build()
@@ -28,6 +30,7 @@ public class AuthController {
 
     @GET
     @RequiredAuthentication
+    @NotRequiredAudit
     @Path("/logout")
     public Response logout(@Context HttpHeaders headers) {
         return Response.ok(sessionBO.deleteSession(headers.getCookies().get((SESSION_COOKIE_NAME)))).build();

@@ -34,6 +34,9 @@ public class Log {
     @Column(name="uuid_user", nullable = false)
     private UUID uuidUser;
 
+    @Column(name="name_user", nullable = false)
+    private String nameUser;
+
     @Column(name="description", nullable = false)
     private String description;
 
@@ -41,19 +44,21 @@ public class Log {
     private LocalDateTime createdAt;
 
     @Builder
-    public Log(UUID uuid, String method, String url, UUID uuidUser, String description, LocalDateTime createdAt) {
+    public Log(UUID uuid, String method, String url, UUID uuidUser, String nameUser, String description, LocalDateTime createdAt) {
         this.uuid = uuid;
         this.method = method;
         this.url = url;
         this.uuidUser = uuidUser;
+        this.nameUser = nameUser;
         this.description = description;
         this.createdAt = createdAt;
     }
     
-    public Log( String method, String url, UUID uuidUser, String description, LocalDateTime createdAt) {
+    public Log( String method, String url, UUID uuidUser,String nameUser, String description, LocalDateTime createdAt) {
         this.method = method;
         this.url = url;
         this.uuidUser = uuidUser;
+        this.nameUser = nameUser;
         this.description = description;
         this.createdAt = createdAt;
     }
@@ -67,6 +72,7 @@ public class Log {
         .url(this.getUrl())
         .uuidUser(this.getUuidUser())
         .description(this.getDescription())
+        .nameUser(this.getNameUser())
         .createdAt(this.getCreatedAt())
         .build();
   }
