@@ -4,13 +4,11 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
 import java.util.UUID;
 
 import org.du2du.ensinaplus.model.dto.UserDTO;
 import org.du2du.ensinaplus.model.entity.session.Session;
 import org.du2du.ensinaplus.service.RedisSessionService;
-import org.du2du.ensinaplus.utils.TokenUtils;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -24,10 +22,7 @@ import jakarta.ws.rs.core.NewCookie;
 public class SessionBO implements Serializable {
     private static final long serialVersionUID = 1L;
     private static final String SESSION_COOKIE_NAME = "ensina-plus-session";
-    
-    @Inject
-    TokenUtils tokenUtils;
-    
+
     @Inject
     RedisSessionService redisSessionService;
 
@@ -91,17 +86,6 @@ public class SessionBO implements Serializable {
             .value("")
             .path("/")
             .maxAge(0)
-            .httpOnly(true)
-            .secure(true)
-            .build();
-    }
-
-    public NewCookie createAuthCookie(String role) {
-        String token = tokenUtils.generate(Set.of(role));
-        return new NewCookie.Builder("ensina-plus-auth")
-            .value("Bearer " + token)
-            .path("/")
-            .maxAge(86400)
             .httpOnly(true)
             .secure(true)
             .build();

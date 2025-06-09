@@ -52,7 +52,7 @@ export class LoginFormComponent {
     this.persistenceService.postRequest(`/v1/user/login/${this.dto().role.toLowerCase()}`, this.dto())
       .pipe(
         tap((response: any) => {
-          this.authService.setUser(response.data);
+          localStorage.setItem('ensina-plus-token', response.data);
           this.messageService.add({
             severity: 'success',
             key: 'toastMessage',

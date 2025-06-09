@@ -4,6 +4,7 @@ import org.du2du.ensinaplus.model.bo.session.SessionBO;
 import org.du2du.ensinaplus.security.NotRequiredAudit;
 import org.du2du.ensinaplus.security.RequiredAuthentication;
 
+import io.quarkus.security.Authenticated;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
@@ -20,7 +21,7 @@ public class AuthController {
     SessionBO sessionBO;
 
     @GET
-    @RequiredAuthentication
+    @Authenticated
     @NotRequiredAudit
     @Path("/validate")
     public Response validate(@Context HttpHeaders headers) {
@@ -29,7 +30,7 @@ public class AuthController {
     }
 
     @GET
-    @RequiredAuthentication
+    @Authenticated
     @NotRequiredAudit
     @Path("/logout")
     public Response logout(@Context HttpHeaders headers) {

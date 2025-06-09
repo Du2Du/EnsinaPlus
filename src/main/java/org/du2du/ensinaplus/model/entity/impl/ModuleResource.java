@@ -1,0 +1,61 @@
+package org.du2du.ensinaplus.model.entity.impl;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.UUID;
+
+import org.du2du.ensinaplus.model.entity.AbstractEntity;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Entity
+@Table(name = "tbmodule_resource")
+@Getter
+@Setter
+@NoArgsConstructor
+public class ModuleResource extends AbstractEntity {
+
+  private String name;
+
+  @Column(name = "description_html", columnDefinition = "text")
+  private String descriptionHTML;
+
+  @Column(name = "disabled_date")
+  private LocalDate disabledDate;
+
+  @Column(name = "file", columnDefinition = "text")
+  private String file;
+
+  @Column(name = "video", columnDefinition = "text")
+  private String video;
+
+  @ManyToOne
+  @JoinColumn(name = "module_uuid", referencedColumnName = "uuid", columnDefinition = "uuid not null references tbmodule(uuid)")
+  private Module module;
+
+  @ManyToOne
+  @JoinColumn(name = "type_uuid", referencedColumnName = "uuid", columnDefinition = "uuid not null references tbtype_resource(uuid)")
+  private TypeResource type;
+
+  @Builder
+  public ModuleResource(UUID uuid, Boolean deleted, LocalDateTime createdAt, LocalDateTime updatedAt, String name,
+      String descriptionHTML, LocalDate disabledDate, Module module, TypeResource type, String file, String video) {
+    super(uuid, deleted, createdAt, updatedAt);
+    this.name = name;
+    this.descriptionHTML = descriptionHTML;
+    this.disabledDate = disabledDate;
+    this.module = module;
+    this.type = type;
+    this.file = file;
+    this.video = video;
+  }
+
+}

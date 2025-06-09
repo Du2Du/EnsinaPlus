@@ -47,10 +47,11 @@ export class MainHeaderComponent implements OnInit, AfterViewInit, OnDestroy, On
   }
 
   ngAfterViewInit(): void {
-    this.inputSubscriber = fromEvent(this.r2.selectRootElement('#inputSearch', true), 'input').pipe(debounceTime(500)).subscribe((event: any) => {
-      this.searchCoursesEvent.emit(this.searchInput())
-      this.searchCourses(event.target.value);
-    });
+    if (!this.inputSubscriber)
+      this.inputSubscriber = fromEvent(this.r2.selectRootElement('#inputSearch', true), 'input').pipe(debounceTime(500)).subscribe((event: any) => {
+        this.searchCoursesEvent.emit(this.searchInput())
+        this.searchCourses(event.target.value);
+      });
   }
 
   ngOnDestroy(): void {

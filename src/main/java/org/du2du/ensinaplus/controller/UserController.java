@@ -40,13 +40,13 @@ public class UserController {
   }
 
   @PUT
-  @Path("save/{uuid}")
+  @Path("save")
   @RequiredAuthentication()
   @ActionDescription("Atualizou os seus dados básicos")
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
-  public Response saveUser(@PathParam("uuid") UUID uuid, UserUpdateFormDTO user, @Context HttpHeaders headers) {
-    return bo.saveUser(uuid, user, headers);
+  public Response saveUser(UserUpdateFormDTO user, @Context HttpHeaders headers) {
+    return bo.saveUser(user, headers);
   }
 
   @POST

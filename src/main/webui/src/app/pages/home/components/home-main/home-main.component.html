@@ -3,9 +3,9 @@
 <div class="item-list">
 
   @if(courses().length === 0){
-  <p-message severity="info" class="mt-5 block">Nenhum curso matriculado</p-message>
+  <p-message severity="info">Nenhum curso matriculado</p-message>
   }@else{
-  <div class="flex gap-4 flex-wrap">
+  <div class="flex mt-5 gap-4 flex-wrap">
     @for (course of courses(); track course.uuid) {
     <app-course-card [matriculated]="true" [course]="course" />
     }

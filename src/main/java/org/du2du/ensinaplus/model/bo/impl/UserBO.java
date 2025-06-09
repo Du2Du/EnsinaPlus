@@ -1,6 +1,7 @@
 package org.du2du.ensinaplus.model.bo.impl;
 
 import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
 
 import org.du2du.ensinaplus.model.bo.AbstractBO;
@@ -15,8 +16,10 @@ import org.du2du.ensinaplus.model.entity.impl.User;
 import org.du2du.ensinaplus.model.enums.RoleEnum;
 import org.du2du.ensinaplus.model.enums.UserTypeEnum;
 import org.du2du.ensinaplus.utils.PasswordUtils;
+import org.du2du.ensinaplus.utils.TokenUtils;
 
 import jakarta.enterprise.context.Dependent;
+import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.HttpHeaders;
@@ -25,7 +28,10 @@ import jakarta.ws.rs.core.Response;
 
 @Dependent
 public class UserBO extends AbstractBO<User, UserDAO> {
-
+    
+  @Inject
+  TokenUtils tokenUtils;
+  
   private static final String SESSION_COOKIE_NAME = "ensina-plus-session";
 
   @Transactional
@@ -58,12 +64,12 @@ public class UserBO extends AbstractBO<User, UserDAO> {
   }
 
   @Transactional
-  public Response saveUser(UUID uuid, UserUpdateFormDTO dto, HttpHeaders headers) {
+  public Response saveUser(UserUpdateFormDTO dto, HttpHeaders headers) {
     ValidateDTO validateResp = validate(dto);
     if (!validateResp.isOk())
       return Response.status(Response.Status.BAD_REQUEST).entity(validateResp).build();
 
-    User userEntity = dao.findById(uuid);
+    User userEntity = dao.findById(dto.getUuid());
     if (Objects.isNull(userEntity))
       return Response.status(Response.Status.CONFLICT)
           .entity(ResponseDTO.builder().title("Erro ao salvar usuário!")
@@ -115,10 +121,9 @@ public class UserBO extends AbstractBO<User, UserDAO> {
     userDTO.setRole(RoleEnum.valueOf(role.toUpperCase()));
 
     NewCookie sessionCookie = sessionBO.createSession(userDTO);
-    NewCookie authCookie = sessionBO.createAuthCookie(role);
 
-    return Response.ok(ResponseDTO.builder().title("Login realizado com sucesso!").data(userDTO).build())
-        .cookie(sessionCookie, authCookie)
+    return Response.ok(ResponseDTO.builder().title("Login realizado com sucesso!").data(tokenUtils.generate(Set.of(role))).build())
+        .cookie(sessionCookie)
         .build();
   }
 
