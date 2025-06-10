@@ -1,3 +1,11 @@
 .course-image{
   height: 500px !important;
 }
+
+:host ::ng-deep .p-accordionpanel:not(.p-disabled).p-accordionpanel-active > .p-accordionheader{
+  color: var(--e-primary-color);
+}
+
+:host ::ng-deep .p-accordionheader{
+  color: var(--e-primary-300);
+}

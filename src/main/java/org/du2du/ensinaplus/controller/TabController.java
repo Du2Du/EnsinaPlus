@@ -1,6 +1,7 @@
 package org.du2du.ensinaplus.controller;
 
 import org.du2du.ensinaplus.model.bo.impl.TabBO;
+import org.du2du.ensinaplus.security.NotRequiredAudit;
 import org.du2du.ensinaplus.security.RequiredAuthentication;
 
 import jakarta.inject.Inject;
@@ -19,6 +20,7 @@ public class TabController {
 
   @GET
   @Path("list")
+  @NotRequiredAudit
   public Response getList(@Context HttpHeaders headers) {
     return bo.getList(headers);
   }

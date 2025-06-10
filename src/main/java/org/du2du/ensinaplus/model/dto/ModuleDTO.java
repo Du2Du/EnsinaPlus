@@ -17,5 +17,6 @@ import lombok.Setter;
 public class ModuleDTO {
     private UUID uuid;
     private String name;
-    private String description;    
+    private String description;
+    private Integer positionOrder; 
 }

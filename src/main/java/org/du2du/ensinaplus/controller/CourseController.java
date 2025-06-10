@@ -68,6 +68,7 @@ public class CourseController {
     @GET
     @Path("{uuid}")
     @RequiredAuthentication
+    @ActionDescription("Entrou em um curso")
     public Response find(@PathParam("uuid") UUID uuid) {
         return courseBO.findCourse(uuid);
     }
@@ -75,6 +76,7 @@ public class CourseController {
     @GET
     @Path("search")
     @RequireRole(RoleEnum.ROLE_STUDENT)
+    @ActionDescription("Buscou um curso")
     public Response searchCourses(@QueryParam("search") String search, @QueryParam("page") Integer page,
             @QueryParam("limit") Integer limit) {
         return courseBO.searchCourse(search, page, limit);
