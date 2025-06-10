@@ -14,7 +14,7 @@ import org.du2du.ensinaplus.model.dto.ModuleDTO;
 public class ModuleDAO extends AbstractDAO<Module>{
 
     public List<ModuleDTO> listModulesOfCourse(UUID courseUuid){
-        String query = "SELECT new org.du2du.ensinaplus.model.dto.ModuleDTO(module.uuid, module.name, module.description) FROM Module as module WHERE module.course.uuid = :courseUuid AND module.deleted = false ORDER BY module.positionOrder ASC";
+        String query = "SELECT new org.du2du.ensinaplus.model.dto.ModuleDTO(module.uuid, module.name, module.description, module.positionOrder) FROM Module as module WHERE module.course.uuid = :courseUuid AND module.deleted = false ORDER BY module.positionOrder ASC";
         List<ModuleDTO> dtos = getEntityManager().createQuery(query, ModuleDTO.class).setParameter("courseUuid", courseUuid).getResultList();
         return dtos;
     }
