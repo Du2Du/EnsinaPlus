@@ -13,6 +13,7 @@ import org.du2du.ensinaplus.model.dto.base.ValidateDTO;
 import org.du2du.ensinaplus.model.dto.form.UserFormDTO;
 import org.du2du.ensinaplus.model.dto.form.UserUpdateFormDTO;
 import org.du2du.ensinaplus.model.entity.impl.User;
+import org.du2du.ensinaplus.model.entity.session.Session;
 import org.du2du.ensinaplus.model.enums.RoleEnum;
 import org.du2du.ensinaplus.model.enums.UserTypeEnum;
 import org.du2du.ensinaplus.utils.PasswordUtils;
@@ -21,9 +22,6 @@ import org.du2du.ensinaplus.utils.TokenUtils;
 import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
-import jakarta.ws.rs.core.Context;
-import jakarta.ws.rs.core.HttpHeaders;
-import jakarta.ws.rs.core.NewCookie;
 import jakarta.ws.rs.core.Response;
 
 @Dependent
@@ -32,8 +30,6 @@ public class UserBO extends AbstractBO<User, UserDAO> {
   @Inject
   TokenUtils tokenUtils;
   
-  private static final String SESSION_COOKIE_NAME = "ensina-plus-session";
-
   @Transactional
   public Response createUser(UserFormDTO user) {
     ValidateDTO validateResp = validate(user);
@@ -64,7 +60,7 @@ public class UserBO extends AbstractBO<User, UserDAO> {
   }
 
   @Transactional
-  public Response saveUser(UserUpdateFormDTO dto, HttpHeaders headers) {
+  public Response saveUser(UserUpdateFormDTO dto) {
     ValidateDTO validateResp = validate(dto);
     if (!validateResp.isOk())
       return Response.status(Response.Status.BAD_REQUEST).entity(validateResp).build();
@@ -83,8 +79,8 @@ public class UserBO extends AbstractBO<User, UserDAO> {
     try {
       dao.persistAndFlush(userEntity);
       UserDTO userDTO = userEntity.toDTO();
-      userDTO.setRole(sessionBO.getSession(headers.getCookies().get((SESSION_COOKIE_NAME))).getData().getRole());
-      sessionBO.updateSession(userDTO, headers);
+      userDTO.setRole(sessionBO.getSession().getData().getRole());
+      sessionBO.updateSession(userDTO);
       return Response.status(Response.Status.CREATED)
           .entity(ResponseDTO.builder().title("Usuário salvo com sucesso!").data(dto).build())
           .build();
@@ -120,15 +116,14 @@ public class UserBO extends AbstractBO<User, UserDAO> {
     UserDTO userDTO = userEntity.toDTO();
     userDTO.setRole(RoleEnum.valueOf(role.toUpperCase()));
 
-    NewCookie sessionCookie = sessionBO.createSession(userDTO);
+    UUID sessionUUID = sessionBO.createSession(userDTO);
 
-    return Response.ok(ResponseDTO.builder().title("Login realizado com sucesso!").data(tokenUtils.generate(Set.of(role))).build())
-        .cookie(sessionCookie)
+    return Response.ok(ResponseDTO.builder().title("Login realizado com sucesso!").data(tokenUtils.generate(Set.of(role), sessionUUID)).build())
         .build();
   }
 
-  public Response getUserDTO(@Context HttpHeaders headers) {
-    var session = sessionBO.getSession(headers.getCookies().get((SESSION_COOKIE_NAME)));
+  public Response getUserDTO() {
+    Session session = sessionBO.getSession();
     return Response.ok().entity(Objects.isNull(session) ? null : session.getData()).build();
   }
 

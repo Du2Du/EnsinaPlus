@@ -30,8 +30,6 @@ public class ModuleResourceBO extends AbstractBO<ModuleResource, ModuleResourceD
     @Inject
     CourseDAO courseDAO;
 
-    private static final String SESSION_COOKIE_NAME = "ensina-plus-session";
-
     @Transactional
     public Response save(ModuleResourceFormDTO dto) {
         ValidateDTO validateResp = validate(dto);

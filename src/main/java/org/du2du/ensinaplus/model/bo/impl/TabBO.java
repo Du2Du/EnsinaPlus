@@ -11,18 +11,15 @@ import org.du2du.ensinaplus.model.enums.RoleEnum;
 
 import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
-import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.Response;
 
 @Dependent
 public class TabBO {
-  private static final String SESSION_COOKIE_NAME = "ensina-plus-session";
-
   @Inject
   SessionBO sessionBO;
 
-  public Response getList(HttpHeaders headers) {
-    UserDTO dto = sessionBO.getSession(headers.getCookies().get((SESSION_COOKIE_NAME))).getData();
+  public Response getList() {
+    UserDTO dto = sessionBO.getSession().getData();
     List<TabListDTO> list = new ArrayList<>();
     if (dto.getRole().equals(RoleEnum.STUDENT) || dto.getRole().equals(RoleEnum.TEACHER)) {
       list.add(TabListDTO.builder().url("/home").icon("pi pi-book").label("Meus cursos").build());

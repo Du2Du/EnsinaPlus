@@ -18,7 +18,6 @@ import org.du2du.ensinaplus.model.entity.impl.Module;
 import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
-import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.Response;
 
 @Dependent
@@ -33,15 +32,13 @@ public class ModuleBO extends AbstractBO<Module, ModuleDAO>{
     @Inject
     CourseDAO courseDAO; 
     
-    private static final String SESSION_COOKIE_NAME = "ensina-plus-session";
-
     @Transactional
-    public Response createModule(ModuleFormDTO moduleFormDTO, HttpHeaders headers){
+    public Response createModule(ModuleFormDTO moduleFormDTO){
         ValidateDTO validateResp = validate(moduleFormDTO);
         if (!validateResp.isOk())
             return Response.status(Response.Status.BAD_REQUEST).entity(validateResp).build();
 
-        if (!courseDAO.findById(moduleFormDTO.getCourseUuid()).getOwner().getUuid().equals((sessionBO.getSession(headers.getCookies().get((SESSION_COOKIE_NAME))).getData().getUuid()))){
+        if (!courseDAO.findById(moduleFormDTO.getCourseUuid()).getOwner().getUuid().equals((sessionBO.getSession().getData().getUuid()))){
             return Response.status(Response.Status.FORBIDDEN)
                 .entity(ResponseDTO.builder().title("Somente o dono do curso pode criar módulos nesse curso").build())
                 .build();
@@ -63,7 +60,7 @@ public class ModuleBO extends AbstractBO<Module, ModuleDAO>{
     }
 
     @Transactional
-    public Response updateModule(ModuleFormDTO moduleFormDTO, HttpHeaders headers){
+    public Response updateModule(ModuleFormDTO moduleFormDTO){
         ValidateDTO validateResp = validate(moduleFormDTO);
         if (!validateResp.isOk())
             return Response.status(Response.Status.BAD_REQUEST).entity(validateResp).build();
@@ -73,7 +70,7 @@ public class ModuleBO extends AbstractBO<Module, ModuleDAO>{
         moduleEntity.setDescription(moduleFormDTO.getDescription());
         moduleEntity.setUpdatedAt(LocalDateTime.now());
        
-        if (!moduleEntity.getCourse().getOwner().getUuid().equals((sessionBO.getSession(headers.getCookies().get((SESSION_COOKIE_NAME))).getData().getUuid()))){
+        if (!moduleEntity.getCourse().getOwner().getUuid().equals((sessionBO.getSession().getData().getUuid()))){
             return Response.status(Response.Status.FORBIDDEN)
                 .entity(ResponseDTO.builder().title("Somente o dono do curso pode criar módulos nesse curso").build())
                 .build();
@@ -92,14 +89,14 @@ public class ModuleBO extends AbstractBO<Module, ModuleDAO>{
     }
 
     @Transactional
-    public Response deleteModule(UUID uuidModule, HttpHeaders headers){
+    public Response deleteModule(UUID uuidModule){
         Module moduleEntity = dao.findById(uuidModule);
         if (Objects.isNull(moduleEntity)){
             return Response.status(Response.Status.CREATED)
                 .entity(ResponseDTO.builder().title("Erro ao excluir módulo!").description("Módulo inexistente").build())
                 .build();
         }
-        if (!moduleEntity.getCourse().getOwner().getUuid().equals((sessionBO.getSession(headers.getCookies().get((SESSION_COOKIE_NAME))).getData().getUuid()))){
+        if (!moduleEntity.getCourse().getOwner().getUuid().equals((sessionBO.getSession().getData().getUuid()))){
             return Response.status(Response.Status.FORBIDDEN)
                 .entity(ResponseDTO.builder().title("Somente o dono do curso pode deletar um módulo").build())
                 .build();

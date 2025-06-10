@@ -16,8 +16,6 @@ import jakarta.ws.rs.POST;
 import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.Context;
-import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
@@ -42,8 +40,8 @@ public class UserController {
   @ActionDescription("Atualizou os seus dados básicos")
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
-  public Response saveUser(UserUpdateFormDTO user, @Context HttpHeaders headers) {
-    return bo.saveUser(user, headers);
+  public Response saveUser(UserUpdateFormDTO user) {
+    return bo.saveUser(user);
   }
 
   @POST
@@ -76,7 +74,7 @@ public class UserController {
   @Produces(MediaType.APPLICATION_JSON)
   @Authenticated
   @ActionDescription("Buscou dto do usuário logado")
-  public Response getUserDTO(@Context HttpHeaders headers) {
-    return bo.getUserDTO(headers);
+  public Response getUserDTO() {
+    return bo.getUserDTO();
   }
 }

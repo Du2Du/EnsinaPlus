@@ -31,7 +31,6 @@ import com.openhtmltopdf.pdfboxout.PdfRendererBuilder;
 import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
-import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.Response;
 
 @Dependent
@@ -40,13 +39,11 @@ public class CourseBO extends AbstractBO<Course, CourseDAO> {
     @Inject
     SessionBO sessionBO;
 
-    private static final String SESSION_COOKIE_NAME = "ensina-plus-session";
-
     @Inject
     CourseStudentDAO courseStudentDAO;
 
     @Transactional
-    public Response createCourse(CourseFormDTO course, HttpHeaders headers) {
+    public Response createCourse(CourseFormDTO course) {
         ValidateDTO validateResp = validate(course);
         if (!validateResp.isOk())
             return Response.status(Response.Status.BAD_REQUEST).entity(validateResp).build();
@@ -58,7 +55,7 @@ public class CourseBO extends AbstractBO<Course, CourseDAO> {
                             .description("Já existe um curso com esse nome cadastrado!").build())
                     .build();
 
-        courseEntity = course.toEntity(sessionBO.getSession(headers.getCookies().get((SESSION_COOKIE_NAME))).getData().getUuid());
+        courseEntity = course.toEntity(sessionBO.getSession().getData().getUuid());
         try {
             courseEntity.persistAndFlush();
             return Response.status(Response.Status.CREATED)
@@ -114,9 +111,9 @@ public class CourseBO extends AbstractBO<Course, CourseDAO> {
                 .build();
     }
 
-    public Response listEnrollmentCourses(HttpHeaders headers) {
+    public Response listEnrollmentCourses() {
         List<Course> coursesEntity = dao.listMyCourses(
-                sessionBO.getSession(headers.getCookies().get((SESSION_COOKIE_NAME))).getData().getUuid());
+                sessionBO.getSession().getData().getUuid());
         List<CourseDTO> coursesDTO = new ArrayList<>();
         coursesEntity.forEach((course) -> {
             coursesDTO.add(course.toDTO());
@@ -133,9 +130,9 @@ public class CourseBO extends AbstractBO<Course, CourseDAO> {
         }
     }
 
-    public Response listCreatedCourses(HttpHeaders headers) {
+    public Response listCreatedCourses() {
         List<Course> coursesEntity = dao.listCreatedCourses(
-                sessionBO.getSession(headers.getCookies().get((SESSION_COOKIE_NAME))).getData().getUuid());
+                sessionBO.getSession().getData().getUuid());
         List<CourseDTO> coursesDTO = new ArrayList<>();
         coursesEntity.forEach((course) -> {
             coursesDTO.add(course.toDTO());
@@ -153,7 +150,7 @@ public class CourseBO extends AbstractBO<Course, CourseDAO> {
     }
 
     @Transactional
-    public Response updateCourse(CourseFormDTO course, HttpHeaders headers, UUID uuid) {
+    public Response updateCourse(CourseFormDTO course, UUID uuid) {
         ValidateDTO validateResp = validate(course);
         if (!validateResp.isOk())
             return Response.status(Response.Status.BAD_REQUEST).entity(validateResp).build();
@@ -165,7 +162,7 @@ public class CourseBO extends AbstractBO<Course, CourseDAO> {
         courseEntity.setMainPicture(course.getMainPicture());
         courseEntity.setUpdatedAt(LocalDateTime.now());
 
-         if (!courseEntity.getOwner().getUuid().equals((sessionBO.getSession(headers.getCookies().get((SESSION_COOKIE_NAME))).getData().getUuid()))){
+         if (!courseEntity.getOwner().getUuid().equals((sessionBO.getSession().getData().getUuid()))){
             return Response.status(Response.Status.FORBIDDEN)
                     .entity(ResponseDTO.builder().title("Somente o dono do curso pode alterar dados do curso").build())
                     .build();
@@ -184,11 +181,11 @@ public class CourseBO extends AbstractBO<Course, CourseDAO> {
     }
 
     @Transactional
-    public Response deleteCourse(UUID uuid, HttpHeaders headers) {
+    public Response deleteCourse(UUID uuid) {
         Course courseEntity = dao.findById(uuid);
 
         if (!courseEntity.getOwner().getUuid()
-                .equals((sessionBO.getSession(headers.getCookies().get((SESSION_COOKIE_NAME))).getData().getUuid()))) {
+                .equals((sessionBO.getSession().getData().getUuid()))) {
             return Response.status(Response.Status.FORBIDDEN)
                     .entity(ResponseDTO.builder().title("Somente o dono do curso pode deletar o curso").build())
                     .build();
@@ -211,7 +208,7 @@ public class CourseBO extends AbstractBO<Course, CourseDAO> {
     
 
     @Transactional
-    public Response avaliateCourse(CourseAvaliationFormDTO courseStudentDTO, HttpHeaders headers) {
+    public Response avaliateCourse(CourseAvaliationFormDTO courseStudentDTO) {
         ValidateDTO validateResp = validate(courseStudentDTO);
         if (!validateResp.isOk())
             return Response.status(Response.Status.BAD_REQUEST).entity(validateResp).build();
@@ -222,7 +219,7 @@ public class CourseBO extends AbstractBO<Course, CourseDAO> {
                     .entity(ResponseDTO.builder().title("Curso não encontrado").build())
                     .build();
 
-        UserDTO userDTO = sessionBO.getSession(headers.getCookies().get((SESSION_COOKIE_NAME))).getData();
+        UserDTO userDTO = sessionBO.getSession().getData();
         CourseStudent courseStudent = courseStudentDAO.findEnroll(userDTO.getUuid(), course.getUuid());
         if (Objects.isNull(courseStudent))
             return Response.status(Response.Status.NOT_FOUND)
@@ -249,7 +246,7 @@ public class CourseBO extends AbstractBO<Course, CourseDAO> {
         }
     }
 
-    public Response generateCertification(HttpHeaders headers, UUID uuid) {
+    public Response generateCertification(UUID uuid) {
         try (ByteArrayOutputStream os = new ByteArrayOutputStream()) {
             PdfRendererBuilder builder = new PdfRendererBuilder();
             builder.useFastMode();
@@ -262,7 +259,7 @@ public class CourseBO extends AbstractBO<Course, CourseDAO> {
                         .build();
             }
 
-            UserDTO userDTO = sessionBO.getSession(headers.getCookies().get((SESSION_COOKIE_NAME))).getData();
+            UserDTO userDTO = sessionBO.getSession().getData();
             CourseStudent courseStudent = courseStudentDAO.findEnroll(userDTO.getUuid(), course.getUuid());
             String htmlContent = replaceCertificateVariables(htmlTemplate, userDTO.getName(), course,
                     courseStudent.getMatriculationDate(), courseStudent.getConclusionDate());

@@ -22,8 +22,6 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
-import jakarta.ws.rs.core.Context;
-import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
@@ -35,6 +33,7 @@ public class CourseController {
 
     @Inject
     CourseStudentBO courseStudentBO;
+    
 
     @POST
     @RolesAllowed(RoleEnum.ROLE_TEACHER)
@@ -42,8 +41,8 @@ public class CourseController {
     @Path("create")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response createCourse(CourseFormDTO course, @Context HttpHeaders headers) {
-        return courseBO.createCourse(course, headers);
+    public Response createCourse(CourseFormDTO course) {
+        return courseBO.createCourse(course);
     }
 
     @POST
@@ -52,8 +51,8 @@ public class CourseController {
     @ActionDescription("Matriculou-se em um curso")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response matriculateCourse(CourseStudentDTO courseStudentDTO, @Context HttpHeaders headers) {
-        return courseStudentBO.matriculateUser(courseStudentDTO, headers);
+    public Response matriculateCourse(CourseStudentDTO courseStudentDTO) {
+        return courseStudentBO.matriculateUser(courseStudentDTO);
     }
 
     @GET
@@ -85,8 +84,8 @@ public class CourseController {
     @RolesAllowed(RoleEnum.ROLE_STUDENT)
     @ActionDescription("Listou todos os cursos que está matriculado")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response listEnrollmentCourses(@Context HttpHeaders headers) {
-        return courseBO.listEnrollmentCourses(headers);
+    public Response listEnrollmentCourses() {
+        return courseBO.listEnrollmentCourses();
     }
 
     @GET
@@ -94,8 +93,8 @@ public class CourseController {
     @RolesAllowed(RoleEnum.ROLE_TEACHER)
     @ActionDescription("Listou todos os cursos de sua autoria")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response listCreatedCourses(@Context HttpHeaders headers) {
-        return courseBO.listCreatedCourses(headers);
+    public Response listCreatedCourses() {
+        return courseBO.listCreatedCourses();
     }
 
     @PUT
@@ -104,8 +103,8 @@ public class CourseController {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("update/{uuid}")
-    public Response updateCourse(@PathParam("uuid") UUID uuid, CourseFormDTO course, @Context HttpHeaders headers) {
-        return courseBO.updateCourse(course, headers, uuid);
+    public Response updateCourse(@PathParam("uuid") UUID uuid, CourseFormDTO course) {
+        return courseBO.updateCourse(course, uuid);
     }
 
     @DELETE
@@ -113,8 +112,8 @@ public class CourseController {
     @ActionDescription("Deleteou um curso")
     @Produces(MediaType.APPLICATION_JSON)
     @Path("delete/{uuid}")
-    public Response deleteCourse(@PathParam("uuid") UUID uuid,  @Context HttpHeaders headers){
-        return courseBO.deleteCourse(uuid, headers);
+    public Response deleteCourse(@PathParam("uuid") UUID uuid){
+        return courseBO.deleteCourse(uuid);
     }
 
     @GET
@@ -122,8 +121,8 @@ public class CourseController {
     @Produces("application/pdf")
     @RolesAllowed(RoleEnum.ROLE_STUDENT)
     @ActionDescription("Gerou um certificado de conclusão de um curso")
-    public Response generateCertification(@PathParam("uuid") UUID uuid, @Context HttpHeaders headers) {
-        return courseBO.generateCertification(headers, uuid);
+    public Response generateCertification(@PathParam("uuid") UUID uuid) {
+        return courseBO.generateCertification(uuid);
     }
 
     @POST
@@ -132,8 +131,7 @@ public class CourseController {
     @ActionDescription("Avaliou um curso")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response avaliateCourse(CourseAvaliationFormDTO courseStudentDTO,
-            @Context HttpHeaders headers) {
-        return courseBO.avaliateCourse(courseStudentDTO, headers);
+    public Response avaliateCourse(CourseAvaliationFormDTO courseStudentDTO) {
+        return courseBO.avaliateCourse(courseStudentDTO);
     }
 }

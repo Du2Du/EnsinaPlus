@@ -28,20 +28,18 @@ public class AuditFilter implements ContainerRequestFilter {
     @Inject
     ResourceInfo resourceInfo;
 
-    private static final String SESSION_COOKIE_NAME = "ensina-plus-session";
-
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {
         if (resourceInfo.getResourceMethod().isAnnotationPresent(NotRequiredAudit.class)
-                || sessionBO.getSession(requestContext.getCookies().get(SESSION_COOKIE_NAME)) == null) {
+                || sessionBO.getSession() == null) {
             return;
         }
         LogDTO logDTO = LogDTO.builder().uuid(null).method(requestContext.getMethod())
                 .url(requestContext.getUriInfo().getAbsolutePath().toString())
                 .uuidUser(
-                        sessionBO.getSession(requestContext.getCookies().get(SESSION_COOKIE_NAME)).getData().getUuid())
+                        sessionBO.getSession().getData().getUuid())
                 .nameUser(
-                        sessionBO.getSession(requestContext.getCookies().get(SESSION_COOKIE_NAME)).getData().getName())
+                        sessionBO.getSession().getData().getName())
                 .description(
                         Objects.isNull(resourceInfo.getResourceMethod().getAnnotation(ActionDescription.class)) ? ""
                                 : resourceInfo.getResourceMethod().getAnnotation(ActionDescription.class).value()[0])

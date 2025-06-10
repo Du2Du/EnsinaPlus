@@ -18,8 +18,6 @@ import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.Context;
-import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
@@ -35,8 +33,8 @@ public class ModuleController {
     @ActionDescription("Criou um módulo")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response createModule(ModuleFormDTO moduleFormDTO,  @Context HttpHeaders headers){
-        return moduleBO.createModule(moduleFormDTO, headers);
+    public Response createModule(ModuleFormDTO moduleFormDTO){
+        return moduleBO.createModule(moduleFormDTO);
     }
 
     @PUT
@@ -45,8 +43,8 @@ public class ModuleController {
     @ActionDescription("Atualizou os dados básicos de um módulo")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response updateModule(ModuleFormDTO moduleFormDTO,  @Context HttpHeaders headers){
-        return moduleBO.updateModule(moduleFormDTO, headers);
+    public Response updateModule(ModuleFormDTO moduleFormDTO){
+        return moduleBO.updateModule(moduleFormDTO);
     }
 
     @DELETE
@@ -54,8 +52,8 @@ public class ModuleController {
     @RolesAllowed(RoleEnum.ROLE_TEACHER)
     @ActionDescription("Deletou um módulo")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response deleteModule(@PathParam ("uuid") UUID uuid,  @Context HttpHeaders headers){
-        return moduleBO.deleteModule(uuid, headers);
+    public Response deleteModule(@PathParam ("uuid") UUID uuid){
+        return moduleBO.deleteModule(uuid);
     }
 
     @GET
