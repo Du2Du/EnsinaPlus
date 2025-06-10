@@ -16,11 +16,11 @@ export class DashboardHeaderComponent {
   constructor(public router: Router) { }
 
   onLoginClick() {
-    this.router.navigate(['login']);
+    this.router.navigate(['/login']);
   }
 
   onRegisterClick() {
-    this.router.navigate(['register']);
+    this.router.navigate(['/register']);
   }
   onLogoClick() {
     this.router.navigate(['/']);

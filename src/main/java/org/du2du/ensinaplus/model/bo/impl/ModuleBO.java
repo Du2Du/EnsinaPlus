@@ -38,7 +38,7 @@ public class ModuleBO extends AbstractBO<Module, ModuleDAO>{
         if (!validateResp.isOk())
             return Response.status(Response.Status.BAD_REQUEST).entity(validateResp).build();
 
-        if (!courseDAO.findById(moduleFormDTO.getCourseUuid()).getOwner().getUuid().equals((sessionBO.getSession().getData().getUuid()))){
+        if (!courseDAO.findById(moduleFormDTO.getCourseUuid()).getOwner().getUuid().equals((sessionBO.getUserDTO().getUuid()))){
             return Response.status(Response.Status.FORBIDDEN)
                 .entity(ResponseDTO.builder().title("Somente o dono do curso pode criar módulos nesse curso").build())
                 .build();
@@ -70,7 +70,7 @@ public class ModuleBO extends AbstractBO<Module, ModuleDAO>{
         moduleEntity.setDescription(moduleFormDTO.getDescription());
         moduleEntity.setUpdatedAt(LocalDateTime.now());
        
-        if (!moduleEntity.getCourse().getOwner().getUuid().equals((sessionBO.getSession().getData().getUuid()))){
+        if (!moduleEntity.getCourse().getOwner().getUuid().equals((sessionBO.getUserDTO().getUuid()))){
             return Response.status(Response.Status.FORBIDDEN)
                 .entity(ResponseDTO.builder().title("Somente o dono do curso pode criar módulos nesse curso").build())
                 .build();
@@ -96,7 +96,7 @@ public class ModuleBO extends AbstractBO<Module, ModuleDAO>{
                 .entity(ResponseDTO.builder().title("Erro ao excluir módulo!").description("Módulo inexistente").build())
                 .build();
         }
-        if (!moduleEntity.getCourse().getOwner().getUuid().equals((sessionBO.getSession().getData().getUuid()))){
+        if (!moduleEntity.getCourse().getOwner().getUuid().equals((sessionBO.getUserDTO().getUuid()))){
             return Response.status(Response.Status.FORBIDDEN)
                 .entity(ResponseDTO.builder().title("Somente o dono do curso pode deletar um módulo").build())
                 .build();

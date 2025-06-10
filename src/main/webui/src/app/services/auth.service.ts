@@ -40,14 +40,14 @@ export class AuthService {
   }
 
   logout() {
+    localStorage.removeItem('ensina-plus-token');
+    this.setUser({} as UserDTO);
+
     this.persistenceService.getRequest('/v1/auth/logout').pipe(
-      map(() => {
-        localStorage.removeItem('ensina-plus-token');
-        return true}),
       catchError(() => of(false))
     ).subscribe(() => {
-      this.router.navigate(['/']);
-    })
+      window.location.href = '/';
+    });
   }
 
   private findUser() {

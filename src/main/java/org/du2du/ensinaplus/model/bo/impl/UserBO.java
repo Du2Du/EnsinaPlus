@@ -13,7 +13,6 @@ import org.du2du.ensinaplus.model.dto.base.ValidateDTO;
 import org.du2du.ensinaplus.model.dto.form.UserFormDTO;
 import org.du2du.ensinaplus.model.dto.form.UserUpdateFormDTO;
 import org.du2du.ensinaplus.model.entity.impl.User;
-import org.du2du.ensinaplus.model.entity.session.Session;
 import org.du2du.ensinaplus.model.enums.RoleEnum;
 import org.du2du.ensinaplus.model.enums.UserTypeEnum;
 import org.du2du.ensinaplus.utils.PasswordUtils;
@@ -26,10 +25,10 @@ import jakarta.ws.rs.core.Response;
 
 @Dependent
 public class UserBO extends AbstractBO<User, UserDAO> {
-    
+
   @Inject
   TokenUtils tokenUtils;
-  
+
   @Transactional
   public Response createUser(UserFormDTO user) {
     ValidateDTO validateResp = validate(user);
@@ -79,7 +78,7 @@ public class UserBO extends AbstractBO<User, UserDAO> {
     try {
       dao.persistAndFlush(userEntity);
       UserDTO userDTO = userEntity.toDTO();
-      userDTO.setRole(sessionBO.getSession().getData().getRole());
+      userDTO.setRole(sessionBO.getUserDTO().getRole());
       sessionBO.updateSession(userDTO);
       return Response.status(Response.Status.CREATED)
           .entity(ResponseDTO.builder().title("Usuário salvo com sucesso!").data(dto).build())
@@ -102,7 +101,8 @@ public class UserBO extends AbstractBO<User, UserDAO> {
               .description("Usuário não encontrado.").build())
           .build();
 
-    if (role.equals(RoleEnum.ROLE_ADMIN) && !UserTypeEnum.ADMIN.equals(userEntity.getType()))
+    if (role.equals(RoleEnum.ROLE_ADMIN) && !UserTypeEnum.ADMIN.equals(userEntity.getType())
+        && !UserTypeEnum.SUPER_ADMIN.equals(userEntity.getType()))
       return Response.status(Response.Status.NOT_FOUND)
           .entity(ResponseDTO.builder().title("Erro ao logar!")
               .description("Usuário não é administrador.").build())
@@ -114,17 +114,18 @@ public class UserBO extends AbstractBO<User, UserDAO> {
               .description("Senha incorreta.").build())
           .build();
     UserDTO userDTO = userEntity.toDTO();
-    userDTO.setRole(RoleEnum.valueOf(role.toUpperCase()));
+    
+    if (UserTypeEnum.SUPER_ADMIN.equals(userEntity.getType()))
+      userDTO.setRole(RoleEnum.SUPER_ADMIN);
+    else
+      userDTO.setRole(RoleEnum.valueOf(role.toUpperCase()));
 
     UUID sessionUUID = sessionBO.createSession(userDTO);
 
-    return Response.ok(ResponseDTO.builder().title("Login realizado com sucesso!").data(tokenUtils.generate(Set.of(role), sessionUUID)).build())
+    return Response
+        .ok(ResponseDTO.builder().title("Login realizado com sucesso!")
+            .data(tokenUtils.generate(Set.of(role), sessionUUID)).build())
         .build();
-  }
-
-  public Response getUserDTO() {
-    Session session = sessionBO.getSession();
-    return Response.ok().entity(Objects.isNull(session) ? null : session.getData()).build();
   }
 
 }

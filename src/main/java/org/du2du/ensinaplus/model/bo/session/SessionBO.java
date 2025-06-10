@@ -76,4 +76,11 @@ public class SessionBO implements Serializable {
         }
     }
 
+    public UserDTO getUserDTO(){
+        Session session = getSession();
+        if (Objects.isNull(session))
+            return null;
+        return session.getData();
+    }
+
 }

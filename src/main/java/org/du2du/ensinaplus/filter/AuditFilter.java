@@ -37,9 +37,9 @@ public class AuditFilter implements ContainerRequestFilter {
         LogDTO logDTO = LogDTO.builder().uuid(null).method(requestContext.getMethod())
                 .url(requestContext.getUriInfo().getAbsolutePath().toString())
                 .uuidUser(
-                        sessionBO.getSession().getData().getUuid())
+                        sessionBO.getUserDTO().getUuid())
                 .nameUser(
-                        sessionBO.getSession().getData().getName())
+                        sessionBO.getUserDTO().getName())
                 .description(
                         Objects.isNull(resourceInfo.getResourceMethod().getAnnotation(ActionDescription.class)) ? ""
                                 : resourceInfo.getResourceMethod().getAnnotation(ActionDescription.class).value()[0])

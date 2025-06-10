@@ -30,12 +30,12 @@ public class CourseStudentBO {
     public Response matriculateUser (CourseStudentDTO courseStudentDTO){
 
         
-        CourseStudent enrollEntity = courseStudentDAO.findEnroll(sessionBO.getSession().getData().getUuid(), courseStudentDTO.getCourseUuid());
+        CourseStudent enrollEntity = courseStudentDAO.findEnroll(sessionBO.getUserDTO().getUuid(), courseStudentDTO.getCourseUuid());
         if(Objects.nonNull(enrollEntity))
             return Response.status(Response.Status.CONFLICT).entity(ResponseDTO.builder().title("Error ao matricular-se no curso")
             .description("Usuário já matriculado").build()).build();
         
-        enrollEntity = courseStudentDTO.toEntity(sessionBO.getSession().getData().getUuid());
+        enrollEntity = courseStudentDTO.toEntity(sessionBO.getUserDTO().getUuid());
         
         try{
             enrollEntity = courseStudentDAO.getEntityManager().merge(enrollEntity);

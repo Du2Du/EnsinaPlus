@@ -22,7 +22,7 @@ public class LogController {
     @Path("list")
     @ActionDescription("Listou os logs")
     @Produces(MediaType.APPLICATION_JSON)
-    @RolesAllowed(RoleEnum.ROLE_ADMIN)
+    @RolesAllowed({RoleEnum.ROLE_ADMIN, RoleEnum.ROLE_SUPER_ADMIN})
     public Response listAllLogs(@QueryParam("page") Integer page){
         return logBO.listAllLogs(page);
     }

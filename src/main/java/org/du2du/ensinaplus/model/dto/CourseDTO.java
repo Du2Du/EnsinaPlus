@@ -22,6 +22,7 @@ public class CourseDTO {
     private UUID uuid;
     private UserDTO owner;
     private boolean matriculado;
+    private Float avaliationAvg;
 
     public CourseDTO(Course course, LocalDate matriculationDate) {
         this.name = course.getName();

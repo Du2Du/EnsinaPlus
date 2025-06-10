@@ -16,7 +16,6 @@ export const appConfig: ApplicationConfig = {
   provideAnimationsAsync(),
   provideStore({user: userReducer}),
   provideHttpClient(withInterceptors([authInterceptorInterceptor])),
-  { provide: LOCALE_ID, useValue: 'pt-BR' },
   providePrimeNG({
     theme: {
       preset: EnsinaPlusTheme,

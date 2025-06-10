@@ -19,12 +19,15 @@ public class TabBO {
   SessionBO sessionBO;
 
   public Response getList() {
-    UserDTO dto = sessionBO.getSession().getData();
+    UserDTO dto = sessionBO.getUserDTO();
     List<TabListDTO> list = new ArrayList<>();
     if (dto.getRole().equals(RoleEnum.STUDENT) || dto.getRole().equals(RoleEnum.TEACHER)) {
       list.add(TabListDTO.builder().url("/home").icon("pi pi-book").label("Meus cursos").build());
     }
-    if (dto.getRole().equals(RoleEnum.ADMIN)) {
+    if(dto.getRole().equals(RoleEnum.TEACHER)){
+      list.add(TabListDTO.builder().url("/course/form").icon("pi pi-plus").label("Criar curso").build());
+    }
+    if (dto.getRole().equals(RoleEnum.ADMIN) || dto.getRole().equals(RoleEnum.SUPER_ADMIN)) {
       list.add(TabListDTO.builder().url("/audit").icon("pi pi-chart-bar").label("Logs").build());
     }
     return Response.ok(ResponseDTO.builder().data(list).build()).build();

@@ -1,6 +1,7 @@
 package org.du2du.ensinaplus.controller;
 
 import org.du2du.ensinaplus.model.bo.impl.UserBO;
+import org.du2du.ensinaplus.model.bo.session.SessionBO;
 import org.du2du.ensinaplus.model.dto.UserLoginDTO;
 import org.du2du.ensinaplus.model.dto.form.UserFormDTO;
 import org.du2du.ensinaplus.model.dto.form.UserUpdateFormDTO;
@@ -24,6 +25,9 @@ public class UserController {
 
   @Inject
   UserBO bo;
+
+  @Inject
+  SessionBO sessionBO;
 
   @POST
   @Path("create")
@@ -75,6 +79,6 @@ public class UserController {
   @Authenticated
   @ActionDescription("Buscou dto do usuário logado")
   public Response getUserDTO() {
-    return bo.getUserDTO();
+    return Response.ok().entity(sessionBO.getUserDTO()).build();
   }
 }

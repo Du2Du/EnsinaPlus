@@ -7,11 +7,15 @@ import org.du2du.ensinaplus.model.bo.AbstractBO;
 import org.du2du.ensinaplus.model.bo.session.SessionBO;
 import org.du2du.ensinaplus.model.dao.impl.CourseDAO;
 import org.du2du.ensinaplus.model.dao.impl.ModuleResourceDAO;
+import org.du2du.ensinaplus.model.dao.impl.UserResourceDAO;
+import org.du2du.ensinaplus.model.dto.FinalizeResourceDTO;
 import org.du2du.ensinaplus.model.dto.base.ResponseDTO;
 import org.du2du.ensinaplus.model.dto.base.ValidateDTO;
 import org.du2du.ensinaplus.model.dto.form.ModuleResourceFormDTO;
 import org.du2du.ensinaplus.model.dto.form.ModuleResourceUpdateFormDTO;
 import org.du2du.ensinaplus.model.entity.impl.ModuleResource;
+import org.du2du.ensinaplus.model.entity.impl.User;
+import org.du2du.ensinaplus.model.entity.impl.UserResource;
 
 import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
@@ -29,6 +33,9 @@ public class ModuleResourceBO extends AbstractBO<ModuleResource, ModuleResourceD
 
     @Inject
     CourseDAO courseDAO;
+
+    @Inject
+    UserResourceDAO userResourceDAO;
 
     @Transactional
     public Response save(ModuleResourceFormDTO dto) {
@@ -80,6 +87,38 @@ public class ModuleResourceBO extends AbstractBO<ModuleResource, ModuleResourceD
             e.printStackTrace();
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                     .entity(ResponseDTO.builder().title("Erro ao atualizar recurso!")
+                            .description(e.getMessage()).build())
+                    .build();
+        }
+    }
+
+    @Transactional
+    public Response finalize(FinalizeResourceDTO dto) {
+        ModuleResource entity = dao.findById(dto.getResourceUUID());
+        if (Objects.isNull(entity))
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity(ResponseDTO.builder().title("Erro ao finalizar recurso!")
+                            .description("Recurso não encontrado.").build())
+                    .build();
+
+        if (Objects.nonNull(
+                userResourceDAO.findByUserAndResource(sessionBO.getUserDTO().getUuid(), dto.getResourceUUID())))
+            return Response.status(Response.Status.CONFLICT)
+                    .entity(ResponseDTO.builder().title("Erro ao finalizar recurso!")
+                            .description("Recurso já finalizado.").build())
+                    .build();
+
+        UserResource userResource = UserResource.builder()
+                .user(User.builder().uuid(sessionBO.getUserDTO().getUuid()).build()).resource(entity).build();
+        try {
+            userResourceDAO.persistAndFlush(userResource);
+            return Response.status(Response.Status.OK)
+                    .entity(ResponseDTO.builder().title("Recurso finalizado com sucesso!").data(dto).build())
+                    .build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity(ResponseDTO.builder().title("Erro ao finalizar recurso!")
                             .description(e.getMessage()).build())
                     .build();
         }

@@ -73,7 +73,7 @@ public class CourseController {
 
     @GET
     @Path("search")
-    @RolesAllowed(RoleEnum.ROLE_STUDENT)
+    @RolesAllowed({RoleEnum.ROLE_STUDENT, RoleEnum.ROLE_ADMIN, RoleEnum.ROLE_SUPER_ADMIN})
     public Response searchCourses(@QueryParam("search") String search, @QueryParam("page") Integer page,
             @QueryParam("limit") Integer limit) {
         return courseBO.searchCourse(search, page, limit);

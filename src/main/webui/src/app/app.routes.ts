@@ -12,6 +12,7 @@ import { HomeComponent } from './pages/home/home.component';
 import { LoginComponent } from './pages/login/login.component';
 import { ProfileComponent } from './pages/profile/profile.component';
 import { RegisterComponent } from './pages/register/register.component';
+import { commonUserGuard } from './guards/common-user.guard';
 
 export const routes: Routes = [
     {
@@ -36,13 +37,19 @@ export const routes: Routes = [
         path: 'home',
         title: 'Home',
         component: HomeComponent,
-        canActivate: [authorizationGuard]
+        canActivate: [authorizationGuard, commonUserGuard]
     },
     {
         path: 'profile',
         title: 'Perfil',
         component: ProfileComponent,
         canActivate: [authorizationGuard]
+    },
+    {
+        path: 'course/form',
+        title: 'Criar curso',
+        component: CourseFormComponent,
+        canActivate: [authorizationGuard, teacherAuthGuard]
     },
     {
         path: 'course/:uuid',
@@ -56,12 +63,7 @@ export const routes: Routes = [
         component: CourseSearchComponent,
         canActivate: [authorizationGuard]
     },
-    {
-        path: 'course/form',
-        title: 'Criar curso',
-        component: CourseFormComponent,
-        canActivate: [authorizationGuard, teacherAuthGuard]
-    },
+
     {
         path:'audit',
         title: 'Auditoria',

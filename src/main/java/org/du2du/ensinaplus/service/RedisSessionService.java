@@ -22,7 +22,7 @@ public class RedisSessionService {
     RedisAPI redisClient;
     
     private final ObjectMapper objectMapper;
-    private static final int SESSION_TTL = 86400; // 24 horas em segundos
+    private static final int SESSION_TTL = 86400; // 24 horas
     
     public RedisSessionService() {
         this.objectMapper = new ObjectMapper();

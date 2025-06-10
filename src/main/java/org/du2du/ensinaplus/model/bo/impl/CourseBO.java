@@ -24,6 +24,7 @@ import org.du2du.ensinaplus.model.dto.form.CourseAvaliationFormDTO;
 import org.du2du.ensinaplus.model.dto.form.CourseFormDTO;
 import org.du2du.ensinaplus.model.entity.impl.Course;
 import org.du2du.ensinaplus.model.entity.impl.CourseStudent;
+import org.du2du.ensinaplus.model.enums.RoleEnum;
 
 import com.openhtmltopdf.outputdevice.helper.BaseRendererBuilder;
 import com.openhtmltopdf.pdfboxout.PdfRendererBuilder;
@@ -55,7 +56,7 @@ public class CourseBO extends AbstractBO<Course, CourseDAO> {
                             .description("Já existe um curso com esse nome cadastrado!").build())
                     .build();
 
-        courseEntity = course.toEntity(sessionBO.getSession().getData().getUuid());
+        courseEntity = course.toEntity(sessionBO.getUserDTO().getUuid());
         try {
             courseEntity.persistAndFlush();
             return Response.status(Response.Status.CREATED)
@@ -113,7 +114,7 @@ public class CourseBO extends AbstractBO<Course, CourseDAO> {
 
     public Response listEnrollmentCourses() {
         List<Course> coursesEntity = dao.listMyCourses(
-                sessionBO.getSession().getData().getUuid());
+                sessionBO.getUserDTO().getUuid());
         List<CourseDTO> coursesDTO = new ArrayList<>();
         coursesEntity.forEach((course) -> {
             coursesDTO.add(course.toDTO());
@@ -132,7 +133,7 @@ public class CourseBO extends AbstractBO<Course, CourseDAO> {
 
     public Response listCreatedCourses() {
         List<Course> coursesEntity = dao.listCreatedCourses(
-                sessionBO.getSession().getData().getUuid());
+                sessionBO.getUserDTO().getUuid());
         List<CourseDTO> coursesDTO = new ArrayList<>();
         coursesEntity.forEach((course) -> {
             coursesDTO.add(course.toDTO());
@@ -162,7 +163,7 @@ public class CourseBO extends AbstractBO<Course, CourseDAO> {
         courseEntity.setMainPicture(course.getMainPicture());
         courseEntity.setUpdatedAt(LocalDateTime.now());
 
-         if (!courseEntity.getOwner().getUuid().equals((sessionBO.getSession().getData().getUuid()))){
+        if (!courseEntity.getOwner().getUuid().equals((sessionBO.getUserDTO().getUuid()))) {
             return Response.status(Response.Status.FORBIDDEN)
                     .entity(ResponseDTO.builder().title("Somente o dono do curso pode alterar dados do curso").build())
                     .build();
@@ -185,7 +186,9 @@ public class CourseBO extends AbstractBO<Course, CourseDAO> {
         Course courseEntity = dao.findById(uuid);
 
         if (!courseEntity.getOwner().getUuid()
-                .equals((sessionBO.getSession().getData().getUuid()))) {
+                .equals((sessionBO.getUserDTO().getUuid())) &&
+                !sessionBO.getUserDTO().getRole().equals(RoleEnum.ADMIN)
+                && !sessionBO.getUserDTO().getRole().equals(RoleEnum.SUPER_ADMIN)) {
             return Response.status(Response.Status.FORBIDDEN)
                     .entity(ResponseDTO.builder().title("Somente o dono do curso pode deletar o curso").build())
                     .build();
@@ -204,9 +207,6 @@ public class CourseBO extends AbstractBO<Course, CourseDAO> {
         }
     }
 
-
-    
-
     @Transactional
     public Response avaliateCourse(CourseAvaliationFormDTO courseStudentDTO) {
         ValidateDTO validateResp = validate(courseStudentDTO);
@@ -219,7 +219,7 @@ public class CourseBO extends AbstractBO<Course, CourseDAO> {
                     .entity(ResponseDTO.builder().title("Curso não encontrado").build())
                     .build();
 
-        UserDTO userDTO = sessionBO.getSession().getData();
+        UserDTO userDTO = sessionBO.getUserDTO();
         CourseStudent courseStudent = courseStudentDAO.findEnroll(userDTO.getUuid(), course.getUuid());
         if (Objects.isNull(courseStudent))
             return Response.status(Response.Status.NOT_FOUND)
@@ -259,7 +259,7 @@ public class CourseBO extends AbstractBO<Course, CourseDAO> {
                         .build();
             }
 
-            UserDTO userDTO = sessionBO.getSession().getData();
+            UserDTO userDTO = sessionBO.getUserDTO();
             CourseStudent courseStudent = courseStudentDAO.findEnroll(userDTO.getUuid(), course.getUuid());
             String htmlContent = replaceCertificateVariables(htmlTemplate, userDTO.getName(), course,
                     courseStudent.getMatriculationDate(), courseStudent.getConclusionDate());
