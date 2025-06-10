@@ -1,33 +1,52 @@
 <app-main-header />
 
 <div class="bg-white  my-[60px] rounded-sm flex mt-5 flex-col w-[80%] m-auto">
+  @if(checkOwner()){
+    <div class="pt-[10px] pr-[10px] self-baseline-last">
+      <p-button label="Apagar curso" icon="pi pi-trash" severity="danger" size="small" />
+    </div>
+  }
   @if(course().mainPicture){
     <img [src]="course().mainPicture" class="w-full course-image"/>
-  }
-  <div class="p-10">
+  
+  } 
+  <div class="p-5">
     <h1 class="font-semibold text-2xl">{{course().name}}</h1>
     <h3 class="text-2xl">{{course().description}}</h3>
   </div>
-  
 </div>
-<p-accordion [multiple]= "true" class="modules-wrapper rounded-sm flex mt-5 flex-col w-[80%] m-auto drag-column" pDroppable (onDrop) = "drop()">
-  @for( module of modules(); track module.uuid){
-    <p-accordionTab [selected] = "true" [header]="module.name"  
-            pDraggable
-            (onDragStart)="dragStart()"
-            (onDragEnd)="dragEnd()">
-          <p class="m-0 mb-[20px]">
-              {{ module.description}}
-          </p>
-          @if(checkOwner()){
-            <div class="pt-[15px] pr-[0px] pb-[5px] pl-[0px]">
-              <p-button label="Adicionar atividade ou recurso" icon="pi pi-plus" />
-            </div>  
-          }
-      </p-accordionTab>
+
+<div class="rounded-sm flex mt-5 mb-[20px] flex-col w-[80%] m-auto bg-white">
+  @if(checkOwner()){
+    <p-accordion cdkDropList (cdkDropListDropped)="reorderModules($event)" [multiple]= "true" class="modules-wrapper rounded-sm flex mt-5 mb-5 flex-col w-[100%] m-auto">
+      @for( module of modules(); track module.uuid){
+        <p-accordionTab cdkDrag [selected] = "true" [header]="module.name">
+              <p class="m-0 mb-[20px]">
+                  {{ module.description}}
+              </p>
+              <div class="footerModule flex mt-5 pt-2 flex-row justify-between m-auto">
+                  <p-button label="Adicionar atividade ou recurso" icon="pi pi-plus" size="small" />
+                  <p-button  label= "Excluir Módulo" icon="pi pi-trash" severity="danger" size="small"/>
+              </div>
+        </p-accordionTab>
+      }
+    </p-accordion>
+    <div class="footerModule flex ml-[15px] mb-[15px] self-start">
+      <p-button class="self-start-first" label="Adicionar Módulo" icon="pi pi-plus"/>
+    </div>
+  } @else {
+    <p-accordion [multiple]= "true" class="modules-wrapper rounded-sm flex mt-5 mb-5 flex-col w-[100%] m-auto p-none">
+        @for( module of modules(); track module.uuid){
+          <p-accordionTab [selected] = "true" [header]="module.name">
+                <p class="m-0 mb-[20px]">
+                    {{ module.description}}
+                </p>
+          </p-accordionTab>
+        }
+    </p-accordion>
   }
-</p-accordion>
+</div>
 <p-blockui [autoZIndex]="999999" [blocked]="blockPage()" styleClass="flex items-center justify-center">
   <i class="pi pi-spin pi-spinner" style="font-size: 2rem"></i>
 </p-blockui>
-<p-toast key="message" position="top-center" />
+<p-toast key="message" position="top-center"/>

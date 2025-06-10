@@ -4,9 +4,10 @@ import { ActivatedRoute } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { BlockUIModule } from 'primeng/blockui';
 import { ToastModule } from 'primeng/toast';
-import { DragDropModule } from 'primeng/dragdrop';
 import { OrderListModule } from 'primeng/orderlist';
 import { AccordionModule } from 'primeng/accordion';
+import { DragDropModule } from '@angular/cdk/drag-drop';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { catchError, of, Subscription, tap } from 'rxjs';
 import { MainHeaderComponent } from "../../components/layout/main-header/main-header.component";
 import { PersistenceService } from '../../services/persistence.service';
@@ -20,7 +21,7 @@ import { ButtonModule } from 'primeng/button';
 @Component({
   selector: 'app-course-home',
   host: {class: ''},
-  imports: [MainHeaderComponent, ToastModule, BlockUIModule, DragDropModule, OrderListModule, AccordionModule, ButtonModule],
+  imports: [MainHeaderComponent, ToastModule, BlockUIModule, DragDropModule, AccordionModule, ButtonModule],
   providers: [MessageService, PersistenceService],
   templateUrl: './course-home.component.html',
   styleUrl: './course-home.component.scss'
@@ -36,6 +37,7 @@ export class CourseHomeComponent implements OnInit, OnDestroy {
   modules = signal<ModuleDTO[]>({} as ModuleDTO[]);
   userData = signal<UserDTO>({} as UserDTO);
   private subscriber: Subscription;
+  currentlyDragging: ModuleDTO | null = null;
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
@@ -83,27 +85,13 @@ export class CourseHomeComponent implements OnInit, OnDestroy {
     }
     return false;
   }
-  // On Drag Start
-    dragStart() {
-        
-    }
 
-    drag() {
-       
-    }
-
-    // On Drag End
-    dragEnd() {
-        
-    }
-
-    // On Drop of Item to droppable area
-    drop() {
-        
-    }
-
-    // Find the Index of a Person
-    findIndex() {
-    }
+  reorderModules(event: CdkDragDrop<ModuleDTO[]>) {
+    moveItemInArray(this.modules(), event.previousIndex, event.currentIndex);
+    this.modules().forEach((module, index) => {
+      module.positionOrder = index;
+    });
+    console.log(this.modules())
+  }
 
 }
