@@ -21,5 +21,4 @@ public class UserDTO {
     private UserTypeEnum type;
     private UUID uuid;
     private String phone;
-    private String picture;
 }

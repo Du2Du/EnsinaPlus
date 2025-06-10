@@ -35,8 +35,6 @@ public class User extends AbstractEntity {
   private String password;
 
   private String phone;
-  @Column(name = "picture", columnDefinition = "text")
-  private String picture;
 
   @Enumerated(EnumType.STRING)
   @Column(name = "type", nullable = false)
@@ -51,23 +49,21 @@ public class User extends AbstractEntity {
 
   @Builder
   public User(UUID uuid, Boolean deleted, LocalDateTime createdAt, LocalDateTime updatedAt, String name, String email,
-      String password, String phone, String picture, UserTypeEnum type) {
+      String password, String phone, UserTypeEnum type) {
     super(uuid, deleted, createdAt, updatedAt);
     this.name = name;
     this.email = email;
     this.password = password;
     this.phone = phone;
-    this.picture = picture;
     this.type = type;
   }
 
-  public User(String name, String email, String password, String phone, String picture) {
+  public User(String name, String email, String password, String phone) {
     super();
     this.name = name;
     this.email = email;
     this.password = password;
     this.phone = phone;
-    this.picture = picture;
   }
 
   public UserDTO toDTO() {
@@ -77,7 +73,6 @@ public class User extends AbstractEntity {
         .email(this.getEmail())
         .type(this.getType())
         .phone(this.getPhone())
-        .picture(this.getPicture())
         .build();
   }
 }

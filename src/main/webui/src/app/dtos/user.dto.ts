@@ -8,5 +8,4 @@ export interface UserDTO {
     type: UserTypeEnum,
     uuid: string,
     phone?: string,
-    picture?: string;
 }

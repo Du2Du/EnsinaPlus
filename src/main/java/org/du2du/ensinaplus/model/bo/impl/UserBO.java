@@ -73,7 +73,6 @@ public class UserBO extends AbstractBO<User, UserDAO> {
 
     userEntity.setName(dto.getName());
     userEntity.setEmail(dto.getEmail());
-    userEntity.setPicture(dto.getPicture());
     userEntity.setPhone(dto.getPhone());
     try {
       dao.persistAndFlush(userEntity);
