@@ -15,6 +15,7 @@ import { catchError, of, tap } from 'rxjs';
 import { FileUtilsService } from '../../../../services/file-utils.service';
 import { PersistenceService } from '../../../../services/persistence.service';
 import { ModuleDTO } from '../../../../dtos/module.dto';
+import { IResource } from '../../course-home.component';
 
 @Component({
   selector: 'app-resource-form',
@@ -29,9 +30,10 @@ export class ResourceFormComponent {
   @ViewChild('form') form!: NgForm;
   isLoading = signal(false);
   resourceDTO = signal<any>({});
-  selectedResource = input<any>({});
+  selectedResource = input<IResource & { typeObj: any }>({} as any);
   selectedModule = input<ModuleDTO>();
   file = signal<string>('');
+  videoFileName = signal<string>('');
   courseUuid!: string;
   reloadData = output();
   onHide = output();
@@ -53,6 +55,9 @@ export class ResourceFormComponent {
   }
 
   ngOnInit() {
+    if (this.selectedResource().type) {
+      this.resourceDTO().tipoObj = this.types.find(t => t.code === this.resourceDTO().type);
+    }
     this.route.params.subscribe((params) => {
       this.courseUuid = params["uuid"]
     });
@@ -68,9 +73,12 @@ export class ResourceFormComponent {
       });
     }
     this.resourceDTO().courseUuid = this.courseUuid;
-    if (this.resourceDTO().tipoObj.code === 'FILE') this.resourceDTO().video = '';
-    else this.file.set('');
-    this.resourceDTO().type = this.resourceDTO().tipoObj.code;    
+    if (this.resourceDTO().tipoObj.code === 'FILE') {
+      this.resourceDTO().video = '';
+    } else if (this.resourceDTO().tipoObj.code === 'VIDEO') {
+      this.file.set('');
+    }
+    this.resourceDTO().type = this.resourceDTO().tipoObj.code;
     this.resourceDTO().moduleUUID = this.selectedModule()?.uuid;
 
     if (this.file())
@@ -113,5 +121,18 @@ export class ResourceFormComponent {
 
   onRemove() {
     this.file.set('');
+  }
+
+  onVideoUpload(event: any) {
+    const file = event.currentFiles[0];
+    this.videoFileName.set(file.name);
+    this.fileService.toBase64(file).subscribe((base64) => {
+      this.resourceDTO().video = base64;
+    });
+  }
+
+  onVideoRemove() {
+    this.resourceDTO().video = '';
+    this.videoFileName.set('');
   }
 }

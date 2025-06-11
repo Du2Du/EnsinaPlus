@@ -1,0 +1,50 @@
+<div class="resource-item p-4 border border-gray-200 rounded-lg shadow-sm">
+  <div class="w-full flex items-center justify-between">
+    <h3 class="text-lg font-semibold text-gray-800 mb-2">
+      {{resource().name}}
+    </h3>
+
+    @if(canEditResource()){
+    <div>
+      <p-button icon="pi pi-pencil" (click)="editResource.emit(resource())" size="small" class="mr-[20px]" />
+      <p-button icon="pi pi-trash" severity="danger" size="small" />
+    </div>
+    }
+  </div>
+
+  <div class="text-sm text-gray-600 mb-4" [innerHTML]="resource().descriptionHTML">
+  </div>
+
+  <div class="resource-content">
+    @if(resource().type === ResourceEnum.FILE) {
+
+    <div class="file-content flex items-center justify-center p-6 bg-gray-50 rounded-lg">
+      <div class="text-center flex flex-col items-center gap-3">
+        <i class="pi pi-file-pdf" style="font-size: 3rem"></i>
+        @if(resource().file){
+        <button (click)="openFile()" class="p-button p-button-outlined font-bold">
+          Abrir PDF
+        </button>
+        }
+      </div>
+    </div>
+    }
+
+    @if (resource().type === ResourceEnum.VIDEO) {
+    <div class="video-content">
+      <div class="relative bg-black rounded-lg overflow-hidden">
+        @if (resource().video) {
+        <video controls class="w-full h-auto max-h-96" preload="metadata">
+          <source [src]="resource().video" type="video/mp4" />
+
+        </video>
+        } @else {
+        <div class="flex items-center justify-center h-48 bg-gray-200">
+          <p class="text-gray-500">Vídeo não disponível</p>
+        </div>
+        }
+      </div>
+    </div>
+    }
+  </div>
+</div>

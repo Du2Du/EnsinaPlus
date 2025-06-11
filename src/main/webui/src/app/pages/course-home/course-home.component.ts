@@ -19,10 +19,21 @@ import { AuthService } from './../../services/auth.service';
 import { CourseHomeModuleFormComponent } from './components/course-home-module-form/course-home-module-form.component';
 import { ResourceFormComponent } from './components/resource-form/resource-form.component';
 import { AvaliationFormComponent } from './components/avaliation-form/avaliation-form.component';
+import { ResourceEnum } from '../../enums/resourceEnum';
+import { ResourceItemComponent } from './components/resource-item/resource-item.component';
+
+export interface IResource {
+  type: ResourceEnum,
+  descriptionHTML: string,
+  name: string,
+  uuid: string,
+  file?: string,
+  video?: string,
+}
 
 @Component({
   selector: 'app-course-home',
-  imports: [RouterModule, MainHeaderComponent, AvaliationFormComponent, DialogModule, ToastModule, ResourceFormComponent, BlockUIModule, DragDropModule, AccordionModule, ButtonModule, CourseHomeModuleFormComponent, DrawerModule],
+  imports: [RouterModule, ResourceItemComponent, MainHeaderComponent, AvaliationFormComponent, DialogModule, ToastModule, ResourceFormComponent, BlockUIModule, DragDropModule, AccordionModule, ButtonModule, CourseHomeModuleFormComponent, DrawerModule],
   providers: [MessageService, PersistenceService, AuthService], // Remover ActivatedRoute daqui
   templateUrl: './course-home.component.html',
   styleUrl: './course-home.component.scss'
@@ -62,6 +73,7 @@ export class CourseHomeComponent implements OnInit, OnDestroy {
   }
 
   loadCourseInfo(): void {
+    this.blockPage.set(true)
     this.persistenceService.getRequest('/v1/course/' + this.courseId)
       .pipe(tap((response: any) => {
         this.blockPage.set(false);
@@ -75,6 +87,7 @@ export class CourseHomeComponent implements OnInit, OnDestroy {
   }
 
   loadCourseModules(): void {
+    this.blockPage.set(true)
     this.persistenceService.getRequest('/v1/module/list/' + this.courseId)
       .pipe(tap((response: any) => {
         this.blockPage.set(false);
@@ -89,6 +102,7 @@ export class CourseHomeComponent implements OnInit, OnDestroy {
   }
 
   reorderModules(event: CdkDragDrop<ModuleDTO[]>) {
+    this.blockPage.set(true)
     moveItemInArray(this.modules(), event.previousIndex, event.currentIndex);
     this.modules().forEach((module, index) => {
       module.positionOrder = index + 1;
@@ -110,7 +124,7 @@ export class CourseHomeComponent implements OnInit, OnDestroy {
   }
 
   deleteModule(uuid: string) {
-    console.log(uuid)
+    this.blockPage.set(true);
     this.persistenceService.deleteRequest('/v1/module/delete/' + uuid)
       .pipe(tap((response: any) => {
         this.blockPage.set(false);
@@ -193,6 +207,12 @@ export class CourseHomeComponent implements OnInit, OnDestroy {
   showMessage(data: any) {
     this.messageService.clear()
     this.messageService.add(data);
+  }
+
+  editResource(resource: IResource) {
+    this.selectedEntity.set('resource')
+    this.selectedResource.set(resource)
+    this.visible.set(true)
   }
 
   protected RoleEnum = RoleEnum;

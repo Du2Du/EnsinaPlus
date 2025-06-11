@@ -29,7 +29,7 @@ public class ModuleResource extends AbstractEntity {
   @Column(name = "name", nullable = false)
   private String name;
 
-  @Column(name = "description_html", columnDefinition = "text")
+@Column(name = "description_html", columnDefinition = "text")
   private String descriptionHTML;
 
   @Column(name = "file", columnDefinition = "text")

@@ -9,6 +9,7 @@ import org.du2du.ensinaplus.model.bo.AbstractBO;
 import org.du2du.ensinaplus.model.bo.session.SessionBO;
 import org.du2du.ensinaplus.model.dao.impl.CourseDAO;
 import org.du2du.ensinaplus.model.dao.impl.ModuleDAO;
+import org.du2du.ensinaplus.model.dao.impl.ModuleResourceDAO;
 import org.du2du.ensinaplus.model.dto.ModuleDTO;
 import org.du2du.ensinaplus.model.dto.base.ResponseDTO;
 import org.du2du.ensinaplus.model.dto.base.ValidateDTO;
@@ -31,6 +32,9 @@ public class ModuleBO extends AbstractBO<Module, ModuleDAO>{
 
     @Inject
     CourseDAO courseDAO; 
+
+    @Inject
+    ModuleResourceDAO moduleResourceDAO;
     
     @Transactional
     public Response createModule(ModuleFormDTO moduleFormDTO){
@@ -139,6 +143,9 @@ public class ModuleBO extends AbstractBO<Module, ModuleDAO>{
     public Response listModulesOfCourse(UUID courseUuid){
         try {
             List<ModuleDTO> moduleDTOs = dao.listModulesOfCourse(courseUuid);
+            moduleDTOs.forEach(module -> {
+                module.setResources(moduleResourceDAO.listByModule(module.getUuid()));
+            });
             return Response.status(Response.Status.OK)
                     .entity(ResponseDTO.builder().title("Módulos listados com sucesso!").data(moduleDTOs).build())
                     .build();

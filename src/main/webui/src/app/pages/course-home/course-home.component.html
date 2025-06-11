@@ -29,13 +29,14 @@
     }
   </div>
 </div>
-@if(modules().length || userData()?.uuid === course().owner?.uuid){
+@if(!blockPage()&& (modules().length || userData()?.uuid === course().owner?.uuid)){
 
 <div class="rounded-md flex mt-5 flex-col w-[80%] m-auto bg-white">
   @if(userData()?.uuid === course().owner?.uuid || [RoleEnum.ADMIN, RoleEnum.SUPER_ADMIN].includes(userData().role)){
   @if(userData()?.uuid === course().owner?.uuid){
   <div class="footerModule flex pt-[15px] pl-[15px] self-start">
-    <p-button class="self-start-first" (click)="selectedEntity.set('module');visible.set(true)" label="Adicionar Módulo" icon="pi pi-plus" />
+    <p-button class="self-start-first" (click)="selectedEntity.set('module');visible.set(true)" label="Adicionar Módulo"
+      icon="pi pi-plus" />
   </div>
   }
   <p-accordion [value]="uuidModules()" cdkDropList (cdkDropListDropped)="reorderModules($event)" [multiple]="true"
@@ -49,10 +50,20 @@
         <p class="m-0 mb-[20px]">
           {{ module.description}}
         </p>
+
+        <div class="flex flex-col gap-3 mb-[20px]">
+          @for(resource of module.resources; track resource.uuid){
+          <app-resource-item (editResource)="editResource($event)"
+            [canEditResource]="userData()?.uuid === course().owner?.uuid || [RoleEnum.ADMIN, RoleEnum.SUPER_ADMIN].includes(userData().role)"
+            [resource]="resource" />
+          }
+        </div>
         <div class="footerModule flex mt-5 pt-2 flex-row justify-between m-auto">
-          <p-button (click)="selectedEntity.set('resource');selectedModule.set(module);visible.set(true)" label="Adicionar atividade ou recurso" icon="pi pi-plus" size="small" />
+          <p-button (click)="selectedEntity.set('resource');selectedModule.set(module);visible.set(true)"
+            label="Adicionar atividade ou recurso" icon="pi pi-plus" size="small" />
           <div>
-            <p-button (click)="selectedEntity.set('module');updateModule(module)" icon="pi pi-pencil" size="small" class="mr-[20px]" />
+            <p-button (click)="selectedEntity.set('module');updateModule(module)" icon="pi pi-pencil" size="small"
+              class="mr-[20px]" />
             <p-button (click)="deleteModule(module.uuid)" icon="pi pi-trash" severity="danger" size="small" />
           </div>
 
@@ -71,6 +82,13 @@
         <p class="m-0 mb-[20px]">
           {{ module.description}}
         </p>
+        <div class="flex flex-col gap-3 mb-[20px]">
+          @for(resource of module.resources; track resource.uuid){
+          <app-resource-item (editResource)="editResource($event)"
+            [canEditResource]="userData()?.uuid === course().owner?.uuid || [RoleEnum.ADMIN, RoleEnum.SUPER_ADMIN].includes(userData().role)"
+            [resource]="resource" />
+          }
+        </div>
       </p-accordion-content>
     </p-accordion-panel>
     }
@@ -102,11 +120,10 @@
   </ng-template>
   @if(selectedEntity() === 'resource'){
   <app-resource-form (onHide)="onHide()" (showMessage)="showMessage($event)" (reloadData)="loadCourseModules()"
-    [selectedModule]="selectedModule()"
-    [selectedResource]="selectedResource()"></app-resource-form>
+    [selectedModule]="selectedModule()" [selectedResource]="selectedResource()"></app-resource-form>
   }@else if(selectedEntity() === 'module'){
-  <app-course-home-module-form (onHide)="onHide()" (showMessage)="showMessage($event)" (reloadData)=" loadCourseModules()"
-    [selectedModule]="selectedModule()"></app-course-home-module-form>
+  <app-course-home-module-form (onHide)="onHide()" (showMessage)="showMessage($event)"
+    (reloadData)=" loadCourseModules()" [selectedModule]="selectedModule()"></app-course-home-module-form>
   }
 </p-drawer>
 
