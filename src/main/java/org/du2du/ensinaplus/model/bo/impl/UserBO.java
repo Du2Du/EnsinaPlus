@@ -120,7 +120,7 @@ public class UserBO extends AbstractBO<User, UserDAO> {
           .build();
     UserDTO userDTO = userEntity.toDTO();
 
-    if (UserTypeEnum.SUPER_ADMIN.equals(userEntity.getType()) && RoleEnum.valueOf(role).equals(RoleEnum.ADMIN))
+    if (UserTypeEnum.SUPER_ADMIN.equals(userEntity.getType()) && role.equals(RoleEnum.ROLE_ADMIN))
       userDTO.setRole(RoleEnum.SUPER_ADMIN);
     else
       userDTO.setRole(RoleEnum.valueOf(role.toUpperCase()));
