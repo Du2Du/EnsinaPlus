@@ -20,9 +20,11 @@ public class CourseFormDTO {
     private String name;
     private String description;
     private String mainPicture;
+    private UUID uuid;
 
     public Course toEntity(UUID uuidUser){
         return Course.builder()
+        .uuid(uuid)
         .name(name)
         .description(description)
         .mainPicture(mainPicture)

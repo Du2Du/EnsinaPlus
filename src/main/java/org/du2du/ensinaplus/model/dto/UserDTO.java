@@ -2,6 +2,7 @@ package org.du2du.ensinaplus.model.dto;
 
 import java.util.UUID;
 
+import org.du2du.ensinaplus.model.entity.impl.User;
 import org.du2du.ensinaplus.model.enums.RoleEnum;
 import org.du2du.ensinaplus.model.enums.UserTypeEnum;
 
@@ -21,5 +22,12 @@ public class UserDTO {
     private UserTypeEnum type;
     private UUID uuid;
     private String phone;
-    private String picture;
+
+    public UserDTO(User user) {
+        this.name = user.getName();
+        this.email = user.getEmail();
+        this.type = user.getType();
+        this.uuid = user.getUuid();
+        this.phone = user.getPhone();
+    }
 }

@@ -52,16 +52,14 @@ export class LoginFormComponent {
     this.persistenceService.postRequest(`/v1/user/login/${this.dto().role.toLowerCase()}`, this.dto())
       .pipe(
         tap((response: any) => {
-          this.authService.setUser(response.data);
+          localStorage.setItem('ensina-plus-token', response.data);
           this.messageService.add({
             severity: 'success',
             key: 'toastMessage',
             summary: 'Login realizado',
             detail: 'Você foi autenticado com sucesso!'
           });
-          setTimeout(() => {
-            this.router.navigate(['/home']);
-          }, 2000)
+          this.router.navigate(['/home']);
         }),
         catchError((data: any) => {
           this.isLoading.set(false);
@@ -72,7 +70,7 @@ export class LoginFormComponent {
             detail: data?.error?.description || 'Não foi possível realizar o login. Tente novamente mais tarde!'
           });
 
-          return of(null);
+          return of(data);
         })
       )
       .subscribe()

@@ -20,10 +20,10 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Table(name= "tbcourse")
+@Table(name = "tbcourse")
 @Getter
 @Setter
-public class Course extends AbstractEntity{
+public class Course extends AbstractEntity {
 
     @Column(name = "name", nullable = false)
     private String name;
@@ -37,44 +37,64 @@ public class Course extends AbstractEntity{
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(referencedColumnName = "uuid", name = "owner_uuid", nullable = false, columnDefinition = "uuid references tbuser(uuid)")
     private User owner;
-    
-    @OneToMany (mappedBy = "course", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY )
+
+    @OneToMany(mappedBy = "course", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     private List<CourseStudent> students;
 
     @OneToMany(mappedBy = "course", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     private List<Module> modules;
 
-    public Course(){
+    @Column(name = "avaliation_avg", nullable = true)
+    private Float avaliationAvg;
+
+    public Course() {
         super();
     }
 
-@Builder
-public Course(UUID uuid, Boolean deleted, LocalDateTime createdAt, LocalDateTime updatedAt, String name, String description, String mainPicture,  User owner, List<CourseStudent> students) {
-    super(uuid, deleted, createdAt, updatedAt);
-    this.name = name;
-    this.description = description;
-    this.mainPicture = mainPicture;
-    this.owner = owner;
-    this.students = students;
-  }
+    @Builder
+    public Course(UUID uuid, Boolean deleted, LocalDateTime createdAt, LocalDateTime updatedAt, String name,
+            String description,
+            String mainPicture, User owner, List<CourseStudent> students, Float avaliationAvg) {
+        super(uuid, deleted, createdAt, updatedAt);
+        this.name = name;
+        this.description = description;
+        this.mainPicture = mainPicture;
+        this.owner = owner;
+        this.students = students;
+        this.avaliationAvg = avaliationAvg;
+    }
 
- public Course(String name, String description, String mainPicture, User owner, List<CourseStudent> students){
-    super();
-    this.name = name;
-    this.description = description;
-    this.mainPicture = mainPicture;
-    this.owner = owner;
-    this.students = students;
- }
+    public Course(String name, String description, String mainPicture, User owner, List<CourseStudent> students) {
+        super();
+        this.name = name;
+        this.description = description;
+        this.mainPicture = mainPicture;
+        this.owner = owner;
+        this.students = students;
+    }
 
- public CourseDTO toDTO(){
-    return CourseDTO.builder()
-    .name(this.getName())
-    .description(this.getDescription())
-    .mainPicture(this.getMainPicture())
-    .uuid(this.getUuid())
-    .owner(this.getOwner().toDTO())
-    .build();
- }
- 
+    public CourseDTO toDTO() {
+        return CourseDTO.builder()
+                .name(this.getName())
+                .description(this.getDescription())
+                .mainPicture(this.getMainPicture())
+                .uuid(this.getUuid())
+                .avaliationAvg(this.getAvaliationAvg())
+                .owner(this.getOwner().toDTO())
+                .build();
+    }
+    public CourseDTO toDTO(Boolean concluido, Boolean matriculado, Boolean avaliado) {
+        return CourseDTO.builder()
+                .name(this.getName())
+                .description(this.getDescription())
+                .mainPicture(this.getMainPicture())
+                .uuid(this.getUuid())
+                .avaliado(avaliado)
+                .concluido(concluido)
+                .matriculado(matriculado)
+                .avaliationAvg(this.getAvaliationAvg())
+                .owner(this.getOwner().toDTO())
+                .build();
+    }
+
 }

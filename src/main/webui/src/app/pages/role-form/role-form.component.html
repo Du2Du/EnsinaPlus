@@ -1,0 +1,35 @@
+<app-main-header />
+
+<div class="w-[80%] mt-5 mx-auto">
+  @if(users().length){
+  <p-table class="rounded-md" [value]="users()">
+    <ng-template #header>
+      <tr>
+        <th>Nome</th>
+        <th>E-mail</th>
+        <th>Tipo</th>
+      </tr>
+    </ng-template>
+    <ng-template #body let-user>
+      <tr>
+        <td>{{ user.name }}</td>
+        <td>{{ user.email }}</td>
+        <td>
+          <p-select appendTo="body" [options]="types" optionLabel="label"
+          (onChange)="changeRole(user)" [(ngModel)]="user.typeObj" class="w-full md:w-56" />
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template #footer>
+      <p-paginator [alwaysShow]="false" (onPageChange)="onPageChange($event)" [first]="page()" [rows]="limit()"
+        [totalRecords]="total()" />
+    </ng-template>
+  </p-table>
+  }@else {
+  <p-message severity="info">Nenhum usuário encontrado</p-message>
+  }
+</div>
+
+<p-blockui [autoZIndex]="999999" [blocked]="blockPage()" styleClass="flex items-center justify-center">
+  <i class="pi pi-spin pi-spinner" style="font-size: 2rem"></i>
+</p-blockui>

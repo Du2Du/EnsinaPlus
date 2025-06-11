@@ -2,16 +2,16 @@ package org.du2du.ensinaplus.model.dto.form;
 
 import java.util.UUID;
 
-import io.smallrye.common.constraint.NotNull;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
 public class CourseAvaliationFormDTO {
 
-  @NotNull()
+  @NotNull(message = "Curso não informado")
   private UUID courseUUID;
-  @NotNull()
+  @NotNull(message = "Estrelas não informado")
   private Integer stars;
   @NotEmpty(message = "Comentário não informado")
   private String comment;

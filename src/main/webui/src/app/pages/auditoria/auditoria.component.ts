@@ -2,7 +2,7 @@ import { Component, signal } from '@angular/core';
 import { TableModule } from 'primeng/table';
 import { MainHeaderComponent } from '../../components/layout/main-header/main-header.component';
 import { PersistenceService } from '../../services/persistence.service';
-import { catchError, finalize, tap } from 'rxjs';
+import { catchError, finalize, of, tap } from 'rxjs';
 import { MessageModule } from 'primeng/message';
 import { AsyncPipe, DatePipe, JsonPipe } from '@angular/common';
 import { PaginatorModule } from 'primeng/paginator';
@@ -31,7 +31,7 @@ export class AuditoriaComponent {
       this.totalElements = response.total;
     }), catchError(error => {
       this.logs.set([]);
-      return error;
+      return of(error);
     }), finalize(() => {
       this.searchingLogs.set(false);
     })).subscribe();

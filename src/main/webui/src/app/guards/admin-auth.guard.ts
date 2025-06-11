@@ -10,10 +10,10 @@ export const adminAuthGuard: CanActivateFn = (route, state) => {
 
   return authService.getUser().pipe(
     tap(user => {
-      if (user.role !== RoleEnum.ADMIN) {
+      if (user.role !== RoleEnum.ADMIN && user.role !== RoleEnum.SUPER_ADMIN) {
         router.navigate(['/home']);
       }
     }),
-    map(user => user.role === RoleEnum.ADMIN)
+    map(user => user.role === RoleEnum.ADMIN || user.role === RoleEnum.SUPER_ADMIN)
   );
 };

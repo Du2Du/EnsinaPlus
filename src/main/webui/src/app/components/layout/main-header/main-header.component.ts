@@ -7,14 +7,17 @@ import { ButtonModule } from 'primeng/button';
 import { DividerModule } from 'primeng/divider';
 import { InputTextModule } from 'primeng/inputtext';
 import { PopoverModule } from 'primeng/popover';
-import { catchError, debounceTime, fromEvent, Subscription, tap } from 'rxjs';
+import { catchError, debounceTime, fromEvent, of, Subscription, tap } from 'rxjs';
 import { UserDTO } from '../../../dtos/user.dto';
 import { SpliceNamePipe } from '../../../pipes/splice-name.pipe';
 import { AuthService } from '../../../services/auth.service';
 import { PersistenceService } from './../../../services/persistence.service';
+import { UserTypeEnum } from '../../../enums/userTypeEnum';
+import { RoleEnum } from '../../../enums/roleEnum';
 
 @Component({
   selector: 'app-main-header',
+  providers: [PersistenceService, AuthService, Router],
   imports: [AvatarModule, ButtonModule, BlockUIModule, SpliceNamePipe, DividerModule, InputTextModule, FormsModule, PopoverModule],
   host: {
     class: 'w-full bg-stone-50 gap-2 !pr-2 !pl-2 flex shadow-md items-center justify-between'
@@ -35,7 +38,7 @@ export class MainHeaderComponent implements OnInit, AfterViewInit, OnDestroy, On
   user = signal<UserDTO>({} as UserDTO);
   blockedPanel = signal(false);
   private subscriber: Subscription;
-  private inputSubscriber!: Subscription;
+  private debounceTimer: any;
 
   ngOnInit(): void {
     this.loadTabs();
@@ -46,28 +49,26 @@ export class MainHeaderComponent implements OnInit, AfterViewInit, OnDestroy, On
   }
 
   ngAfterViewInit(): void {
-    this.inputSubscriber = fromEvent(this.r2.selectRootElement('#inputSearch', true), 'input').pipe(debounceTime(500)).subscribe((event: any) => {
-      this.searchCoursesEvent.emit(this.searchInput())
-      this.searchCourses(event.target.value);
-    });
   }
 
   ngOnDestroy(): void {
     this.subscriber.unsubscribe();
-    this.inputSubscriber.unsubscribe();
+    if (this.debounceTimer) {
+      clearTimeout(this.debounceTimer);
+    }
   }
 
   private loadTabs() {
-    this.persistenceService.getRequest('/v1/tabs').pipe(tap((response: any) => {
+    this.persistenceService.getRequest('/v1/tab/list').pipe(tap((response: any) => {
       this.tabs.set(response.data);
     }), catchError(error => {
       this.tabs.set([]);
-      return error;
+      return of(error);
     })).subscribe();
   }
 
   onLogoClick() {
-    this.router.navigate(['/']);
+    this.router.navigate(['/home']);
   }
 
   searchCourses(event: string) {
@@ -82,4 +83,16 @@ export class MainHeaderComponent implements OnInit, AfterViewInit, OnDestroy, On
   redirectTab(url: string) {
     this.router.navigateByUrl(url);
   }
+
+  onInputChange(event: any) {
+    if (this.debounceTimer) {
+      clearTimeout(this.debounceTimer);
+    }
+    this.debounceTimer = setTimeout(() => {
+      this.searchCoursesEvent.emit(this.searchInput());
+      this.searchCourses(event.target.value);
+    }, 500);
+  }
+
+  protected RoleEnum = RoleEnum;
 }

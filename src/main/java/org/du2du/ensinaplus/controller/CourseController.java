@@ -9,8 +9,9 @@ import org.du2du.ensinaplus.model.dto.form.CourseAvaliationFormDTO;
 import org.du2du.ensinaplus.model.dto.form.CourseFormDTO;
 import org.du2du.ensinaplus.model.enums.RoleEnum;
 import org.du2du.ensinaplus.security.ActionDescription;
-import org.du2du.ensinaplus.security.RequireRole;
 
+import io.quarkus.security.Authenticated;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
@@ -21,8 +22,6 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
-import jakarta.ws.rs.core.Context;
-import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
@@ -34,30 +33,40 @@ public class CourseController {
 
     @Inject
     CourseStudentBO courseStudentBO;
-    
+
     @POST
-    @RequireRole(RoleEnum.ROLE_TEACHER)
+    @RolesAllowed(RoleEnum.ROLE_TEACHER)
     @ActionDescription("Criando um curso")
     @Path("create")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response createCourse(CourseFormDTO course, @Context HttpHeaders headers) {
-        return courseBO.createCourse(course, headers);
+    public Response createCourse(CourseFormDTO course) {
+        return courseBO.createCourse(course);
     }
 
     @POST
     @Path("enroll")
-    @RequireRole(RoleEnum.ROLE_STUDENT)
+    @RolesAllowed(RoleEnum.ROLE_STUDENT)
     @ActionDescription("Matriculou-se em um curso")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response matriculateCourse(CourseStudentDTO courseStudentDTO, @Context HttpHeaders headers) {
-        return courseStudentBO.matriculateUser(courseStudentDTO, headers);
+    public Response matriculateCourse(CourseStudentDTO courseStudentDTO) {
+        return courseStudentBO.matriculateUser(courseStudentDTO);
+    }
+
+    @DELETE
+    @Path("unenroll/{uuid}")
+    @RolesAllowed(RoleEnum.ROLE_STUDENT)
+    @ActionDescription("Desmatriculou-se do curso")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response desmatricularCurso(@PathParam("uuid") UUID uuid) {
+        return courseStudentBO.desmatricularCurso(uuid);
     }
 
     @GET
     @Path("list")
-    @RequireRole(RoleEnum.ROLE_STUDENT)
+    @RolesAllowed(RoleEnum.ROLE_STUDENT)
     @ActionDescription("Listou todos os cursos")
     @Produces(MediaType.APPLICATION_JSON)
     public Response listAllCourses() {
@@ -65,8 +74,17 @@ public class CourseController {
     }
 
     @GET
+    @Path("{uuid}")
+    @Authenticated
+    @ActionDescription("Entrou em um curso")
+    public Response find(@PathParam("uuid") UUID uuid) {
+        return courseBO.findCourse(uuid);
+    }
+
+    @GET
     @Path("search")
-    @RequireRole(RoleEnum.ROLE_STUDENT)
+    @RolesAllowed({ RoleEnum.ROLE_STUDENT, RoleEnum.ROLE_ADMIN, RoleEnum.ROLE_SUPER_ADMIN })
+    @ActionDescription("Buscou um curso")
     public Response searchCourses(@QueryParam("search") String search, @QueryParam("page") Integer page,
             @QueryParam("limit") Integer limit) {
         return courseBO.searchCourse(search, page, limit);
@@ -74,58 +92,66 @@ public class CourseController {
 
     @GET
     @Path("enrollment")
-    @RequireRole(RoleEnum.ROLE_STUDENT)
+    @RolesAllowed(RoleEnum.ROLE_STUDENT)
     @ActionDescription("Listou todos os cursos que está matriculado")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response listEnrollmentCourses(@Context HttpHeaders headers) {
-        return courseBO.listEnrollmentCourses(headers);
+    public Response listEnrollmentCourses() {
+        return courseBO.listEnrollmentCourses();
     }
 
     @GET
     @Path("list/created")
-    @RequireRole(RoleEnum.ROLE_TEACHER)
+    @RolesAllowed(RoleEnum.ROLE_TEACHER)
     @ActionDescription("Listou todos os cursos de sua autoria")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response listCreatedCourses(@Context HttpHeaders headers) {
-        return courseBO.listCreatedCourses(headers);
+    public Response listCreatedCourses() {
+        return courseBO.listCreatedCourses();
     }
 
     @PUT
-    @RequireRole(RoleEnum.ROLE_TEACHER)
+    @RolesAllowed(RoleEnum.ROLE_TEACHER)
     @ActionDescription("Atualizou os dados básicos do curso")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    @Path("update/{uuid}")
-    public Response updateCourse(@PathParam("uuid") UUID uuid, CourseFormDTO course, @Context HttpHeaders headers){
-        return courseBO.updateCourse(course, headers, uuid);
+    @Path("update")
+    public Response updateCourse(CourseFormDTO course) {
+        return courseBO.updateCourse(course);
     }
 
     @DELETE
-    @RequireRole(RoleEnum.ROLE_TEACHER)
+    @RolesAllowed({ RoleEnum.ROLE_TEACHER, RoleEnum.ROLE_ADMIN, RoleEnum.ROLE_SUPER_ADMIN })
     @ActionDescription("Deleteou um curso")
     @Produces(MediaType.APPLICATION_JSON)
     @Path("delete/{uuid}")
-    public Response deleteCourse(@PathParam("uuid") UUID uuid,  @Context HttpHeaders headers){
-        return courseBO.deleteCourse(uuid, headers);
+    public Response deleteCourse(@PathParam("uuid") UUID uuid) {
+        return courseBO.deleteCourse(uuid);
     }
 
     @GET
     @Path("generate/{uuid}/certification")
     @Produces("application/pdf")
-    @RequireRole(RoleEnum.ROLE_STUDENT)
+    @RolesAllowed(RoleEnum.ROLE_STUDENT)
     @ActionDescription("Gerou um certificado de conclusão de um curso")
-    public Response generateCertification(@PathParam("uuid") UUID uuid, @Context HttpHeaders headers) {
-        return courseBO.generateCertification(headers, uuid);
+    public Response generateCertification(@PathParam("uuid") UUID uuid) {
+        return courseBO.generateCertification(uuid);
     }
+
+    @GET
+    @Path("avaliation/list/{courseUUID}")
+    @Authenticated
+    @ActionDescription("Listou as avalicações de um curso")
+    public Response listAvaliation(@PathParam("courseUUID") UUID courseUUID) {
+        return courseBO.listAvaliations(courseUUID);
+    }
+
 
     @POST
     @Path("avaliate")
-    @RequireRole(RoleEnum.ROLE_STUDENT)
+    @RolesAllowed(RoleEnum.ROLE_STUDENT)
     @ActionDescription("Avaliou um curso")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response avaliateCourse(CourseAvaliationFormDTO courseStudentDTO,
-            @Context HttpHeaders headers) {
-        return courseBO.avaliateCourse(courseStudentDTO, headers);
+    public Response avaliateCourse(CourseAvaliationFormDTO courseStudentDTO) {
+        return courseBO.avaliateCourse(courseStudentDTO);
     }
 }

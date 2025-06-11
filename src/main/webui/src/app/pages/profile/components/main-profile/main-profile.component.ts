@@ -10,7 +10,7 @@ import { UserDTO } from '../../../../dtos/user.dto';
 import { AuthService } from '../../../../services/auth.service';
 import { PersistenceService } from '../../../../services/persistence.service';
 import { DividerModule } from 'primeng/divider';
-import { catchError, Subscription, tap } from 'rxjs';
+import { catchError, of, Subscription, tap } from 'rxjs';
 import { MessageService } from 'primeng/api';
 
 @Component({
@@ -46,7 +46,7 @@ export class MainProfileComponent implements OnDestroy {
 
     }
     this.isLoading.set(true);
-    this.persistenceService.putRequest("/v1/user/save/" + this.userData().uuid, this.userData()).pipe(tap(this.onSaveUser.bind(this)), catchError(this.onSaveUserError.bind(this))).subscribe();
+    this.persistenceService.putRequest("/v1/user/update/", this.userData()).pipe(tap(this.onSaveUser.bind(this)), catchError(this.onSaveUserError.bind(this))).subscribe();
   }
 
   private joinFormMessages() {
@@ -70,7 +70,7 @@ export class MainProfileComponent implements OnDestroy {
   private onSaveUserError(error: any) {
     this.isLoading.set(false);
     this.messageService.add({ severity: 'error', summary: 'Erro', key: 'toastMessage', detail: error.description });
-    return error;
+    return of(error);
   }
 
 }

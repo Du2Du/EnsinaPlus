@@ -1,0 +1,142 @@
+<app-main-header />
+
+<div style="border-radius: 6px;" class="bg-white  my-[60px] rounded-md flex mt-5 flex-col w-[80%] m-auto">
+  @if(course().mainPicture){
+  <img style="border-radius: 6px 6px 0 0;" [src]="course().mainPicture" class="w-full course-image" />
+
+  }
+  <div class="flex justify-between itens-start p-5">
+    <div>
+      <h1 class="font-semibold text-2xl">{{course().name}}</h1>
+      <h3 class="text-xl">{{course().description}}</h3>
+      @if(course().avaliationAvg){
+      <p-rating class="mb-3" (click)="goToAvaliations()" [(ngModel)]="course().avaliationAvg" [readonly]="true" />
+      }
+      @if(!course().concluido && course().matriculado && userData().role=== RoleEnum.STUDENT){
+      <p-button icon="pi pi-exclamation-triangle" label="Desmatricular-se" (click)="desmatricular()" severity="warn"
+        size="small" />
+      }@else if(course().concluido && userData().role=== RoleEnum.STUDENT){
+      <div class="flex mt-3 items-center gap-3">
+        <p-button label="Certificado" (click)="generateFile()" severity="success" icon="pi pi-file" size="small" />
+        @if(!course().avaliado){
+        <p-button label="Avaliar" variant="outlined" (click)="avaliate()" severity="info" icon="pi pi-pencil"
+          size="small" />
+        }
+      </div>
+      }
+    </div>
+    @if(userData().uuid === course().owner.uuid || [RoleEnum.ADMIN, RoleEnum.SUPER_ADMIN].includes(userData().role)){
+    <div>
+      <p-button (click)="excludeCourse()" icon="pi pi-trash" severity="danger" size="small" />
+    </div>
+    }
+  </div>
+</div>
+@if(!blockPage()&& (modules().length || userData().uuid === course().owner.uuid)){
+
+<div class="rounded-md flex mt-5 flex-col w-[80%] m-auto bg-white">
+  @if(userData().uuid === course().owner.uuid || [RoleEnum.ADMIN, RoleEnum.SUPER_ADMIN].includes(userData().role)){
+  @if(userData().uuid === course().owner.uuid&& userData().role=== RoleEnum.TEACHER){
+  <div class="footerModule flex pt-[15px] pl-[15px] self-start">
+    <p-button class="self-start-first" (click)="selectedEntity.set('module');visible.set(true)" label="Adicionar Módulo"
+      icon="pi pi-plus" />
+  </div>
+  }
+  <p-accordion [value]="uuidModules()" cdkDropList (cdkDropListDropped)="reorderModules($event)" [multiple]="true"
+    class="modules-wrapper rounded-md flex mt-5 mb-5 flex-col w-[100%] m-auto">
+    @for(module of modules(); track module.uuid){
+    <p-accordion-panel cdkDrag [value]='module.uuid'>
+      <p-accordion-header>
+        {{module.name}}
+      </p-accordion-header>
+      <p-accordion-content>
+        <p class="m-0 mb-[20px]">
+          {{ module.description}}
+        </p>
+
+        <div class="flex flex-col gap-3 mb-[20px]">
+          @for(resource of module.resources; track resource.uuid){
+          <app-resource-item (reloadCourse)="loadCourseInfo()" (editResource)="editResource($event)" (deleteResource)="deleteResource($event)"
+            [canEditResource]="userData().uuid === course().owner.uuid || [RoleEnum.ADMIN, RoleEnum.SUPER_ADMIN].includes(userData().role)"
+            [resource]="resource" />
+          }
+        </div>
+        <div class="footerModule flex mt-5 pt-2 flex-row justify-between m-auto">
+          @if(userData().role=== RoleEnum.TEACHER){
+          <p-button (click)="selectedEntity.set('resource');selectedModule.set(module);visible.set(true)"
+            label="Adicionar atividade ou recurso" icon="pi pi-plus" size="small" />
+          }
+          <div>
+            @if(userData().role=== RoleEnum.TEACHER){
+            <p-button (click)="selectedEntity.set('module');updateModule(module)" icon="pi pi-pencil" size="small"
+              class="mr-[20px]" />
+            }
+            <p-button (click)="deleteModule(module.uuid)" icon="pi pi-trash" severity="danger" size="small" />
+          </div>
+
+        </div>
+      </p-accordion-content>
+    </p-accordion-panel>
+    }
+  </p-accordion>
+  } @else {
+  <p-accordion [value]="uuidModules()" [multiple]="true"
+    class="modules-wrapper rounded-md flex mt-5 mb-5 flex-col w-[100%] m-auto">
+    @for( module of modules(); track module.uuid){
+    <p-accordion-panel [value]='module.uuid'>
+      <p-accordion-header>{{module.name}}</p-accordion-header>
+      <p-accordion-content>
+        <p class="m-0 mb-[20px]">
+          {{ module.description}}
+        </p>
+        <div class="flex flex-col gap-3 mb-[20px]">
+          @for(resource of module.resources; track resource.uuid){
+          <app-resource-item  (reloadCourse)="loadCourseInfo()" (editResource)="editResource($event)" (deleteResource)="deleteResource($event)"
+            [canEditResource]="userData().uuid === course().owner.uuid || RoleEnum.TEACHER === userData().role"
+            [resource]="resource" />
+          }
+        </div>
+      </p-accordion-content>
+    </p-accordion-panel>
+    }
+  </p-accordion>
+  }
+</div>
+}
+<p-blockui [autoZIndex]="999999" [blocked]="blockPage()" styleClass="flex items-center justify-center">
+  <i class="pi pi-spin pi-spinner" style="font-size: 2rem"></i>
+</p-blockui>
+<p-toast key="message" position="top-center" />
+
+<p-drawer (onHide)="onHide()" [(visible)]="visible" position="right" styleClass="!w-full md:!w-80 lg:!w-[50rem]">
+  <ng-template #header>
+
+    @if(selectedEntity() === 'resource'){
+    @if(selectedResource().uuid){
+    <h1 class="text-2xl bold">Atualizar Recurso</h1>
+    }@else{
+    <h1 class="text-2xl bold">Criar Recurso</h1>
+    }
+    }@else if(selectedEntity() === 'module'){
+    @if(selectedModule().uuid) {
+    <h1 class="text-2xl bold">Atualizar Módulo</h1>
+    } @else{
+    <h1 class="text-2xl bold">Criar Módulo</h1>
+    }
+    }
+  </ng-template>
+  @if(selectedEntity() === 'resource'){
+  <app-resource-form (onHide)="onHide()" (showMessage)="showMessage($event)" (reloadData)="loadCourseModules()"
+    [selectedModule]="selectedModule()" [selectedResource]="selectedResource()"></app-resource-form>
+  }@else if(selectedEntity() === 'module'){
+  <app-course-home-module-form (onHide)="onHide()" (showMessage)="showMessage($event)"
+    (reloadData)=" loadCourseModules()" [selectedModule]="selectedModule()"></app-course-home-module-form>
+  }
+</p-drawer>
+
+
+<p-dialog header="Realizar Avaliação" [modal]="true" [(visible)]="visibleDialog" [style]="{ width: '25rem' }">
+  <app-avaliation-form [courseUUID]="courseId" (showMessage)="showMessage($event)" />
+</p-dialog>
+
+<p-toast key="toastMessage" [baseZIndex]="999999" position="top-center"></p-toast>

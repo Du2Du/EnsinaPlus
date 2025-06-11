@@ -1,6 +1,7 @@
 package org.du2du.ensinaplus.utils;
 
 import java.util.Set;
+import java.util.UUID;
 
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.jwt.JsonWebToken;
@@ -20,9 +21,10 @@ public class TokenUtils {
     @Inject
     JWTParser parser;
 
-    public String generate(Set<String> roles) {
+    public String generate(Set<String> roles, UUID sesssao) {
         return Jwt.issuer(issuer)
             .subject("ensina-plus")
+            .claim("sessaoUUID", sesssao)
             .expiresAt(System.currentTimeMillis() + 1000 * 60 * 60 * 24)
             .groups(roles).sign();
     }

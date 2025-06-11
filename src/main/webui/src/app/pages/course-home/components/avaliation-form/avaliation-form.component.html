@@ -1,0 +1,16 @@
+<form #form="ngForm">
+  <div class="flex items-center gap-4 mb-4">
+    <p-rating [required]="true" 
+              [ngModel]="avaliationDTO().stars" 
+              (ngModelChange)="updateStars($event)" 
+              name="stars" />
+  </div>
+  <div class="flex flex-col items-start gap-4 mb-8">
+    <label for="description" class="font-semibold w-24">Descrição</label>
+    <textarea name="description" rows="5" class="w-full" cols="30" pTextarea [required]="true"
+      [(ngModel)]="avaliationDTO().description" id="description"></textarea>
+  </div>
+  <div class="flex justify-end gap-2">
+    <p-button label="Enviar" [disabled]="form.invalid" (click)="saveAvaliation()" />
+  </div>
+</form>

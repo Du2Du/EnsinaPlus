@@ -1,11 +1,11 @@
-<span class="text-2xl mt-4"><b>Cursos matriculados</b></span>
+<span class="text-2xl mt-4"><b>{{userDTO().role !== RoleEnum.TEACHER ? 'Cursos matriculados' : 'Cursos criados'}}</b></span>
 
 <div class="item-list">
 
   @if(courses().length === 0){
-  <p-message severity="info" class="mt-5 block">Nenhum curso matriculado</p-message>
+  <p-message severity="info" class="mt-5">{{userDTO().role !== RoleEnum.TEACHER ? 'Nenhum curso matriculado' : 'Nenhum curso criado'}}</p-message>
   }@else{
-  <div class="flex gap-4 flex-wrap">
+  <div class="flex mt-5 gap-4 flex-wrap">
     @for (course of courses(); track course.uuid) {
     <app-course-card [matriculated]="true" [course]="course" />
     }

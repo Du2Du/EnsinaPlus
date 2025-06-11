@@ -1,0 +1,42 @@
+<form #form="ngForm" class="flex flex-col gap-2" (ngSubmit)="onSubmit()">
+    <div class="card">
+        <p-divider />
+        <div class="flex flex-col gap-2">
+            <label for="name">Nome</label>
+            <input [required]="true" pInputText id="name" [required]="true" aria-describedby="name-help"
+                [(ngModel)]="resourceDTO().name" name="name" />
+        </div>
+
+        <div class="flex flex-col gap-2">
+            <label for="description">Descrição</label>
+            <textarea name="description" rows="5" cols="30" pTextarea [(ngModel)]="resourceDTO().descriptionHTML"
+                id="description"></textarea>
+        </div>
+
+        <div class="flex flex-col gap-2">
+            <label for="type">Tipo</label>
+            <p-selectbutton name="type" [disabled]="resourceDTO().uuid" [required]="true" [options]="types"
+                [(ngModel)]="resourceDTO().tipoObj" optionLabel="label" aria-labelledby="basic" />
+        </div>
+
+        @if (resourceDTO().tipoObj?.code === 'VIDEO') {
+        <div class="flex flex-col gap-2">
+            <label for="video">Arquivo de vídeo (.mp4)</label>
+            <p-fileupload name="video[]" (onSelect)="onVideoUpload($event)" [customUpload]="true" [multiple]="false"
+                (onRemove)="onVideoRemove()" accept=".mp4" maxFileSize="1000000000" mode="basic"
+                chooseLabel="Selecionar vídeo">
+            </p-fileupload>
+            @if (videoFileName()) {
+            <small class="text-green-600">Arquivo selecionado: {{videoFileName()}}</small>
+            }
+        </div>
+        } @else if (resourceDTO().tipoObj?.code === 'FILE') {
+        <p-fileupload name="demo[]" (onSelect)="onBasicUploadAuto($event)" [customUpload]="true" [multiple]="false"
+            (onRemove)="onRemove()" accept=".pdf" maxFileSize="1000000000" mode="basic">
+        </p-fileupload>
+        }
+
+    </div>
+    <p-button styleClass="w-full" label="Salvar" type="submit" [disabled]="isLoading() || form.invalid"
+        [loading]="isLoading()" />
+</form>

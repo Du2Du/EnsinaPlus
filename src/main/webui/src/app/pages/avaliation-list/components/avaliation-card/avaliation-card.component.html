@@ -1,0 +1,12 @@
+<p-card class="mb-4">
+  <ng-template pTemplate="header">
+    <div class="flex justify-between items-center p-3 bg-gray-50" style="border-radius: 12px 12px 0 0">
+      <h3 class="text-lg font-semibold">{{ avaliation()?.name }}</h3>
+      <p-rating [ngModel]="avaliation()?.stars" [readonly]="true"></p-rating>
+    </div>
+  </ng-template>
+  
+  <div class="p-2">
+    <p class="text-gray-700">{{ avaliation()?.description }}</p>
+  </div>
+</p-card>

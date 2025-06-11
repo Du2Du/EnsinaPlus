@@ -38,17 +38,17 @@ public class CourseDAO extends AbstractDAO<Course> {
         String query = "select c, cs.matriculationDate " +
                 "from Course c " +
                 "left join CourseStudent cs on cs.course.uuid = c.uuid "+
-                "where lower(c.name) like lower(:search) " +
-                "or lower(c.description) like lower(:search)";
+                "where (lower(c.name) like lower(:search) " +
+                "or lower(c.description) like lower(:search)) and deleted is false";
         return find(query, Map.of("search", Objects.nonNull(search) ? "%" + search + "%" : "%%")).page(page, limit).project(CourseDTO.class).list();
     }
 
     public Long countOfSearch(String search) {
         String query = "select count(c) " +
                 "from Course c " +
-                "where lower(c.name) like lower(:search) " +
-                "or lower(c.description) like lower(:search)";
+                "where (lower(c.name) like lower(:search) " +
+                "or lower(c.description) like lower(:search)) and deleted is false";
         return find(query, Map.of("search", "%" + search + "%")).count();
     }
-
+    
 }
