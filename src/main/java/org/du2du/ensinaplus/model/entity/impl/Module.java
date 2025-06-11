@@ -19,7 +19,6 @@ import lombok.Setter;
 @Table(name = "tbmodule")
 @Getter
 @Setter
-@Table(name = "tbmodule")
 @NoArgsConstructor
 public class Module extends AbstractEntity{
 

@@ -51,13 +51,12 @@ public class ModuleController {
 
     @PUT
     @Path("reorder")
-    @RequiredAuthentication
-    @RequireRole(RoleEnum.ROLE_TEACHER)
+    @RolesAllowed(RoleEnum.ROLE_TEACHER)
     @ActionDescription("Atualizou os dados básicos de um módulo")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response reorderPositionsModules(List<ModuleDTO> modulesDtos,  @Context HttpHeaders headers){
-        return moduleBO.reorderPositionsModules(modulesDtos, headers);
+    public Response reorderPositionsModules(List<ModuleDTO> modulesDtos){
+        return moduleBO.reorderPositionsModules(modulesDtos);
     }
 
     @DELETE
