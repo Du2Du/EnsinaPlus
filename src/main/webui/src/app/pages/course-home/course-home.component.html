@@ -53,7 +53,7 @@
 
         <div class="flex flex-col gap-3 mb-[20px]">
           @for(resource of module.resources; track resource.uuid){
-          <app-resource-item (editResource)="editResource($event)"
+          <app-resource-item (editResource)="editResource($event)" (deleteResource)="deleteResource($event)"
             [canEditResource]="userData()?.uuid === course().owner?.uuid || [RoleEnum.ADMIN, RoleEnum.SUPER_ADMIN].includes(userData().role)"
             [resource]="resource" />
           }
@@ -84,7 +84,7 @@
         </p>
         <div class="flex flex-col gap-3 mb-[20px]">
           @for(resource of module.resources; track resource.uuid){
-          <app-resource-item (editResource)="editResource($event)"
+          <app-resource-item (editResource)="editResource($event)" (deleteResource)="deleteResource($event)"
             [canEditResource]="userData()?.uuid === course().owner?.uuid || [RoleEnum.ADMIN, RoleEnum.SUPER_ADMIN].includes(userData().role)"
             [resource]="resource" />
           }

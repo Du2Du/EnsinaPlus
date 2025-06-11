@@ -7,7 +7,7 @@
     @if(canEditResource()){
     <div>
       <p-button icon="pi pi-pencil" (click)="editResource.emit(resource())" size="small" class="mr-[20px]" />
-      <p-button icon="pi pi-trash" severity="danger" size="small" />
+      <p-button icon="pi pi-trash" severity="danger" (click)="deleteResource.emit(resource().uuid)" size="small" />
     </div>
     }
   </div>

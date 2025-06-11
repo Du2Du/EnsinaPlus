@@ -15,6 +15,7 @@ export class ResourceItemComponent {
   resource = input.required<IResource>();
   canEditResource = input(false);
   editResource = output<IResource>();
+  deleteResource = output<string>();
   ResourceEnum = ResourceEnum;
 
   openFile(): void {
@@ -46,4 +47,5 @@ export class ResourceItemComponent {
       alert('Erro ao abrir o arquivo. Verifique se o formato está correto.');
     }
   }
+
 }

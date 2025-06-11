@@ -137,6 +137,20 @@ export class CourseHomeComponent implements OnInit, OnDestroy {
         })).subscribe();
   }
 
+  deleteResource(uuid: string) {
+    this.blockPage.set(true);
+    this.persistenceService.deleteRequest('/v1/resource/delete/' + uuid)
+      .pipe(tap((response: any) => {
+        this.blockPage.set(false);
+        this.loadCourseModules();
+      }),
+        catchError((error: any) => {
+          this.blockPage.set(false);
+          this.messageService.add({ severity: 'error', summary: error.error.title ?? 'Erro ao deletar recurso', key: 'message', detail: error.error.description });
+          return of(error);
+        })).subscribe();
+  }
+
   onHide() {
     this.visible.set(false);
     this.selectedEntity.set(undefined)
