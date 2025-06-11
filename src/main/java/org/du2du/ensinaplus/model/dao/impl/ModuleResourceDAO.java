@@ -1,6 +1,7 @@
 package org.du2du.ensinaplus.model.dao.impl;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.du2du.ensinaplus.model.dao.AbstractDAO;
@@ -19,4 +20,9 @@ public class ModuleResourceDAO extends AbstractDAO<ModuleResource> {
         .setParameter("moduleUuid", moduleUuid)
         .getResultList();
   }
+
+  public Long countCourseActivities(UUID courseUuid){
+    String query = "SELECT COUNT(a) FROM ModuleResource a WHERE a.module.course.uuid = :courseUuid AND a.deleted = false";
+     return find(query, Map.of("courseUuid", courseUuid)).count();
+}
 }

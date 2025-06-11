@@ -15,6 +15,7 @@ import org.du2du.ensinaplus.model.dto.base.ResponseDTO;
 import org.du2du.ensinaplus.model.dto.base.ValidateDTO;
 import org.du2du.ensinaplus.model.dto.form.ModuleFormDTO;
 import org.du2du.ensinaplus.model.entity.impl.Module;
+import org.du2du.ensinaplus.model.enums.RoleEnum;
 
 import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
@@ -121,7 +122,9 @@ public class ModuleBO extends AbstractBO<Module, ModuleDAO>{
                 .entity(ResponseDTO.builder().title("Erro ao excluir módulo!").description("Módulo inexistente").build())
                 .build();
         }
-        if (!moduleEntity.getCourse().getOwner().getUuid().equals((sessionBO.getUserDTO().getUuid()))){
+        if (!moduleEntity.getCourse().getOwner().getUuid().equals((sessionBO.getUserDTO().getUuid())) &&
+                !sessionBO.getUserDTO().getRole().equals(RoleEnum.ADMIN)
+                && !sessionBO.getUserDTO().getRole().equals(RoleEnum.SUPER_ADMIN)){
             return Response.status(Response.Status.FORBIDDEN)
                 .entity(ResponseDTO.builder().title("Somente o dono do curso pode deletar um módulo").build())
                 .build();

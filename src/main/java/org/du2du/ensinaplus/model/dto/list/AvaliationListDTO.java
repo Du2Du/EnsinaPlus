@@ -1,8 +1,6 @@
 package org.du2du.ensinaplus.model.dto.list;
 
 
-import java.util.UUID;
-
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;

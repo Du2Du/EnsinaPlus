@@ -21,6 +21,9 @@
         }
       </div>
       }
+      @if(course().avaliationAvg){
+        <p-rating (click)="goToAvaliations()" [(ngModel)]="course().avaliationAvg" [readonly]="true" />
+      }
     </div>
     @if(userData()?.uuid === course().owner?.uuid || [RoleEnum.ADMIN, RoleEnum.SUPER_ADMIN].includes(userData().role)){
     <div>

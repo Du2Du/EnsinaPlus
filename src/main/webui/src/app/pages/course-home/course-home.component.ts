@@ -1,3 +1,4 @@
+import { FormsModule } from '@angular/forms';
 import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
 import { Component, OnDestroy, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
@@ -17,6 +18,7 @@ import { RoleEnum } from '../../enums/roleEnum';
 import { PersistenceService } from '../../services/persistence.service';
 import { AuthService } from './../../services/auth.service';
 import { CourseHomeModuleFormComponent } from './components/course-home-module-form/course-home-module-form.component';
+import { RatingModule } from 'primeng/rating';
 import { ResourceFormComponent } from './components/resource-form/resource-form.component';
 import { AvaliationFormComponent } from './components/avaliation-form/avaliation-form.component';
 import { ResourceEnum } from '../../enums/resourceEnum';
@@ -33,7 +35,7 @@ export interface IResource {
 
 @Component({
   selector: 'app-course-home',
-  imports: [RouterModule, ResourceItemComponent, MainHeaderComponent, AvaliationFormComponent, DialogModule, ToastModule, ResourceFormComponent, BlockUIModule, DragDropModule, AccordionModule, ButtonModule, CourseHomeModuleFormComponent, DrawerModule],
+  imports: [RouterModule, MainHeaderComponent,ResourceItemComponent, AvaliationFormComponent, DialogModule, ToastModule, ResourceFormComponent, BlockUIModule, DragDropModule, AccordionModule, ButtonModule, CourseHomeModuleFormComponent, DrawerModule, RatingModule, FormsModule],
   providers: [MessageService, PersistenceService, AuthService], // Remover ActivatedRoute daqui
   templateUrl: './course-home.component.html',
   styleUrl: './course-home.component.scss'

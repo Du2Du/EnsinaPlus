@@ -18,4 +18,9 @@ public class UserResourceDAO extends AbstractBaseDAO<UserResource> {
   public long deleteUserResources(UUID userUUID, UUID courseUUID) {
     return delete("user.uuid = :userUUID and resource.module.course.uuid = :courseUUID", "userUUID", userUUID, "courseUUID", courseUUID);
   }
+
+  public Long countConcludedActivities (UUID courseUUID, UUID userUUID){
+        String query = "SELECT COUNT(ca) FROM UserResource as ca WHERE ca.user.uuid = :userUUID and ca.resource.module.course.uuid = :courseUUID";
+        return find(query, "userUUID", userUUID, "courseUUID", courseUUID).count();
+    }
 }

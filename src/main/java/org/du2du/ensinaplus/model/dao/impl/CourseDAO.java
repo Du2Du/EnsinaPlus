@@ -50,5 +50,5 @@ public class CourseDAO extends AbstractDAO<Course> {
                 "or lower(c.description) like lower(:search)) and deleted is false";
         return find(query, Map.of("search", "%" + search + "%")).count();
     }
-
+    
 }
