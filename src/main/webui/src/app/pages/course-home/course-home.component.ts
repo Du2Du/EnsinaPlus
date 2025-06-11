@@ -88,10 +88,6 @@ export class CourseHomeComponent implements OnInit, OnDestroy {
         })).subscribe();
   }
 
-  checkOwner(): boolean {
-    return this.userData()?.uuid === this.course().owner?.uuid || [RoleEnum.ADMIN, RoleEnum.SUPER_ADMIN].includes(this.userData().role);
-  }
-
   reorderModules(event: CdkDragDrop<ModuleDTO[]>) {
     moveItemInArray(this.modules(), event.previousIndex, event.currentIndex);
     this.modules().forEach((module, index) => {
@@ -128,6 +124,7 @@ export class CourseHomeComponent implements OnInit, OnDestroy {
   }
 
   onHide() {
+    this.selectedEntity.set(undefined)
     this.selectedModule.set({} as ModuleDTO);
   }
 
@@ -153,9 +150,7 @@ export class CourseHomeComponent implements OnInit, OnDestroy {
       tap(response => {
         this.messageService.clear()
         this.messageService.add({ severity: 'success', summary: 'Curso deletado com sucesso!', key: 'message', });
-        setTimeout(() => {
-          this.router.navigate(['/home']);
-        }, 4000)
+        this.router.navigate(['/home']);
       }), catchError(error => {
         this.blockPage.set(false);
         this.messageService.add({ severity: 'error', summary: error.error?.title || 'Erro ao deletar curso', key: 'message', detail: error.error?.description });
@@ -197,4 +192,6 @@ export class CourseHomeComponent implements OnInit, OnDestroy {
     this.messageService.clear()
     this.messageService.add(data);
   }
+
+  protected RoleEnum = RoleEnum;
 }

@@ -65,6 +65,9 @@ export class ResourceFormComponent {
       });
     }
     this.resourceDTO().courseUuid = this.courseUuid;
+    if (this.resourceDTO().tipoObj.code === 'FILE') this.resourceDTO().video = '';
+    else this.file.set('');
+
     if (this.file())
       this.resourceDTO().file = this.file();
     this.isLoading.set(true);

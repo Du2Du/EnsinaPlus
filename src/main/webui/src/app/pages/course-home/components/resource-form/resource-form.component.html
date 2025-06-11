@@ -13,8 +13,8 @@
     </div>
 
     <div class="flex flex-col gap-2">
-        <label for="description">Tipo</label>
-        <p-selectbutton [disabled]="resourceDTO().uuid" [required]="true" [options]="types" [(ngModel)]="resourceDTO().tipoObj" optionLabel="label"
+        <label for="type">Tipo</label>
+        <p-selectbutton name="type" [disabled]="resourceDTO().uuid" [required]="true" [options]="types" [(ngModel)]="resourceDTO().tipoObj" optionLabel="label"
             aria-labelledby="basic" />
     </div>
 
