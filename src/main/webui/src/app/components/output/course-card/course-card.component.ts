@@ -24,6 +24,6 @@ export class CourseCardComponent implements AfterViewInit {
   }
 
   accessCourse() {
-    this.router.navigate(['course', this.course().uuid])
+    this.router.navigateByUrl('/course/resume/' + this.course().uuid)
   }
 }

@@ -1,6 +1,6 @@
 import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
 import { Component, OnDestroy, OnInit, signal } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { AccordionModule } from 'primeng/accordion';
 import { MessageService } from 'primeng/api';
 import { BlockUIModule } from 'primeng/blockui';
@@ -22,8 +22,8 @@ import { AvaliationFormComponent } from './components/avaliation-form/avaliation
 
 @Component({
   selector: 'app-course-home',
-  imports: [MainHeaderComponent, AvaliationFormComponent, DialogModule, ToastModule, ResourceFormComponent, BlockUIModule, DragDropModule, AccordionModule, ButtonModule, CourseHomeModuleFormComponent, DrawerModule],
-  providers: [MessageService, PersistenceService, AuthService, ActivatedRoute],
+  imports: [RouterModule, MainHeaderComponent, AvaliationFormComponent, DialogModule, ToastModule, ResourceFormComponent, BlockUIModule, DragDropModule, AccordionModule, ButtonModule, CourseHomeModuleFormComponent, DrawerModule],
+  providers: [MessageService, PersistenceService, AuthService], // Remover ActivatedRoute daqui
   templateUrl: './course-home.component.html',
   styleUrl: './course-home.component.scss'
 })
@@ -66,7 +66,6 @@ export class CourseHomeComponent implements OnInit, OnDestroy {
       .pipe(tap((response: any) => {
         this.blockPage.set(false);
         this.course.set(response.data);
-        console.log(this.course());
       }),
         catchError((error: any) => {
           this.blockPage.set(false);
@@ -146,18 +145,29 @@ export class CourseHomeComponent implements OnInit, OnDestroy {
         this.messageService.add({ severity: 'error', summary: error.error?.title || 'Erro ao desmatricular-se', key: 'message', detail: error.error?.description });
         return of(error);
       })
-    )
+    ).subscribe();
   }
 
   generateFile() {
-    window.open(`/v1/course/generate/${this.courseId}/certification`, '_blank')?.focus();
+    this.blockPage.set(true);
+    this.persistenceService.getRequest(`/v1/course/generate/${this.courseId}/certification`).pipe(
+      tap((response: any) => {
+        console.log(response);
+        this.blockPage.set(false);
+        window.open(response, '_blank')?.focus();
+      }), catchError(error => {
+        this.blockPage.set(false);
+        this.messageService.add({ severity: 'error', summary: error.error?.title || 'Erro ao gerar certificado', key: 'message', detail: error.error?.description });
+        return of(error);
+      })
+    ).subscribe()
   }
 
-  goToAvaliations(){
+  goToAvaliations() {
     this.router.navigate(['course', 'avaliation', this.courseId])
   }
 
-  avaliate(){
+  avaliate() {
     this.visibleDialog.set(true);
   }
 

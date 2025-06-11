@@ -1,25 +1,24 @@
-import { ModuleDTO } from './../../../../dtos/module.dto';
-import { Component, input, model, OnChanges, output, signal, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, input, output, signal, SimpleChanges, ViewChild } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
-import { InputTextModule } from 'primeng/inputtext';
-import { PersistenceService } from '../../../../services/persistence.service';
-import { ActivatedRoute, Router } from '@angular/router';
-import { MessageService } from 'primeng/api';
-import { catchError, of, tap } from 'rxjs';
-import { CardModule } from 'primeng/card';
-import { ToastModule } from 'primeng/toast';
-import { DividerModule } from 'primeng/divider';
-import { TextareaModule } from 'primeng/textarea';
-import { ButtonModule } from 'primeng/button';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import { cloneDeep } from 'lodash';
-import { SelectButtonModule } from 'primeng/selectbutton';
+import { MessageService } from 'primeng/api';
+import { ButtonModule } from 'primeng/button';
+import { CardModule } from 'primeng/card';
+import { DividerModule } from 'primeng/divider';
 import { FileUploadModule } from 'primeng/fileupload';
+import { InputTextModule } from 'primeng/inputtext';
+import { SelectButtonModule } from 'primeng/selectbutton';
+import { TextareaModule } from 'primeng/textarea';
+import { ToastModule } from 'primeng/toast';
+import { catchError, of, tap } from 'rxjs';
 import { FileUtilsService } from '../../../../services/file-utils.service';
+import { PersistenceService } from '../../../../services/persistence.service';
 
 @Component({
   selector: 'app-resource-form',
-  providers: [MessageService, PersistenceService, ActivatedRoute],
-  imports: [FormsModule, FileUploadModule, SelectButtonModule, InputTextModule, CardModule, TextareaModule, DividerModule, ToastModule, ButtonModule], templateUrl: './resource-form.component.html',
+  providers: [MessageService, PersistenceService],
+  imports: [RouterModule, FormsModule, FileUploadModule, SelectButtonModule, InputTextModule, CardModule, TextareaModule, DividerModule, ToastModule, ButtonModule], templateUrl: './resource-form.component.html',
   styleUrl: './resource-form.component.scss'
 })
 export class ResourceFormComponent {

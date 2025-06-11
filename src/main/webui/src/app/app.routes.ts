@@ -56,28 +56,33 @@ export const routes: Routes = [
         canActivate: [authorizationGuard]
     },
     {
-        path: 'course/form',
-        title: 'Criar curso',
-        component: CourseFormComponent,
-        canActivate: [authorizationGuard, teacherAuthGuard]
-    },
-    {
-        path: 'course/avaliation/:courseUUID',
-        title: 'Avaliações',
-        component: AvaliationListComponent,
-        canActivate: [authorizationGuard]
-    },
-    {
-        path: 'course/form/:uuid',
-        title: 'Editar curso',
-        component: CourseFormComponent,
-        canActivate: [authorizationGuard, courseEditAuthGuard]
-    },
-    {
-        path: 'course/:uuid',
-        title: 'Curso',
-        component: CourseHomeComponent,
-        canActivate: [authorizationGuard]
+        path: 'course',
+        canActivate: [authorizationGuard],
+        children: [
+            {
+                path: 'form',
+                title: 'Criar curso',
+                component: CourseFormComponent,
+                canActivate: [teacherAuthGuard]
+            },
+            {
+                path: 'form/:uuid',
+                title: 'Editar curso',
+                component: CourseFormComponent,
+                canActivate: [courseEditAuthGuard]
+            },
+            {
+                path: 'resume/:uuid',
+                title: 'Curso',
+                component: CourseHomeComponent,
+                canActivate: [authorizationGuard],
+            },
+            {
+                path: 'avaliation/:courseUUID',
+                title: 'Avaliações',
+                component: AvaliationListComponent
+            }
+        ]
     },
     {
         path: 'search/:search',

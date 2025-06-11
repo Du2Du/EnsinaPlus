@@ -12,7 +12,8 @@ import { authInterceptorInterceptor } from './interceptors/auth-interceptor.inte
 import { userReducer } from './store/user.reducer';
 
 export const appConfig: ApplicationConfig = {
-  providers: [provideZoneChangeDetection({ eventCoalescing: true }), provideRouter(routes),
+  providers: [provideZoneChangeDetection({ eventCoalescing: true }), 
+    provideRouter(routes),
   provideAnimationsAsync(),
   provideStore({user: userReducer}),
   provideHttpClient(withInterceptors([authInterceptorInterceptor])),

@@ -59,9 +59,7 @@ export class LoginFormComponent {
             summary: 'Login realizado',
             detail: 'Você foi autenticado com sucesso!'
           });
-          setTimeout(() => {
-            this.router.navigate(['/home']);
-          }, 2000)
+          this.router.navigate(['/home']);
         }),
         catchError((data: any) => {
           this.isLoading.set(false);

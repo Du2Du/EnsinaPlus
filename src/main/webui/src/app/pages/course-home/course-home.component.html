@@ -13,10 +13,10 @@
       <p-button icon="pi pi-exclamation-triangle" label="Desmatricular-se" (click)="desmatricular()" severity="warn"
         size="small" />
       }@else if(course().concluido){
-      <div class="flex items-center gap-3">
+      <div class="flex mt-3 items-center gap-3">
+        <p-button label="Certificado" (click)="generateFile()" severity="success" icon="pi pi-file" size="small" />
         <p-button label="Avaliar" variant="outlined" (click)="avaliate()" severity="info" icon="pi pi-pencil"
           size="small" />
-        <p-button label="Certificado" (click)="generateFile()" severity="success" icon="pi pi-file" size="small" />
       </div>
       }
     </div>

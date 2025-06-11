@@ -3,7 +3,7 @@ import { Component, input, model, OnChanges, output, signal, SimpleChanges, View
 import { FormsModule, NgForm } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
 import { PersistenceService } from '../../../../services/persistence.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { catchError, of, tap } from 'rxjs';
 import { CardModule } from 'primeng/card';
@@ -15,8 +15,8 @@ import {cloneDeep} from 'lodash';
 
 @Component({
   selector: 'app-course-home-module-form',
-  providers: [MessageService, PersistenceService, ActivatedRoute],
-  imports: [FormsModule, InputTextModule, CardModule, TextareaModule, DividerModule, ToastModule, ButtonModule],
+  providers: [MessageService, PersistenceService],
+  imports: [RouterModule, FormsModule, InputTextModule, CardModule, TextareaModule, DividerModule, ToastModule, ButtonModule],
   templateUrl: './course-home-module-form.component.html',
   styleUrl: './course-home-module-form.component.scss'
 })

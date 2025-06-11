@@ -76,7 +76,7 @@ export class CourseFormComponent implements OnInit {
   private onSaveCourse(response: any) {
     this.isLoading.set(false);
     this.messageService.add({ severity: 'success', summary: 'Sucesso', key: 'toastMessage', detail: 'Curso salvo com sucesso!' });
-    this.router.navigate(['/course', response.data.uuid]);
+    this.router.navigate(['/course', 'resume', response.data.uuid]);
   }
 
   private onSaveCourseError(error: any) {
