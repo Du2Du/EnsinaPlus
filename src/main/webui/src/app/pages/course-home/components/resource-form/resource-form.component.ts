@@ -76,7 +76,7 @@ export class ResourceFormComponent {
         catchError(this.onSaveModuleError.bind(this))).subscribe();
 
     } else {
-      this.persistenceService.postRequest("/v1/resource/create", this.resourceDTO()).pipe(tap(this.onSaveModule.bind(this)),
+      this.persistenceService.postRequest("/v1/resource/save", this.resourceDTO()).pipe(tap(this.onSaveModule.bind(this)),
         catchError(this.onSaveModuleError.bind(this))).subscribe();
     }
   }

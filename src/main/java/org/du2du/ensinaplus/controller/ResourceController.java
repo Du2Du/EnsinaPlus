@@ -30,7 +30,7 @@ public class ResourceController {
 
   @POST
   @Path("save")
-  @RolesAllowed(RoleEnum.ROLE_STUDENT)
+  @RolesAllowed(RoleEnum.ROLE_TEACHER)
   @ActionDescription("Salvou o recurso")
   public Response save(ModuleResourceFormDTO dto) {
     return bo.save(dto);
@@ -38,7 +38,7 @@ public class ResourceController {
 
   @PUT
   @Path("update")
-  @RolesAllowed(RoleEnum.ROLE_STUDENT)
+  @RolesAllowed(RoleEnum.ROLE_TEACHER)
   @ActionDescription("Atualizou o recurso")
   public Response update(ModuleResourceUpdateFormDTO dto) {
     return bo.update(dto);
