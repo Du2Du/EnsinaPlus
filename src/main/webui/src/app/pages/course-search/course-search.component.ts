@@ -32,7 +32,7 @@ export class CourseSearchComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
-      this.search.set(params['search']);
+      this.search.set(params?.['search'] ?? '');
       this.loadCourses();
     });
   }

@@ -91,6 +91,12 @@ export const routes: Routes = [
         canActivate: [authorizationGuard]
     },
     {
+        path: 'explore',
+        title: 'Buscar Cursos',
+        component: CourseSearchComponent,
+        canActivate: [authorizationGuard]
+    },
+    {
         path:'audit',
         title: 'Auditoria',
         component: AuditoriaComponent,

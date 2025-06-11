@@ -29,12 +29,12 @@ public class TabBO {
       list.add(TabListDTO.builder().uuid(UUID.randomUUID()).url("/course/form").icon("pi pi-plus").label("Criar curso").build());
     }
     if(dto.getRole().equals(RoleEnum.STUDENT)){
-      list.add(TabListDTO.builder().uuid(UUID.randomUUID()).url("/search/").icon("pi pi-search").label("Explorar").build());
+      list.add(TabListDTO.builder().uuid(UUID.randomUUID()).url("/explore/").icon("pi pi-search").label("Explorar").build());
     }
 
     if (dto.getRole().equals(RoleEnum.ADMIN) || dto.getRole().equals(RoleEnum.SUPER_ADMIN)) {
       list.add(TabListDTO.builder().uuid(UUID.randomUUID()).url("/audit").icon("pi pi-chart-bar").label("Logs").build());
-      list.add(TabListDTO.builder().uuid(UUID.randomUUID()).url("/search/").icon("pi pi-search").label("Explorar").build());
+      list.add(TabListDTO.builder().uuid(UUID.randomUUID()).url("/explore/").icon("pi pi-search").label("Explorar").build());
     }
     if(dto.getRole().equals(RoleEnum.SUPER_ADMIN)){
       list.add(TabListDTO.builder().uuid(UUID.randomUUID()).url("/roles").icon("pi pi-users").label("Permissões").build());

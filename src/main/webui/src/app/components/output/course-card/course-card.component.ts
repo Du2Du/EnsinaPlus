@@ -4,6 +4,8 @@ import { CourseDTO } from '../../../dtos/course.dto';
 import { ButtonModule } from 'primeng/button';
 import { TooltipModule } from 'primeng/tooltip';
 import { Router } from '@angular/router';
+import { UserDTO } from '../../../dtos/user.dto';
+import { RoleEnum } from '../../../enums/roleEnum';
 
 @Component({
   selector: 'app-course-card',
@@ -17,8 +19,10 @@ export class CourseCardComponent implements AfterViewInit {
   constructor(private router: Router) { }
 
   course = input<CourseDTO>({} as CourseDTO);
+  user = input<UserDTO>({} as UserDTO);
   matriculated = input(false);
   enroll = output<CourseDTO>();
+
 
   ngAfterViewInit(): void {
   }
@@ -26,4 +30,6 @@ export class CourseCardComponent implements AfterViewInit {
   accessCourse() {
     this.router.navigateByUrl('/course/resume/' + this.course().uuid)
   }
+
+  protected RoleEnum = RoleEnum;
 }

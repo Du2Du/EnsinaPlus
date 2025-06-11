@@ -147,6 +147,22 @@ export class CourseHomeComponent implements OnInit, OnDestroy {
       })
     ).subscribe();
   }
+  excludeCourse() {
+    this.blockPage.set(true);
+    this.persistenceService.deleteRequest('/v1/course/delete/' + this.courseId).pipe(
+      tap(response => {
+        this.messageService.clear()
+        this.messageService.add({ severity: 'success', summary: 'Curso deletado com sucesso!', key: 'message', });
+        setTimeout(() => {
+          this.router.navigate(['/home']);
+        }, 4000)
+      }), catchError(error => {
+        this.blockPage.set(false);
+        this.messageService.add({ severity: 'error', summary: error.error?.title || 'Erro ao deletar curso', key: 'message', detail: error.error?.description });
+        return of(error);
+      })
+    ).subscribe();
+  }
 
   generateFile() {
     this.blockPage.set(true);
