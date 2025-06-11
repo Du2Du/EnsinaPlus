@@ -9,6 +9,9 @@
     <div>
       <h1 class="font-semibold text-2xl">{{course().name}}</h1>
       <h3 class="text-xl">{{course().description}}</h3>
+      @if(course().avaliationAvg){
+        <p-rating class="mb-3" (click)="goToAvaliations()" [(ngModel)]="course().avaliationAvg" [readonly]="true" />
+      }
       @if(!course().concluido && course().matriculado){
       <p-button icon="pi pi-exclamation-triangle" label="Desmatricular-se" (click)="desmatricular()" severity="warn"
         size="small" />
@@ -20,9 +23,6 @@
           size="small" />
         }
       </div>
-      }
-      @if(course().avaliationAvg){
-        <p-rating (click)="goToAvaliations()" [(ngModel)]="course().avaliationAvg" [readonly]="true" />
       }
     </div>
     @if(userData().uuid === course().owner.uuid || [RoleEnum.ADMIN, RoleEnum.SUPER_ADMIN].includes(userData().role)){

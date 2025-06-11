@@ -80,7 +80,7 @@ export class CourseSearchComponent implements OnInit, OnDestroy {
     })
       .pipe(tap((response: any) => {
         this.blockPage.set(false);
-        course.matriculado = true;
+        this.courses().find(c => c.uuid === course.uuid)!.matriculado = true;
         this.messageService.add({
           key: 'message',
           severity: 'success',
