@@ -1,5 +1,5 @@
 import { Component, OnInit, signal } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { catchError, of, tap } from 'rxjs';
 import { PersistenceService } from './../../services/persistence.service';
@@ -19,8 +19,8 @@ export interface IAvaliation {
 
 @Component({
   selector: 'app-avaliation-list',
-  imports: [MainHeaderComponent, BlockUIModule, ButtonModule, AvaliationCardComponent, MessageModule,],
-  providers: [MessageService, PersistenceService, ActivatedRoute],
+  imports: [MainHeaderComponent, BlockUIModule, RouterModule, ButtonModule, AvaliationCardComponent, MessageModule,],
+  providers: [MessageService, PersistenceService],
   templateUrl: './avaliation-list.component.html',
   styleUrl: './avaliation-list.component.scss'
 })
