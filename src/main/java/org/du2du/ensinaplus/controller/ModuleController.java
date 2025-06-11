@@ -61,7 +61,7 @@ public class ModuleController {
 
     @DELETE
     @Path("delete/{uuid}")
-    @RolesAllowed(RoleEnum.ROLE_TEACHER)
+    @RolesAllowed({RoleEnum.ROLE_TEACHER, RoleEnum.ROLE_ADMIN, RoleEnum.ROLE_SUPER_ADMIN})
     @ActionDescription("Deletou um módulo")
     @Produces(MediaType.APPLICATION_JSON)
     public Response deleteModule(@PathParam ("uuid") UUID uuid){
