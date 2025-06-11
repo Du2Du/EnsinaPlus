@@ -1,6 +1,5 @@
 package org.du2du.ensinaplus.model.entity.impl;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 

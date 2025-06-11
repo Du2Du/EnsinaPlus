@@ -16,6 +16,8 @@ import org.du2du.ensinaplus.model.bo.AbstractBO;
 import org.du2du.ensinaplus.model.bo.session.SessionBO;
 import org.du2du.ensinaplus.model.dao.impl.CourseDAO;
 import org.du2du.ensinaplus.model.dao.impl.CourseStudentDAO;
+import org.du2du.ensinaplus.model.dao.impl.ModuleResourceDAO;
+import org.du2du.ensinaplus.model.dao.impl.UserResourceDAO;
 import org.du2du.ensinaplus.model.dto.CourseDTO;
 import org.du2du.ensinaplus.model.dto.UserDTO;
 import org.du2du.ensinaplus.model.dto.base.ResponseDTO;
@@ -42,6 +44,12 @@ public class CourseBO extends AbstractBO<Course, CourseDAO> {
 
     @Inject
     CourseStudentDAO courseStudentDAO;
+
+    @Inject
+    UserResourceDAO userResourceDAO;
+
+    @Inject
+    ModuleResourceDAO moduleResourceDAO;
 
     @Transactional
     public Response createCourse(CourseFormDTO course) {
@@ -341,6 +349,25 @@ public class CourseBO extends AbstractBO<Course, CourseDAO> {
                 .replace("__data_inicio__", startDate.format(formatter))
                 .replace("__data_final__", endDate.format(formatter))
                 .replace("__data_emissao__", currentDate);
+    }
+
+    @Transactional
+    public ResponseDTO<?> verifyCourseConclusion(UUID courseUuid){
+        UUID userUUID = sessionBO.getUserDTO().getUuid();
+        
+        Course courseEntity = dao.findById(courseUuid);
+        if(Objects.isNull(courseEntity)) return ResponseDTO.builder().title("Curso inexistente").build();
+        try {
+            if(userResourceDAO.countConcludedActivities(courseUuid, userUUID) == moduleResourceDAO.countCourseActivities(courseUuid)){
+                CourseStudent enrollEntity = courseStudentDAO.findEnroll(userUUID, courseUuid);
+                enrollEntity.setConclusionDate(LocalDate.now());
+                courseStudentDAO.persistAndFlush(enrollEntity);
+                return ResponseDTO.builder().title("Curso concluído com sucesso!").build();
+            } 
+            return ResponseDTO.builder().title("Curso não concluído!").build();
+        } catch (Exception e){
+            return ResponseDTO.builder().title("Error ao verificar conclusão de curso").build();
+        }
     }
 
 }

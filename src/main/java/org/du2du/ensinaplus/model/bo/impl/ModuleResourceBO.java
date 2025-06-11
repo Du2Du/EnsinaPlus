@@ -1,7 +1,7 @@
 package org.du2du.ensinaplus.model.bo.impl;
 
-import java.time.LocalDate;
 import java.util.Objects;
+import java.util.UUID;
 
 import org.du2du.ensinaplus.model.bo.AbstractBO;
 import org.du2du.ensinaplus.model.bo.session.SessionBO;
@@ -16,6 +16,7 @@ import org.du2du.ensinaplus.model.dto.form.ModuleResourceUpdateFormDTO;
 import org.du2du.ensinaplus.model.entity.impl.ModuleResource;
 import org.du2du.ensinaplus.model.entity.impl.User;
 import org.du2du.ensinaplus.model.entity.impl.UserResource;
+import org.du2du.ensinaplus.model.enums.RoleEnum;
 
 import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
@@ -90,6 +91,35 @@ public class ModuleResourceBO extends AbstractBO<ModuleResource, ModuleResourceD
     }
 
     @Transactional
+    public Response delete(UUID moduleResourceUUID){
+        ModuleResource moduleResourceEntity = dao.findById(moduleResourceUUID);
+        if (Objects.isNull(moduleResourceEntity)){
+            return Response.status(Response.Status.BAD_REQUEST)
+                .entity(ResponseDTO.builder().title("Erro ao excluir atividade!").description("Atividade inexistente").build())
+                .build();
+        }
+        if (!moduleResourceEntity.getModule().getCourse().getOwner().getUuid().equals((sessionBO.getUserDTO().getUuid())) &&
+                !sessionBO.getUserDTO().getRole().equals(RoleEnum.ADMIN)
+                && !sessionBO.getUserDTO().getRole().equals(RoleEnum.SUPER_ADMIN) ){
+            return Response.status(Response.Status.FORBIDDEN)
+                .entity(ResponseDTO.builder().title("Somente o dono do curso ou usuário papel superior pode deletar uma atividade").build())
+                .build();
+        }
+        try{
+            moduleResourceEntity.setDeleted(true);
+            dao.persistAndFlush(moduleResourceEntity);
+            return Response.status(Response.Status.OK)
+                .entity(ResponseDTO.builder().title("Atividade deletada com sucesso!").build())
+                .build();
+        } catch (Exception e){
+            e.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                .entity(ResponseDTO.builder().title("Erro ao deletar atividade").description(e.getMessage()).build())
+                .build();
+        }
+    }
+
+    @Transactional
     public Response finalize(FinalizeResourceDTO dto) {
         ModuleResource entity = dao.findById(dto.getResourceUUID());
         if (Objects.isNull(entity))
@@ -109,6 +139,7 @@ public class ModuleResourceBO extends AbstractBO<ModuleResource, ModuleResourceD
                 .user(User.builder().uuid(sessionBO.getUserDTO().getUuid()).build()).resource(entity).build();
         try {
             userResourceDAO.persistAndFlush(userResource);
+            courseBO.verifyCourseConclusion(entity.getModule().getCourse().getUuid());
             return Response.status(Response.Status.OK)
                     .entity(ResponseDTO.builder().title("Recurso finalizado com sucesso!").data(dto).build())
                     .build();
