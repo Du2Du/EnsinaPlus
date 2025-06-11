@@ -1,4 +1,4 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnDestroy, OnInit, signal } from '@angular/core';
 import { MainHeaderComponent } from "../../components/layout/main-header/main-header.component";
 import { PersistenceService } from '../../services/persistence.service';
 import { MessageModule } from 'primeng/message';
@@ -8,8 +8,10 @@ import { BlockUIModule } from 'primeng/blockui';
 import { CourseDTO } from '../../dtos/course.dto';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
-import { catchError, of, tap } from 'rxjs';
+import { catchError, of, Subscription, tap } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
+import { UserDTO } from '../../dtos/user.dto';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-course-search',
@@ -19,16 +21,19 @@ import { ActivatedRoute } from '@angular/router';
   templateUrl: './course-search.component.html',
   styleUrl: './course-search.component.scss'
 })
-export class CourseSearchComponent implements OnInit {
+export class CourseSearchComponent implements OnInit, OnDestroy {
 
-  constructor(private route: ActivatedRoute, private persistenceService: PersistenceService, private messageService: MessageService) { }
+  constructor(private authService: AuthService, private route: ActivatedRoute, private persistenceService: PersistenceService, private messageService: MessageService) {
+    this.subscriber = authService.getUser().subscribe(user => this.userData.set({ ...user }));
+  }
 
   search = signal('');
   blockPage = signal(false);
   courses = signal<any[]>([]);
   page = 0;
-  limit = 15;
+  limit = 15; userData = signal<UserDTO>({} as UserDTO);
   totalRecords = 0;
+  private subscriber: Subscription;
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
@@ -37,6 +42,9 @@ export class CourseSearchComponent implements OnInit {
     });
   }
 
+  ngOnDestroy(): void {
+    this.subscriber.unsubscribe();
+  }
 
   private loadCourses() {
     this.blockPage.set(true);

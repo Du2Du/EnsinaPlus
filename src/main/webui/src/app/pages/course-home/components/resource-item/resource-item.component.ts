@@ -1,8 +1,9 @@
-import { Component, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IResource } from '../../course-home.component';
-import { ResourceEnum } from '../../../../enums/resourceEnum';
+import { Component, input, output } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
+import { ResourceEnum } from '../../../../enums/resourceEnum';
+import { IResource } from '../../course-home.component';
+import { PersistenceService } from './../../../../services/persistence.service';
 
 @Component({
   selector: 'app-resource-item',
@@ -12,12 +13,16 @@ import { ButtonModule } from 'primeng/button';
 })
 export class ResourceItemComponent {
 
+  constructor(private persistenceService: PersistenceService) { }
+
   resource = input.required<IResource>();
   canEditResource = input(false);
   editResource = output<IResource>();
   deleteResource = output<string>();
   ResourceEnum = ResourceEnum;
-
+  markAsView() {
+    this.persistenceService.postRequest('/v1/resource/finalize/', { resourceUUID: this.resource().uuid }).subscribe();
+  }
   openFile(): void {
     if (!this.resource().file) return;
 
@@ -41,7 +46,7 @@ export class ResourceItemComponent {
       window.open(url, '_blank');
 
       setTimeout(() => window.URL.revokeObjectURL(url), 1000);
-
+      this.markAsView();
     } catch (error) {
       console.error('Erro ao abrir arquivo:', error);
       alert('Erro ao abrir o arquivo. Verifique se o formato está correto.');

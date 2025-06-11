@@ -4,7 +4,7 @@
     <span class="text-2xl"><b>Busca de cursos</b></span>
   <div class="flex gap-4 mt-4 flex-wrap">
     @for(course of courses(); track course.uuid) {
-    <app-course-card (enroll)="enroll($event)" [course]="course" />
+    <app-course-card [user]="userData()" (enroll)="enroll($event)" [course]="course" />
     }
   </div>
   <p-paginator class="mt-5 block" [alwaysShow]="false" (onPageChange)="onPageChange($event)" [first]="page"

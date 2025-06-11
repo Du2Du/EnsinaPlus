@@ -34,7 +34,7 @@
     <div class="video-content">
       <div class="relative bg-black rounded-lg overflow-hidden">
         @if (resource().video) {
-        <video controls class="w-full h-auto max-h-96" preload="metadata">
+        <video (click)="markAsView()" controls class="w-full h-auto max-h-96" preload="metadata">
           <source [src]="resource().video" type="video/mp4" />
 
         </video>
