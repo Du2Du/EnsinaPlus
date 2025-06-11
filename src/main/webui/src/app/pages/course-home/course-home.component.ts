@@ -168,7 +168,7 @@ export class CourseHomeComponent implements OnInit, OnDestroy {
         this.messageService.add({ severity: 'success', summary: 'Sua matricula no curso foi cancelada!', key: 'message', });
         setTimeout(() => {
           this.router.navigate(['/home']);
-        }, 4000)
+        }, 2000)
       }), catchError(error => {
         this.blockPage.set(false);
         this.messageService.add({ severity: 'error', summary: error.error?.title || 'Erro ao desmatricular-se', key: 'message', detail: error.error?.description });
