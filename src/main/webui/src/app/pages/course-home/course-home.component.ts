@@ -19,11 +19,12 @@ import { State } from '../../store/user.reducer';
 import { UserDTO } from '../../dtos/user.dto';
 import { ButtonModule } from 'primeng/button';
 import { CourseHomeModuleFormComponent } from './components/course-home-module-form/course-home-module-form.component';
+import { RatingModule } from 'primeng/rating';
 
 @Component({
   selector: 'app-course-home',
   host: {class: ''},
-  imports: [MainHeaderComponent, ToastModule, BlockUIModule, DragDropModule, AccordionModule, ButtonModule, CourseHomeModuleFormComponent, DrawerModule],
+  imports: [MainHeaderComponent, ToastModule, BlockUIModule, DragDropModule, AccordionModule, ButtonModule, CourseHomeModuleFormComponent, DrawerModule, RatingModule],
   providers: [MessageService, PersistenceService],
   templateUrl: './course-home.component.html',
   styleUrl: './course-home.component.scss'

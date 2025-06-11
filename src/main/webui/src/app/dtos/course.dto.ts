@@ -6,5 +6,6 @@ export interface CourseDTO {
   mainPicture: string,
   uuid: string,
   matriculado: boolean,
-  owner: UserDTO
+  owner: UserDTO,
+  avaliationAvg: number
 }
