@@ -74,17 +74,17 @@ public class UserBO extends AbstractBO<User, UserDAO> {
     userEntity.setName(dto.getName());
     userEntity.setEmail(dto.getEmail());
     userEntity.setPhone(dto.getPhone());
-    if(sessionBO.getUserDTO().getRole().equals(RoleEnum.SUPER_ADMIN))
+    if (sessionBO.getUserDTO().getRole().equals(RoleEnum.SUPER_ADMIN))
       userEntity.setType(dto.getType());
 
-      try {
+    try {
       dao.persistAndFlush(userEntity);
 
-     if(sessionBO.getUserDTO().getUuid().equals(userEntity.getUuid())){
-      UserDTO userDTO = userEntity.toDTO();
-      userDTO.setRole(sessionBO.getUserDTO().getRole());
-      sessionBO.updateSession(userDTO);
-     }
+      if (sessionBO.getUserDTO().getUuid().equals(userEntity.getUuid())) {
+        UserDTO userDTO = userEntity.toDTO();
+        userDTO.setRole(sessionBO.getUserDTO().getRole());
+        sessionBO.updateSession(userDTO);
+      }
       return Response.status(Response.Status.OK)
           .entity(ResponseDTO.builder().title("Usuário salvo com sucesso!").data(dto).build())
           .build();
@@ -120,7 +120,7 @@ public class UserBO extends AbstractBO<User, UserDAO> {
           .build();
     UserDTO userDTO = userEntity.toDTO();
 
-    if (UserTypeEnum.SUPER_ADMIN.equals(userEntity.getType()))
+    if (UserTypeEnum.SUPER_ADMIN.equals(userEntity.getType()) && RoleEnum.valueOf(role).equals(RoleEnum.ADMIN))
       userDTO.setRole(RoleEnum.SUPER_ADMIN);
     else
       userDTO.setRole(RoleEnum.valueOf(role.toUpperCase()));
@@ -130,7 +130,8 @@ public class UserBO extends AbstractBO<User, UserDAO> {
     return Response
         .ok(ResponseDTO.builder().title("Login realizado com sucesso!")
             .data(tokenUtils.generate(
-                Set.of(UserTypeEnum.SUPER_ADMIN.equals(userEntity.getType()) ? RoleEnum.ROLE_SUPER_ADMIN : role), sessionUUID))
+                Set.of(UserTypeEnum.SUPER_ADMIN.equals(userEntity.getType()) ? RoleEnum.ROLE_SUPER_ADMIN : role),
+                sessionUUID))
             .build())
         .build();
   }
