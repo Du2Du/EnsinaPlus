@@ -89,10 +89,31 @@ public class ModuleBO extends AbstractBO<Module, ModuleDAO>{
     }
 
     @Transactional
+    public Response reorderPositionsModules(List<ModuleDTO> moduleDTOs){
+        try{
+            moduleDTOs.forEach(moduleDTO -> {
+            Module moduleEntity = dao.findById(moduleDTO.getUuid());
+            moduleEntity.setPositionOrder(moduleDTO.getPositionOrder());
+            moduleEntity.setUpdatedAt(LocalDateTime.now());
+            dao.persistAndFlush(moduleEntity);
+        });
+         return Response.status(Response.Status.OK)
+                .entity(ResponseDTO.builder().title("Módulos atualizados com sucesso!").build())
+                .build();
+        } catch (Exception e){
+            e.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                .entity(ResponseDTO.builder().title("Erro ao atualizar posições dos módulos").data(e.getMessage()).build())
+                .build();
+        }
+        
+    }
+
+    @Transactional
     public Response deleteModule(UUID uuidModule){
         Module moduleEntity = dao.findById(uuidModule);
         if (Objects.isNull(moduleEntity)){
-            return Response.status(Response.Status.CREATED)
+            return Response.status(Response.Status.BAD_REQUEST)
                 .entity(ResponseDTO.builder().title("Erro ao excluir módulo!").description("Módulo inexistente").build())
                 .build();
         }
@@ -104,7 +125,7 @@ public class ModuleBO extends AbstractBO<Module, ModuleDAO>{
         try{
             moduleEntity.setDeleted(true);
             dao.persistAndFlush(moduleEntity);
-            return Response.status(Response.Status.CREATED)
+            return Response.status(Response.Status.OK)
                 .entity(ResponseDTO.builder().title("Módulo deletado com sucesso!").build())
                 .build();
         } catch (Exception e){

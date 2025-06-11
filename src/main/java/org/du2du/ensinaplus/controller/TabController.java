@@ -1,6 +1,7 @@
 package org.du2du.ensinaplus.controller;
 
 import org.du2du.ensinaplus.model.bo.impl.TabBO;
+import org.du2du.ensinaplus.security.NotRequiredAudit;
 
 import io.quarkus.security.Authenticated;
 import jakarta.inject.Inject;
@@ -17,6 +18,7 @@ public class TabController {
 
   @GET
   @Path("list")
+  @NotRequiredAudit
   public Response getList() {
     return bo.getList();
   }
