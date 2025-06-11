@@ -27,6 +27,10 @@
     </div>
     @if(userData().uuid === course().owner.uuid || [RoleEnum.ADMIN, RoleEnum.SUPER_ADMIN].includes(userData().role)){
     <div>
+      @if(userData().uuid === course().owner.uuid&& userData().role=== RoleEnum.TEACHER){
+      <p-button (click)="editCourse()" icon="pi pi-pencil" size="small"
+        class="mr-[20px]" />
+      }
       <p-button (click)="excludeCourse()" icon="pi pi-trash" severity="danger" size="small" />
     </div>
     }
@@ -56,7 +60,8 @@
 
         <div class="flex flex-col gap-3 mb-[20px]">
           @for(resource of module.resources; track resource.uuid){
-          <app-resource-item (reloadCourse)="loadCourseInfo()" (editResource)="editResource($event)" (deleteResource)="deleteResource($event)"
+          <app-resource-item (reloadCourse)="loadCourseInfo()" (editResource)="editResource($event)"
+            (deleteResource)="deleteResource($event)"
             [canEditResource]="userData().uuid === course().owner.uuid || [RoleEnum.ADMIN, RoleEnum.SUPER_ADMIN].includes(userData().role)"
             [resource]="resource" />
           }
@@ -91,7 +96,8 @@
         </p>
         <div class="flex flex-col gap-3 mb-[20px]">
           @for(resource of module.resources; track resource.uuid){
-          <app-resource-item  (reloadCourse)="loadCourseInfo()" (editResource)="editResource($event)" (deleteResource)="deleteResource($event)"
+          <app-resource-item (reloadCourse)="loadCourseInfo()" (editResource)="editResource($event)"
+            (deleteResource)="deleteResource($event)"
             [canEditResource]="userData().uuid === course().owner.uuid || RoleEnum.TEACHER === userData().role"
             [resource]="resource" />
           }

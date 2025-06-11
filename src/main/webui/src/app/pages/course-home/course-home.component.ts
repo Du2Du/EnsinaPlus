@@ -231,5 +231,9 @@ export class CourseHomeComponent implements OnInit, OnDestroy {
     this.visible.set(true)
   }
 
+  editCourse(){
+    this.router.navigate(['course', 'form', this.courseId])
+  }
+
   protected RoleEnum = RoleEnum;
 }
