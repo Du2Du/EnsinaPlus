@@ -34,6 +34,7 @@ export class ResourceFormComponent {
   file = signal<string>('');
   courseUuid!: string;
   reloadData = output();
+  onHide = output();
   showMessage = output<any>();
   types = [
     {
@@ -88,6 +89,8 @@ export class ResourceFormComponent {
     this.isLoading.set(false);
     this.showMessage.emit({ severity: 'success', summary: 'Sucesso', key: 'toastMessage', detail: 'Módulo salvo com sucesso!' });
     this.reloadData.emit();
+    this.onHide.emit();
+
   }
 
   private onSaveModuleError(error: any) {

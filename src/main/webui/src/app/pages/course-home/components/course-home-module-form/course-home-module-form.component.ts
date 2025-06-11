@@ -30,6 +30,7 @@ export class CourseHomeModuleFormComponent implements OnChanges {
   selectedModule = input<ModuleDTO>({} as any);
   courseUuid!:string;
   reloadData = output();
+  onHide = output();
   showMessage = output<any>();
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -68,6 +69,7 @@ export class CourseHomeModuleFormComponent implements OnChanges {
     this.isLoading.set(false);
     this.showMessage.emit({ severity: 'success', summary: 'Sucesso', key: 'toastMessage', detail: 'Módulo salvo com sucesso!' });
     this.reloadData.emit();
+    this.onHide.emit();
   }
 
   private onSaveModuleError(error: any) {

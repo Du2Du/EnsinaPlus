@@ -101,11 +101,11 @@
     }
   </ng-template>
   @if(selectedEntity() === 'resource'){
-  <app-resource-form (showMessage)="showMessage($event)" (reloadData)="loadCourseModules()"
+  <app-resource-form (onHide)="onHide()" (showMessage)="showMessage($event)" (reloadData)="loadCourseModules()"
     [selectedModule]="selectedModule()"
     [selectedResource]="selectedResource()"></app-resource-form>
   }@else if(selectedEntity() === 'module'){
-  <app-course-home-module-form (showMessage)="showMessage($event)" (reloadData)=" loadCourseModules()"
+  <app-course-home-module-form (onHide)="onHide()" (showMessage)="showMessage($event)" (reloadData)=" loadCourseModules()"
     [selectedModule]="selectedModule()"></app-course-home-module-form>
   }
 </p-drawer>

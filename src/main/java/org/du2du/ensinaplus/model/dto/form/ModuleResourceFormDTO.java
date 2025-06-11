@@ -17,7 +17,7 @@ public class ModuleResourceFormDTO {
 
   @NotBlank(message = "Nome é obrigatório")
   private String name;
-  private String descriptioHTML;
+  private String descriptionHTML;
   @NotNull(message = "Modulo é obrigatório")
   private UUID moduleUUID;
   @NotNull(message = "Tipo é obrigatório")
@@ -30,7 +30,7 @@ public class ModuleResourceFormDTO {
       .name(name)
       .file(file)
       .video(video)
-      .descriptionHTML(descriptioHTML)
+      .descriptionHTML(descriptionHTML)
       .module(Module.builder().uuid(moduleUUID).build())
       .type(type)
       .build();
