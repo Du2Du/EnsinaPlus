@@ -65,6 +65,9 @@ export class ResourceFormComponent {
       });
     }
     this.resourceDTO().courseUuid = this.courseUuid;
+    if (this.resourceDTO().tipoObj.code === 'FILE') this.resourceDTO().video = '';
+    else this.file.set('');
+
     if (this.file())
       this.resourceDTO().file = this.file();
     this.isLoading.set(true);
@@ -73,7 +76,7 @@ export class ResourceFormComponent {
         catchError(this.onSaveModuleError.bind(this))).subscribe();
 
     } else {
-      this.persistenceService.postRequest("/v1/resource/create", this.resourceDTO()).pipe(tap(this.onSaveModule.bind(this)),
+      this.persistenceService.postRequest("/v1/resource/save", this.resourceDTO()).pipe(tap(this.onSaveModule.bind(this)),
         catchError(this.onSaveModuleError.bind(this))).subscribe();
     }
   }

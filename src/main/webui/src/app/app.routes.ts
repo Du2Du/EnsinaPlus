@@ -80,6 +80,7 @@ export const routes: Routes = [
             {
                 path: 'avaliation/:courseUUID',
                 title: 'Avaliações',
+                canActivate: [authorizationGuard],
                 component: AvaliationListComponent
             }
         ]
