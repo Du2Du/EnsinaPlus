@@ -1,6 +1,6 @@
 import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
 import { Component, OnDestroy, OnInit, signal } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AccordionModule } from 'primeng/accordion';
 import { MessageService } from 'primeng/api';
 import { BlockUIModule } from 'primeng/blockui';
@@ -16,6 +16,7 @@ import { RoleEnum } from '../../enums/roleEnum';
 import { PersistenceService } from '../../services/persistence.service';
 import { AuthService } from './../../services/auth.service';
 import { CourseHomeModuleFormComponent } from './components/course-home-module-form/course-home-module-form.component';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-course-home',
@@ -26,7 +27,8 @@ import { CourseHomeModuleFormComponent } from './components/course-home-module-f
 })
 export class CourseHomeComponent implements OnInit, OnDestroy {
 
-  constructor(private route: ActivatedRoute, private persistenceService: PersistenceService, private messageService: MessageService, private authService: AuthService) {
+  constructor(private route: ActivatedRoute, private router: Router, private persistenceService: PersistenceService,
+    private messageService: MessageService, private authService: AuthService) {
     this.subscriber = authService.getUser().subscribe(user => this.userData.set({ ...user }));
   }
 
@@ -125,4 +127,24 @@ export class CourseHomeComponent implements OnInit, OnDestroy {
     this.selectedModule.set({} as ModuleDTO);
   }
 
+  desmatricular() {
+    this.blockPage.set(true);
+    this.persistenceService.deleteRequest('/v1/course/unenroll/' + this.courseId).pipe(
+      tap(response => {
+        this.messageService.clear()
+        this.messageService.add({ severity: 'success', summary: 'Sua matricula no curso foi cancelada!', key: 'message', });
+        setTimeout(() => {
+          this.router.navigate(['/home']);
+        }, 4000)
+      }), catchError(error => {
+        this.blockPage.set(false);
+        this.messageService.add({ severity: 'error', summary: error.error?.title || 'Erro ao desmatricular-se', key: 'message', detail: error.error?.description });
+        return of(error);
+      })
+    )
+  }
+
+  generateFile() {
+    window.open(`/v1/course/generate/${this.courseId}/certification`, '_blank')?.focus();
+  }
 }

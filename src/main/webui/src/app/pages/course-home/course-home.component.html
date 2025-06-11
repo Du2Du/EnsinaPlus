@@ -2,76 +2,85 @@
 
 <div style="border-radius: 6px;" class="bg-white  my-[60px] rounded-md flex mt-5 flex-col w-[80%] m-auto">
   @if(course().mainPicture){
-    <img style="border-radius: 6px 6px 0 0;" [src]="course().mainPicture" class="w-full course-image"/>
-  
-  } 
+  <img style="border-radius: 6px 6px 0 0;" [src]="course().mainPicture" class="w-full course-image" />
+
+  }
   <div class="flex justify-between itens-start p-5">
     <div>
       <h1 class="font-semibold text-2xl">{{course().name}}</h1>
       <h3 class="text-2xl">{{course().description}}</h3>
+      @if(!course().concluido && course().matriculado){
+      <p-button icon="pi pi-exclamation-triangle" label="Desmatricular-se" (click)="desmatricular()" severity="warn"
+        size="small" />
+      }@else if(course().concluido){
+      <p-button label="Certificado" (click)="generateFile()" severity="success" icon="pi pi-file" size="small" />
+      }
     </div>
-     @if(checkOwner()){
-      <div>
-        <p-button icon="pi pi-trash" severity="danger" size="small" />
-      </div>
+    @if(checkOwner()){
+    <div>
+      <p-button icon="pi pi-trash" severity="danger" size="small" />
+    </div>
     }
   </div>
 </div>
 
 <div class="rounded-md flex mt-5 flex-col w-[80%] m-auto bg-white">
-  <div  class="footerModule flex pt-[15px] pl-[15px] self-start">
-      <p-button class="self-start-first" (click)="visible.set(true)" label="Adicionar Módulo" icon="pi pi-plus"/>
-    </div>
+  <div class="footerModule flex pt-[15px] pl-[15px] self-start">
+    <p-button class="self-start-first" (click)="visible.set(true)" label="Adicionar Módulo" icon="pi pi-plus" />
+  </div>
   @if(checkOwner()){
-    <p-accordion [value]="uuidModules()" cdkDropList (cdkDropListDropped)="reorderModules($event)" [multiple]= "true" class="modules-wrapper rounded-md flex mt-5 mb-5 flex-col w-[100%] m-auto">
-      @for(module of modules(); track module.uuid){
-        <p-accordion-panel cdkDrag [value] = 'module.uuid'>
-        <p-accordion-header>
-          {{module.name}}
-        </p-accordion-header>
-        <p-accordion-content>
-              <p class="m-0 mb-[20px]">
-                  {{ module.description}}
-              </p>
-              <div class="footerModule flex mt-5 pt-2 flex-row justify-between m-auto">
-                  <p-button (click)="visible.set(true)" label="Adicionar atividade ou recurso" icon="pi pi-plus" size="small" />
-                  <div>
-                    <p-button (click)="updateModule(module)" icon="pi pi-pencil" size="small" class="mr-[20px]"/>
-                    <p-button (click)="deleteModule(module.uuid)" icon="pi pi-trash" severity="danger" size="small"/>
-                  </div>
-                  
-              </div>
-        </p-accordion-content>
-        </p-accordion-panel>
-      }
-    </p-accordion>
+  <p-accordion [value]="uuidModules()" cdkDropList (cdkDropListDropped)="reorderModules($event)" [multiple]="true"
+    class="modules-wrapper rounded-md flex mt-5 mb-5 flex-col w-[100%] m-auto">
+    @for(module of modules(); track module.uuid){
+    <p-accordion-panel cdkDrag [value]='module.uuid'>
+      <p-accordion-header>
+        {{module.name}}
+      </p-accordion-header>
+      <p-accordion-content>
+        <p class="m-0 mb-[20px]">
+          {{ module.description}}
+        </p>
+        <div class="footerModule flex mt-5 pt-2 flex-row justify-between m-auto">
+          <p-button (click)="visible.set(true)" label="Adicionar atividade ou recurso" icon="pi pi-plus" size="small" />
+          <div>
+            <p-button (click)="updateModule(module)" icon="pi pi-pencil" size="small" class="mr-[20px]" />
+            <p-button (click)="deleteModule(module.uuid)" icon="pi pi-trash" severity="danger" size="small" />
+          </div>
+
+        </div>
+      </p-accordion-content>
+    </p-accordion-panel>
+    }
+  </p-accordion>
   } @else {
-    <p-accordion [value]="uuidModules()" [multiple]= "true" class="modules-wrapper rounded-md flex mt-5 mb-5 flex-col w-[100%] m-auto">
+  <p-accordion [value]="uuidModules()" [multiple]="true"
+    class="modules-wrapper rounded-md flex mt-5 mb-5 flex-col w-[100%] m-auto">
     @for( module of modules(); track module.uuid){
-      <p-accordion-panel  [value] = 'module.uuid'>
-          <p-accordion-header>{{module.name}}</p-accordion-header>
-          <p-accordion-content>
-                <p class="m-0 mb-[20px]">
-                    {{ module.description}}
-                </p>
-          </p-accordion-content>
-          </p-accordion-panel>
-      }
-      </p-accordion>
+    <p-accordion-panel [value]='module.uuid'>
+      <p-accordion-header>{{module.name}}</p-accordion-header>
+      <p-accordion-content>
+        <p class="m-0 mb-[20px]">
+          {{ module.description}}
+        </p>
+      </p-accordion-content>
+    </p-accordion-panel>
+    }
+  </p-accordion>
   }
 </div>
 <p-blockui [autoZIndex]="999999" [blocked]="blockPage()" styleClass="flex items-center justify-center">
   <i class="pi pi-spin pi-spinner" style="font-size: 2rem"></i>
 </p-blockui>
-<p-toast key="message" position="top-center"/>
+<p-toast key="message" position="top-center" />
 
-<p-drawer (onHide)="onHide()" [(visible)]="visible" position = "right" styleClass="!w-full md:!w-80 lg:!w-[50rem]">
+<p-drawer (onHide)="onHide()" [(visible)]="visible" position="right" styleClass="!w-full md:!w-80 lg:!w-[50rem]">
   <ng-template #header>
     @if(selectedModule().uuid) {
-      <h1 class="text-2xl bold">Atualizar Módulo</h1>
+    <h1 class="text-2xl bold">Atualizar Módulo</h1>
     } @else{
-      <h1 class="text-2xl bold" >Criar Módulo</h1>
+    <h1 class="text-2xl bold">Criar Módulo</h1>
     }
-    </ng-template>
-  <app-course-home-module-form (reloadData)=" loadCourseModules()" [selectedModule]="selectedModule()"></app-course-home-module-form> 
+  </ng-template>
+  <app-course-home-module-form (reloadData)=" loadCourseModules()"
+    [selectedModule]="selectedModule()"></app-course-home-module-form>
 </p-drawer>
