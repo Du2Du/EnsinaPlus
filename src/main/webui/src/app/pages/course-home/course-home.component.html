@@ -10,12 +10,15 @@
       <h1 class="font-semibold text-2xl">{{course().name}}</h1>
       <h3 class="text-xl">{{course().description}}</h3>
       @if(course().avaliationAvg){
-        <p-rating class="mb-3" (click)="goToAvaliations()" [(ngModel)]="course().avaliationAvg" [readonly]="true" />
+      <p-rating class="mb-3" (click)="goToAvaliations()" [(ngModel)]="course().avaliationAvg" [readonly]="true" />
       }
-      @if(!course().concluido && course().matriculado){
+      @if(!course().concluido && course().matriculado && userData().role=== RoleEnum.STUDENT){
+      <p-button label="Realizar Avaliação" (click)="visibleDialog.set(true)" severity="info" icon="pi pi-pencil"
+        size="small" />
+
       <p-button icon="pi pi-exclamation-triangle" label="Desmatricular-se" (click)="desmatricular()" severity="warn"
         size="small" />
-      }@else if(course().concluido){
+      }@else if(course().concluido && userData().role=== RoleEnum.STUDENT){
       <div class="flex mt-3 items-center gap-3">
         <p-button label="Certificado" (click)="generateFile()" severity="success" icon="pi pi-file" size="small" />
         @if(!course().avaliado){
@@ -36,7 +39,7 @@
 
 <div class="rounded-md flex mt-5 flex-col w-[80%] m-auto bg-white">
   @if(userData().uuid === course().owner.uuid || [RoleEnum.ADMIN, RoleEnum.SUPER_ADMIN].includes(userData().role)){
-  @if(userData().uuid === course().owner.uuid){
+  @if(userData().uuid === course().owner.uuid&& userData().role=== RoleEnum.TEACHER){
   <div class="footerModule flex pt-[15px] pl-[15px] self-start">
     <p-button class="self-start-first" (click)="selectedEntity.set('module');visible.set(true)" label="Adicionar Módulo"
       icon="pi pi-plus" />
@@ -62,11 +65,15 @@
           }
         </div>
         <div class="footerModule flex mt-5 pt-2 flex-row justify-between m-auto">
+          @if(userData().role=== RoleEnum.TEACHER){
           <p-button (click)="selectedEntity.set('resource');selectedModule.set(module);visible.set(true)"
             label="Adicionar atividade ou recurso" icon="pi pi-plus" size="small" />
+          }
           <div>
+            @if(userData().role=== RoleEnum.TEACHER){
             <p-button (click)="selectedEntity.set('module');updateModule(module)" icon="pi pi-pencil" size="small"
               class="mr-[20px]" />
+            }
             <p-button (click)="deleteModule(module.uuid)" icon="pi pi-trash" severity="danger" size="small" />
           </div>
 

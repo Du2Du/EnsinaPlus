@@ -130,7 +130,9 @@ public class UserBO extends AbstractBO<User, UserDAO> {
     return Response
         .ok(ResponseDTO.builder().title("Login realizado com sucesso!")
             .data(tokenUtils.generate(
-                Set.of(UserTypeEnum.SUPER_ADMIN.equals(userEntity.getType()) ? RoleEnum.ROLE_SUPER_ADMIN : role),
+                Set.of(UserTypeEnum.SUPER_ADMIN.equals(userEntity.getType()) && role.equals(RoleEnum.ROLE_ADMIN)
+                    ? RoleEnum.ROLE_SUPER_ADMIN
+                    : role),
                 sessionUUID))
             .build())
         .build();
