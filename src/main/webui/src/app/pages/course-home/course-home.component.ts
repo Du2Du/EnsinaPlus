@@ -66,7 +66,6 @@ export class CourseHomeComponent implements OnInit, OnDestroy {
     this.route.params.subscribe(params => {
       this.courseId = params['uuid'];
       this.loadCourseInfo();
-      this.loadCourseModules();
     });
   }
 
@@ -80,6 +79,7 @@ export class CourseHomeComponent implements OnInit, OnDestroy {
       .pipe(tap((response: any) => {
         this.blockPage.set(false);
         this.course.set(response.data);
+        this.loadCourseModules();
       }),
         catchError((error: any) => {
           this.blockPage.set(false);

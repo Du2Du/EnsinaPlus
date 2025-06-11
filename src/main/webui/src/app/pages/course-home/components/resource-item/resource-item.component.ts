@@ -4,6 +4,7 @@ import { ButtonModule } from 'primeng/button';
 import { ResourceEnum } from '../../../../enums/resourceEnum';
 import { IResource } from '../../course-home.component';
 import { PersistenceService } from './../../../../services/persistence.service';
+import { tap } from 'rxjs';
 
 @Component({
   selector: 'app-resource-item',
@@ -19,9 +20,14 @@ export class ResourceItemComponent {
   canEditResource = input(false);
   editResource = output<IResource>();
   deleteResource = output<string>();
+  reloadCourse = output();
+
   ResourceEnum = ResourceEnum;
   markAsView() {
-    this.persistenceService.postRequest('/v1/resource/finalize/', { resourceUUID: this.resource().uuid }).subscribe();
+    this.persistenceService.postRequest('/v1/resource/finalize/', { resourceUUID: this.resource().uuid })
+      .pipe(tap((response: any) => {
+        this.reloadCourse.emit();
+      })).subscribe();
   }
   openFile(): void {
     if (!this.resource().file) return;

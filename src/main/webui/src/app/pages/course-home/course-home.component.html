@@ -13,9 +13,6 @@
       <p-rating class="mb-3" (click)="goToAvaliations()" [(ngModel)]="course().avaliationAvg" [readonly]="true" />
       }
       @if(!course().concluido && course().matriculado && userData().role=== RoleEnum.STUDENT){
-      <p-button label="Realizar Avaliação" (click)="visibleDialog.set(true)" severity="info" icon="pi pi-pencil"
-        size="small" />
-
       <p-button icon="pi pi-exclamation-triangle" label="Desmatricular-se" (click)="desmatricular()" severity="warn"
         size="small" />
       }@else if(course().concluido && userData().role=== RoleEnum.STUDENT){
@@ -59,7 +56,7 @@
 
         <div class="flex flex-col gap-3 mb-[20px]">
           @for(resource of module.resources; track resource.uuid){
-          <app-resource-item (editResource)="editResource($event)" (deleteResource)="deleteResource($event)"
+          <app-resource-item (reloadCourse)="loadCourseInfo()" (editResource)="editResource($event)" (deleteResource)="deleteResource($event)"
             [canEditResource]="userData().uuid === course().owner.uuid || [RoleEnum.ADMIN, RoleEnum.SUPER_ADMIN].includes(userData().role)"
             [resource]="resource" />
           }
@@ -94,8 +91,8 @@
         </p>
         <div class="flex flex-col gap-3 mb-[20px]">
           @for(resource of module.resources; track resource.uuid){
-          <app-resource-item (editResource)="editResource($event)" (deleteResource)="deleteResource($event)"
-            [canEditResource]="userData().uuid === course().owner.uuid || [RoleEnum.ADMIN, RoleEnum.SUPER_ADMIN].includes(userData().role)"
+          <app-resource-item  (reloadCourse)="loadCourseInfo()" (editResource)="editResource($event)" (deleteResource)="deleteResource($event)"
+            [canEditResource]="userData().uuid === course().owner.uuid || RoleEnum.TEACHER === userData().role"
             [resource]="resource" />
           }
         </div>
