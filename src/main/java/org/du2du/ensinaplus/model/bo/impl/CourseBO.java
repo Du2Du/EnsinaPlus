@@ -119,7 +119,7 @@ public class CourseBO extends AbstractBO<Course, CourseDAO> {
         return Response.status(Response.Status.OK)
                 .entity(ResponseDTO.builder().title("Curso encontrado com sucesso")
                         .data(courseEntity.toDTO(Objects.nonNull(courseStudent) && Objects.nonNull(courseStudent.getConclusionDate()),
-                                Objects.nonNull(courseStudent)))
+                                Objects.nonNull(courseStudent),   Objects.nonNull(courseStudent) && Objects.nonNull(courseStudent.getStars())))
                         .build())
                 .build();
     }

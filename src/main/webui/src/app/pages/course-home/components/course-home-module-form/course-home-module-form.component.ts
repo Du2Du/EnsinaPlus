@@ -30,7 +30,8 @@ export class CourseHomeModuleFormComponent implements OnChanges {
   selectedModule = input<ModuleDTO>({} as any);
   courseUuid!:string;
   reloadData = output();
-  
+  showMessage = output<any>();
+
   ngOnChanges(changes: SimpleChanges): void {
       if(changes['selectedModule']){
         this.moduleDTO.set(cloneDeep({...this.selectedModule()}))
@@ -44,7 +45,7 @@ export class CourseHomeModuleFormComponent implements OnChanges {
 
   onSubmit() {
     if (this.form.invalid) {
-      return this.messageService.add({
+      return this.showMessage.emit({
         severity: 'error',
         key: 'toastMessage',
         summary: 'Formulário inválido',
@@ -65,13 +66,13 @@ export class CourseHomeModuleFormComponent implements OnChanges {
 
   private onSaveModule(response: any) {
     this.isLoading.set(false);
-    this.messageService.add({ severity: 'success', summary: 'Sucesso', key: 'toastMessage', detail: 'Módulo salvo com sucesso!' });
+    this.showMessage.emit({ severity: 'success', summary: 'Sucesso', key: 'toastMessage', detail: 'Módulo salvo com sucesso!' });
     this.reloadData.emit();
   }
 
   private onSaveModuleError(error: any) {
     this.isLoading.set(false);
-    this.messageService.add({ severity: 'error', summary: error.error.title, key: 'toastMessage', detail: error.error.description });
+    this.showMessage.emit({ severity: 'error', summary: error.error.title, key: 'toastMessage', detail: error.error.description });
     return of(error);
   }
   private joinFormMessages() {

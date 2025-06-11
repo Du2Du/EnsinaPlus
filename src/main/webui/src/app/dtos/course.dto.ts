@@ -9,4 +9,5 @@ export interface CourseDTO {
   owner: UserDTO,
   avaliationAvg: number
   concluido: boolean,
+  avaliado: boolean,
 }

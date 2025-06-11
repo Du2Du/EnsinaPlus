@@ -15,8 +15,10 @@
       }@else if(course().concluido){
       <div class="flex mt-3 items-center gap-3">
         <p-button label="Certificado" (click)="generateFile()" severity="success" icon="pi pi-file" size="small" />
+        @if(!course().avaliado){
         <p-button label="Avaliar" variant="outlined" (click)="avaliate()" severity="info" icon="pi pi-pencil"
           size="small" />
+        }
       </div>
       }
       @if(course().avaliationAvg){
@@ -30,12 +32,13 @@
     }
   </div>
 </div>
+@if(modules().length){
 
 <div class="rounded-md flex mt-5 flex-col w-[80%] m-auto bg-white">
+  @if(checkOwner()){
   <div class="footerModule flex pt-[15px] pl-[15px] self-start">
     <p-button class="self-start-first" (click)="visible.set(true)" label="Adicionar Módulo" icon="pi pi-plus" />
   </div>
-  @if(checkOwner()){
   <p-accordion [value]="uuidModules()" cdkDropList (cdkDropListDropped)="reorderModules($event)" [multiple]="true"
     class="modules-wrapper rounded-md flex mt-5 mb-5 flex-col w-[100%] m-auto">
     @for(module of modules(); track module.uuid){
@@ -75,6 +78,7 @@
   </p-accordion>
   }
 </div>
+}
 <p-blockui [autoZIndex]="999999" [blocked]="blockPage()" styleClass="flex items-center justify-center">
   <i class="pi pi-spin pi-spinner" style="font-size: 2rem"></i>
 </p-blockui>
@@ -98,14 +102,17 @@
     }
   </ng-template>
   @if(selectedEntity() === 'resource'){
-  <app-resource-form (reloadData)=" loadCourseModules()" [selectedResource]="selectedResource()"></app-resource-form>
+  <app-resource-form (showMessage)="showMessage($event)" (reloadData)=" loadCourseModules()"
+    [selectedResource]="selectedResource()"></app-resource-form>
   }@else if(selectedEntity() === 'module'){
-  <app-course-home-module-form (reloadData)=" loadCourseModules()"
+  <app-course-home-module-form (showMessage)="showMessage($event)" (reloadData)=" loadCourseModules()"
     [selectedModule]="selectedModule()"></app-course-home-module-form>
   }
 </p-drawer>
 
 
 <p-dialog header="Realizar Avaliação" [modal]="true" [(visible)]="visibleDialog" [style]="{ width: '25rem' }">
-  <app-avaliation-form />
+  <app-avaliation-form [courseUUID]="courseId" (showMessage)="showMessage($event)" />
 </p-dialog>
+
+<p-toast key="toastMessage" [baseZIndex]="999999" position="top-center"></p-toast>

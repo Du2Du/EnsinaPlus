@@ -12,7 +12,7 @@ export const commonUserGuard: CanActivateFn = (route, state) => {
   return authService.getUser().pipe(
     tap(user => {  
       if (user.role !== RoleEnum.STUDENT && user.role!== RoleEnum.TEACHER) {
-        router.navigate(['/audit']);
+        router.navigate(['/search/']);
       }
     }),
     map(user => user.role === RoleEnum.STUDENT || user.role === RoleEnum.TEACHER)
