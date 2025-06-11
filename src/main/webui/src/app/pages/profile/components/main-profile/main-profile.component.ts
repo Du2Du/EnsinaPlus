@@ -46,7 +46,7 @@ export class MainProfileComponent implements OnDestroy {
 
     }
     this.isLoading.set(true);
-    this.persistenceService.putRequest("/v1/user/save/", this.userData()).pipe(tap(this.onSaveUser.bind(this)), catchError(this.onSaveUserError.bind(this))).subscribe();
+    this.persistenceService.putRequest("/v1/user/update/", this.userData()).pipe(tap(this.onSaveUser.bind(this)), catchError(this.onSaveUserError.bind(this))).subscribe();
   }
 
   private joinFormMessages() {

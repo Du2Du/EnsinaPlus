@@ -30,6 +30,7 @@
                 class="w-full user-panel__buttons" (click)="blockedPanel.set(true);authService.logout()" />
         </div>
     </p-popover>
-    <p-blockui [blocked]="blockedPanel()" />
-
+    <p-blockui [autoZIndex]="999999" [blocked]="blockedPanel()" styleClass="flex items-center justify-center">
+        <i class="pi pi-spin pi-spinner" style="font-size: 2rem"></i>
+    </p-blockui>
 </div>

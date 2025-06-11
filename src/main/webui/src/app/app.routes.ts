@@ -15,6 +15,7 @@ import { RegisterComponent } from './pages/register/register.component';
 import { commonUserGuard } from './guards/common-user.guard';
 import { RoleFormComponent } from './pages/role-form/role-form.component';
 import { superAdminUserGuard } from './guards/super-admin-user.guard';
+import { courseEditAuthGuard } from './guards/course-edit-auth.guard';
 
 export const routes: Routes = [
     {
@@ -58,6 +59,12 @@ export const routes: Routes = [
         title: 'Criar curso',
         component: CourseFormComponent,
         canActivate: [authorizationGuard, teacherAuthGuard]
+    },
+    {
+        path: 'course/form/:uuid',
+        title: 'Editar curso',
+        component: CourseFormComponent,
+        canActivate: [authorizationGuard, courseEditAuthGuard]
     },
     {
         path: 'course/:uuid',

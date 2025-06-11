@@ -102,13 +102,13 @@ public class CourseController {
     @ActionDescription("Atualizou os dados básicos do curso")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    @Path("update/{uuid}")
-    public Response updateCourse(@PathParam("uuid") UUID uuid, CourseFormDTO course) {
-        return courseBO.updateCourse(course, uuid);
+    @Path("update")
+    public Response updateCourse(CourseFormDTO course) {
+        return courseBO.updateCourse(course);
     }
 
     @DELETE
-    @RolesAllowed(RoleEnum.ROLE_TEACHER)
+    @RolesAllowed({RoleEnum.ROLE_TEACHER, RoleEnum.ROLE_ADMIN, RoleEnum.ROLE_SUPER_ADMIN})
     @ActionDescription("Deleteou um curso")
     @Produces(MediaType.APPLICATION_JSON)
     @Path("delete/{uuid}")

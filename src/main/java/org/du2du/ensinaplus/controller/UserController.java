@@ -41,7 +41,7 @@ public class UserController {
   }
 
   @PUT
-  @Path("save")
+  @Path("update")
   @Authenticated
   @ActionDescription("Atualizou os seus dados básicos")
   @Produces(MediaType.APPLICATION_JSON)

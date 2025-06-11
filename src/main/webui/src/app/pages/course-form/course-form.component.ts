@@ -1,4 +1,4 @@
-import { Component, signal, ViewChild } from '@angular/core';
+import { Component, OnInit, signal, ViewChild } from '@angular/core';
 import { MainHeaderComponent } from "../../components/layout/main-header/main-header.component";
 import { CardModule } from 'primeng/card';
 import { FormsModule, NgForm } from '@angular/forms';
@@ -13,7 +13,7 @@ import { Location } from '@angular/common';
 import { FileUploadModule } from 'primeng/fileupload';
 import { FileUtilsService } from '../../services/file-utils.service';
 import { catchError, of, tap } from 'rxjs';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-course-form',
@@ -21,15 +21,32 @@ import { Router } from '@angular/router';
   templateUrl: './course-form.component.html',
   styleUrl: './course-form.component.scss'
 })
-export class CourseFormComponent {
+export class CourseFormComponent implements OnInit {
 
   constructor(private fileService: FileUtilsService, private persistenceService: PersistenceService,
-    private router: Router,
+    private router: Router, private route: ActivatedRoute,
     private messageService: MessageService, private location: Location) { }
 
   @ViewChild('form') form!: NgForm;
   isLoading = signal(false);
   courseDTO = signal<{ uuid: string, name: string, description: string; mainPicture: string }>({} as any);
+  picture = signal<string>('');
+  ngOnInit(): void {
+    this.route.params.subscribe(params => {
+      const uuid = params['uuid'];
+      if (uuid) {
+        this.loadCourse(uuid);
+      }
+    })
+  }
+
+  private loadCourse(uuid: string) {
+    this.isLoading.set(true);
+    this.persistenceService.getRequest(`/v1/course/${uuid}`).pipe(tap((response: any) => {
+      this.courseDTO.set(response.data);
+      this.isLoading.set(false);
+    })).subscribe();
+  }
 
   onBack() {
     this.location.back();
@@ -45,8 +62,13 @@ export class CourseFormComponent {
       });
 
     }
+    if (this.picture())
+      this.courseDTO().mainPicture = this.picture();
     this.isLoading.set(true);
-    this.persistenceService.postRequest(this.courseDTO().uuid ? "/v1/course/save" : "/v1/course/create", this.courseDTO()).pipe(tap(this.onSaveCourse.bind(this)),
+    if (this.courseDTO().uuid)
+      this.persistenceService.putRequest("/v1/course/update", this.courseDTO()).pipe(tap(this.onSaveCourse.bind(this)),
+        catchError(this.onSaveCourseError.bind(this))).subscribe();
+    else this.persistenceService.postRequest("/v1/course/create", this.courseDTO()).pipe(tap(this.onSaveCourse.bind(this)),
       catchError(this.onSaveCourseError.bind(this))).subscribe();
 
   }
@@ -65,10 +87,13 @@ export class CourseFormComponent {
 
   onBasicUploadAuto(event: any) {
     this.fileService.toBase64(event.currentFiles[0]).subscribe((base64) => {
-      this.courseDTO().mainPicture = base64;
+      this.picture.set(base64);
     });
   }
 
+  onRemove() {
+    this.picture.set('');
+  }
 
   private joinFormMessages() {
     let message = '';

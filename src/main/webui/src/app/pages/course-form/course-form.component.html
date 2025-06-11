@@ -21,8 +21,11 @@
 
         <div class="flex flex-col gap-2">
             <label for="description">Imagem principal</label>
+            @if(courseDTO().mainPicture && courseDTO().uuid){
+            <img [src]="courseDTO().mainPicture" style="max-width: 150px; max-height: 150px" alt="Imagem principal" />
+            }
             <p-fileupload name="demo[]" (onSelect)="onBasicUploadAuto($event)" [customUpload]="true" [multiple]="false"
-                accept="image/*" maxFileSize="1000000" mode="advanced">
+                (onRemove)="onRemove()" accept="image/*" maxFileSize="1000000" mode="advanced">
             </p-fileupload>
         </div>
 

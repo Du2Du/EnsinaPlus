@@ -151,12 +151,12 @@ public class CourseBO extends AbstractBO<Course, CourseDAO> {
     }
 
     @Transactional
-    public Response updateCourse(CourseFormDTO course, UUID uuid) {
+    public Response updateCourse(CourseFormDTO course) {
         ValidateDTO validateResp = validate(course);
         if (!validateResp.isOk())
             return Response.status(Response.Status.BAD_REQUEST).entity(validateResp).build();
 
-        Course courseEntity = dao.findById(uuid);
+        Course courseEntity = dao.findById(course.getUuid());
 
         courseEntity.setName(course.getName());
         courseEntity.setDescription(course.getDescription());

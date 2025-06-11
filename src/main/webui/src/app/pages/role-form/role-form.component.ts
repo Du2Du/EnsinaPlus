@@ -81,7 +81,7 @@ export class RoleFormComponent implements OnInit {
   changeRole(user: UserDTO & { typeObj: { code: UserTypeEnum } }) {
     user.type = user.typeObj['code'];
     this.blockPage.set(true);
-    this.persistenceService.putRequest('/v1/user/save/', user).pipe(
+    this.persistenceService.putRequest('/v1/user/update/', user).pipe(
       tap((response) => {
         this.blockPage.set(false);
         this.messageService.clear();
