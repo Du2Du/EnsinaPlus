@@ -22,7 +22,7 @@
       </div>
       }
       @if(course().avaliationAvg){
-        <p-rating [(ngModel)]="course().avaliationAvg" [readonly]="true" />
+        <p-rating (click)="goToAvaliations()" [(ngModel)]="course().avaliationAvg" [readonly]="true" />
       }
     </div>
     @if(checkOwner()){

@@ -1,3 +1,4 @@
+import { FormsModule } from '@angular/forms';
 import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
 import { Component, OnDestroy, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
@@ -23,7 +24,7 @@ import { AvaliationFormComponent } from './components/avaliation-form/avaliation
 
 @Component({
   selector: 'app-course-home',
-  imports: [RouterModule, MainHeaderComponent, AvaliationFormComponent, DialogModule, ToastModule, ResourceFormComponent, BlockUIModule, DragDropModule, AccordionModule, ButtonModule, CourseHomeModuleFormComponent, DrawerModule, RatingModule],
+  imports: [RouterModule, MainHeaderComponent, AvaliationFormComponent, DialogModule, ToastModule, ResourceFormComponent, BlockUIModule, DragDropModule, AccordionModule, ButtonModule, CourseHomeModuleFormComponent, DrawerModule, RatingModule, FormsModule],
   providers: [MessageService, PersistenceService, AuthService], // Remover ActivatedRoute daqui
   templateUrl: './course-home.component.html',
   styleUrl: './course-home.component.scss'
