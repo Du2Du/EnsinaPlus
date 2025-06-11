@@ -128,6 +128,7 @@ export class CourseHomeComponent implements OnInit, OnDestroy {
   onHide() {
     this.selectedEntity.set(undefined)
     this.selectedModule.set({} as ModuleDTO);
+    this.selectedResource.set({});
   }
 
   desmatricular() {

@@ -14,6 +14,7 @@ import { ToastModule } from 'primeng/toast';
 import { catchError, of, tap } from 'rxjs';
 import { FileUtilsService } from '../../../../services/file-utils.service';
 import { PersistenceService } from '../../../../services/persistence.service';
+import { ModuleDTO } from '../../../../dtos/module.dto';
 
 @Component({
   selector: 'app-resource-form',
@@ -29,6 +30,7 @@ export class ResourceFormComponent {
   isLoading = signal(false);
   resourceDTO = signal<any>({});
   selectedResource = input<any>({});
+  selectedModule = input<ModuleDTO>();
   file = signal<string>('');
   courseUuid!: string;
   reloadData = output();
@@ -67,6 +69,8 @@ export class ResourceFormComponent {
     this.resourceDTO().courseUuid = this.courseUuid;
     if (this.resourceDTO().tipoObj.code === 'FILE') this.resourceDTO().video = '';
     else this.file.set('');
+    this.resourceDTO().type = this.resourceDTO().tipoObj.code;    
+    this.resourceDTO().moduleUUID = this.selectedModule()?.uuid;
 
     if (this.file())
       this.resourceDTO().file = this.file();
@@ -74,7 +78,6 @@ export class ResourceFormComponent {
     if (this.resourceDTO().uuid) {
       this.persistenceService.putRequest("/v1/resource/update", this.resourceDTO()).pipe(tap(this.onSaveModule.bind(this)),
         catchError(this.onSaveModuleError.bind(this))).subscribe();
-
     } else {
       this.persistenceService.postRequest("/v1/resource/save", this.resourceDTO()).pipe(tap(this.onSaveModule.bind(this)),
         catchError(this.onSaveModuleError.bind(this))).subscribe();
