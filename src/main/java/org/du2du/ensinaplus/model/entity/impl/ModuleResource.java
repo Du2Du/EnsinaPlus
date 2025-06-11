@@ -26,13 +26,11 @@ import lombok.Setter;
 @NoArgsConstructor
 public class ModuleResource extends AbstractEntity {
 
+  @Column(name = "name", nullable = false)
   private String name;
 
   @Column(name = "description_html", columnDefinition = "text")
   private String descriptionHTML;
-
-  @Column(name = "disabled_date")
-  private LocalDate disabledDate;
 
   @Column(name = "file", columnDefinition = "text")
   private String file;
@@ -50,11 +48,10 @@ public class ModuleResource extends AbstractEntity {
 
   @Builder
   public ModuleResource(UUID uuid, Boolean deleted, LocalDateTime createdAt, LocalDateTime updatedAt, String name,
-      String descriptionHTML, LocalDate disabledDate, Module module, TypeResourceEnum type, String file, String video) {
+      String descriptionHTML, Module module, TypeResourceEnum type, String file, String video) {
     super(uuid, deleted, createdAt, updatedAt);
     this.name = name;
     this.descriptionHTML = descriptionHTML;
-    this.disabledDate = disabledDate;
     this.module = module;
     this.type = type;
     this.file = file;

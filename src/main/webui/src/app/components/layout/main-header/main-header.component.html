@@ -4,7 +4,7 @@
 </div>
 
 @if(user().role !== RoleEnum.TEACHER){
-<input type="text" pInputText class="w-[70%]" placeholder="Buscar novos cursos" id="inputSearch"
+<input type="text" pInputText class="w-[70%]" placeholder="Buscar cursos" id="inputSearch"
     [(ngModel)]="searchInput" (input)="onInputChange($event)" />
 }
 

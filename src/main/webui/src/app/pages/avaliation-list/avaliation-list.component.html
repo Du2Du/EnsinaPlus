@@ -8,7 +8,7 @@
   </div>
   @if(avaliations().length){
   <div class="flex mt-3 flex-col gap-3">
-    @for(avaliation of avaliations(); track avaliation.uuid){
+    @for(avaliation of avaliations(); track $index){
     <app-avaliation-card [avaliation]="avaliation" />
     }
   </div>

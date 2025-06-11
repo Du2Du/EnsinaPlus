@@ -85,7 +85,8 @@ public class CourseBO extends AbstractBO<Course, CourseDAO> {
             return ResponseDTO.builder().title("Média de estrelas atualizada com sucesso!").build();
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseDTO.builder().title("Erro ao atualizar media de avaliação do curso").description(e.getMessage()).build();
+            return ResponseDTO.builder().title("Erro ao atualizar media de avaliação do curso")
+                    .description(e.getMessage()).build();
         }
     }
 
@@ -113,8 +114,13 @@ public class CourseBO extends AbstractBO<Course, CourseDAO> {
                     .entity(ResponseDTO.builder().title("Curso não encontrado").build())
                     .build();
 
+        CourseStudent courseStudent = courseStudentDAO.findEnroll(sessionBO.getUserDTO().getUuid(), uuid);
+
         return Response.status(Response.Status.OK)
-                .entity(ResponseDTO.builder().title("Curso encontrado com sucesso").data(courseEntity.toDTO()).build())
+                .entity(ResponseDTO.builder().title("Curso encontrado com sucesso")
+                        .data(courseEntity.toDTO(Objects.nonNull(courseStudent) && Objects.nonNull(courseStudent.getConclusionDate()),
+                                Objects.nonNull(courseStudent)))
+                        .build())
                 .build();
     }
 

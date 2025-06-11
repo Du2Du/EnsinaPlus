@@ -6,6 +6,7 @@ import java.util.UUID;
 import org.du2du.ensinaplus.model.bo.session.SessionBO;
 import org.du2du.ensinaplus.model.dao.impl.CourseDAO;
 import org.du2du.ensinaplus.model.dao.impl.CourseStudentDAO;
+import org.du2du.ensinaplus.model.dao.impl.UserResourceDAO;
 import org.du2du.ensinaplus.model.dto.CourseStudentDTO;
 import org.du2du.ensinaplus.model.dto.base.ResponseDTO;
 import org.du2du.ensinaplus.model.entity.impl.CourseStudent;
@@ -26,6 +27,9 @@ public class CourseStudentBO {
 
     @Inject
     SessionBO sessionBO;
+
+    @Inject
+    UserResourceDAO userResourceDAO;
 
     @Transactional
     public Response matriculateUser(CourseStudentDTO courseStudentDTO) {
@@ -66,6 +70,8 @@ public class CourseStudentBO {
 
         try {
             courseStudentDAO.delete(enrollEntity);
+            userResourceDAO.deleteUserResources(sessionBO.getUserDTO().getUuid(), courseUUID);
+            courseStudentDAO.flush();
             return Response.status(Response.Status.CREATED)
                     .entity(ResponseDTO.builder().title("Sua matricula no curso foi cancelada!").data(courseUUID)
                             .build())

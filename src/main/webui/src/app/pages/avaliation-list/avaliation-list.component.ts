@@ -20,7 +20,7 @@ export interface IAvaliation {
 @Component({
   selector: 'app-avaliation-list',
   imports: [MainHeaderComponent, BlockUIModule, ButtonModule, AvaliationCardComponent, MessageModule,],
-  providers: [MessageService, PersistenceService],
+  providers: [MessageService, PersistenceService, ActivatedRoute],
   templateUrl: './avaliation-list.component.html',
   styleUrl: './avaliation-list.component.scss'
 })

@@ -71,12 +71,9 @@ public class ModuleResourceBO extends AbstractBO<ModuleResource, ModuleResourceD
                     .build();
 
         entity.setName(dto.getName());
-        entity.setDescriptionHTML(dto.getDescriptioHTML());
+        entity.setDescriptionHTML(dto.getDescriptionHTML());
         entity.setFile(dto.getFile());
         entity.setVideo(dto.getVideo());
-        entity.setDeleted(Objects.isNull(dto.getDisabled()) ? false : dto.getDisabled());
-        if (entity.getDeleted())
-            entity.setDisabledDate(LocalDate.now());
 
         try {
             dao.persistAndFlush(entity);

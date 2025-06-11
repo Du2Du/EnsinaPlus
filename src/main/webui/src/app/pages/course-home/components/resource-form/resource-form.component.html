@@ -1,0 +1,38 @@
+<form #form="ngForm" class="flex flex-col gap-2" (ngSubmit)="onSubmit()">
+    <p-divider />
+    <div class="flex flex-col gap-2">
+        <label for="name">Nome</label>
+        <input [required]="true" pInputText id="name" [required]="true" aria-describedby="name-help"
+            [(ngModel)]="resourceDTO().name" name="name" />
+    </div>
+
+    <div class="flex flex-col gap-2">
+        <label for="description">Descrição</label>
+        <textarea name="description" rows="5" cols="30" pTextarea [(ngModel)]="resourceDTO().descriptionHTML"
+            id="description"></textarea>
+    </div>
+
+    <div class="flex flex-col gap-2">
+        <label for="description">Tipo</label>
+        <p-selectbutton [disabled]="resourceDTO().uuid" [required]="true" [options]="types" [(ngModel)]="resourceDTO().tipoObj" optionLabel="label"
+            aria-labelledby="basic" />
+    </div>
+
+
+    @if(resourceDTO().tipoObj?.code === 'VIDEO'){
+    <div class="flex flex-col gap-2">
+        <label for="video">URL do vídeo</label>
+        <textarea [required]="true" name="video" rows="5" cols="15" pTextarea [(ngModel)]="resourceDTO().video"
+            id="video"></textarea>
+    </div>
+    }@else if(resourceDTO().tipoObj?.code === 'FILE'){
+    <p-fileupload name="demo[]" (onSelect)="onBasicUploadAuto($event)" [customUpload]="true"
+        [multiple]="false" (onRemove)="onRemove()" accept=".pdf" maxFileSize="1000000000" mode="basic">
+    </p-fileupload>
+    }
+
+    <p-button styleClass="w-full" label="Salvar" type="submit" [disabled]="isLoading()" [loading]="isLoading()" />
+</form>
+
+
+<p-toast key="toastMessage" position="top-center">

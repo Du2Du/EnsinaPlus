@@ -1,0 +1,14 @@
+<form #form=ngForm>
+  <div class="flex items-center gap-4 mb-4">
+    <p-rating [required]="true" [(ngModel)]="avaliationDTO().stars" />
+  </div>
+  <div class="flex flex-col items-center gap-4 mb-8">
+    <label for="description" class="font-semibold w-24">Descrição</label>
+    <input pInputText id="description" [required]="true" class="flex-auto" autocomplete="off"
+      [(ngModel)]="avaliationDTO().description" />
+  </div>
+  <div class="flex justify-end gap-2">
+    <p-button label="Enviar" [disabled]="form.invalid" (click)="saveAvaliation()" />
+  </div>
+</form>
+<p-toast key="toastMessage" position="top-center"></p-toast>
