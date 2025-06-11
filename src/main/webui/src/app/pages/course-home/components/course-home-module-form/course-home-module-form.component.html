@@ -1,0 +1,25 @@
+    <form #form="ngForm" class="flex flex-col gap-2" (ngSubmit)="onSubmit()">
+        <p-divider />
+        <div class="flex flex-col gap-2">
+            <label for="name">Nome</label>
+            <input pInputText id="name" [required]="true" aria-describedby="name-help" [(ngModel)]="moduleDTO().name"
+                name="name" />
+        </div>
+
+        <div class="flex flex-col gap-2">
+            <label for="description">Descrição</label>
+            <textarea name="description" rows="5" cols="30" pTextarea [(ngModel)]="moduleDTO().description"
+                id="description"></textarea>
+        </div>
+
+        <div class="flex flex-col gap-2">
+            <label for="positionOrder">Posição do Módulo</label>
+            <input name="positionOrder" rows="5" cols="30" pTextarea [(ngModel)]="moduleDTO().positionOrder"
+                id="positionOrder" placeholder="1, 2, 3 ..."/>
+        </div>
+
+        <p-button styleClass="w-full" label="Salvar" type="submit" [disabled]="isLoading()" [loading]="isLoading()" />
+    </form>
+
+
+<p-toast key="toastMessage" position="top-center">

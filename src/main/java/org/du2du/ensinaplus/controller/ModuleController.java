@@ -1,8 +1,10 @@
 package org.du2du.ensinaplus.controller;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.du2du.ensinaplus.model.bo.impl.ModuleBO;
+import org.du2du.ensinaplus.model.dto.ModuleDTO;
 import org.du2du.ensinaplus.model.dto.form.ModuleFormDTO;
 import org.du2du.ensinaplus.model.enums.RoleEnum;
 import org.du2du.ensinaplus.security.ActionDescription;
@@ -49,6 +51,17 @@ public class ModuleController {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response updateModule(ModuleFormDTO moduleFormDTO,  @Context HttpHeaders headers){
         return moduleBO.updateModule(moduleFormDTO, headers);
+    }
+
+    @PUT
+    @Path("reorder")
+    @RequiredAuthentication
+    @RequireRole(RoleEnum.ROLE_TEACHER)
+    @ActionDescription("Atualizou os dados básicos de um módulo")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response reorderPositionsModules(List<ModuleDTO> modulesDtos,  @Context HttpHeaders headers){
+        return moduleBO.reorderPositionsModules(modulesDtos, headers);
     }
 
     @DELETE
