@@ -4,6 +4,7 @@ import { ButtonModule } from 'primeng/button';
 import { ResourceEnum } from '../../../../enums/resourceEnum';
 import { IResource } from '../../course-home.component';
 import { PersistenceService } from './../../../../services/persistence.service';
+import { FileUploadService } from '../../../../services/file-upload.service';
 import { tap } from 'rxjs';
 
 @Component({
@@ -14,7 +15,10 @@ import { tap } from 'rxjs';
 })
 export class ResourceItemComponent {
 
-  constructor(private persistenceService: PersistenceService) { }
+  constructor(
+    private persistenceService: PersistenceService,
+    private fileUploadService: FileUploadService
+  ) { }
 
   resource = input.required<IResource>();
   canEditResource = input(false);
@@ -31,32 +35,14 @@ export class ResourceItemComponent {
   }
   openFile(): void {
     if (!this.resource().file) return;
+    
+    const downloadUrl = this.fileUploadService.getFileDownloadUrl(this.resource().file ?? '');
+    window.open(downloadUrl, '_blank');
+  }
 
-    try {
-      const base64Data = this.resource().file?.includes(',')
-        ? this.resource().file?.split(',')[1]
-        : this.resource().file;
-
-      const byteCharacters = atob(base64Data ?? '');
-      const byteNumbers = new Array(byteCharacters.length);
-
-      for (let i = 0; i < byteCharacters.length; i++) {
-        byteNumbers[i] = byteCharacters.charCodeAt(i);
-      }
-
-      const byteArray = new Uint8Array(byteNumbers);
-
-      const blob = new Blob([byteArray], { type: 'application/pdf' });
-
-      const url = window.URL.createObjectURL(blob);
-      window.open(url, '_blank');
-
-      setTimeout(() => window.URL.revokeObjectURL(url), 1000);
-      this.markAsView();
-    } catch (error) {
-      console.error('Erro ao abrir arquivo:', error);
-      alert('Erro ao abrir o arquivo. Verifique se o formato está correto.');
-    }
+  getVideoUrl(): string {
+    if (!this.resource().video) return '';
+    return this.fileUploadService.getFileDownloadUrl(this.resource().video ?? '');
   }
 
 }

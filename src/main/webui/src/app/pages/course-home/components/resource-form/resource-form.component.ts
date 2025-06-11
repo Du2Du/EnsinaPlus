@@ -16,6 +16,7 @@ import { FileUtilsService } from '../../../../services/file-utils.service';
 import { PersistenceService } from '../../../../services/persistence.service';
 import { ModuleDTO } from '../../../../dtos/module.dto';
 import { IResource } from '../../course-home.component';
+import { FileUploadService } from '../../../../services/file-upload.service';
 
 @Component({
   selector: 'app-resource-form',
@@ -24,8 +25,13 @@ import { IResource } from '../../course-home.component';
   styleUrl: './resource-form.component.scss'
 })
 export class ResourceFormComponent {
-  constructor(private fileService: FileUtilsService, private persistenceService: PersistenceService,
-    private messageService: MessageService, private route: ActivatedRoute) { }
+  constructor(
+    private fileService: FileUtilsService, 
+    private fileUploadService: FileUploadService,
+    private persistenceService: PersistenceService,
+    private messageService: MessageService, 
+    private route: ActivatedRoute
+  ) { }
 
   @ViewChild('form') form!: NgForm;
   isLoading = signal(false);
@@ -85,11 +91,15 @@ export class ResourceFormComponent {
       this.resourceDTO().file = this.file();
     this.isLoading.set(true);
     if (this.resourceDTO().uuid) {
-      this.persistenceService.putRequest("/v1/resource/update", this.resourceDTO()).pipe(tap(this.onSaveModule.bind(this)),
-        catchError(this.onSaveModuleError.bind(this))).subscribe();
+      this.persistenceService.putRequest('resource/update', this.resourceDTO()).subscribe({
+        next: (response) => this.onSaveModule(response),
+        error: (error) => this.onSaveModuleError(error)
+      });
     } else {
-      this.persistenceService.postRequest("/v1/resource/save", this.resourceDTO()).pipe(tap(this.onSaveModule.bind(this)),
-        catchError(this.onSaveModuleError.bind(this))).subscribe();
+      this.persistenceService.postRequest('resource/save', this.resourceDTO()).subscribe({
+        next: (response) => this.onSaveModule(response),
+        error: (error) => this.onSaveModuleError(error)
+      });
     }
   }
 
@@ -114,21 +124,33 @@ export class ResourceFormComponent {
   }
 
   onBasicUploadAuto(event: any) {
-    this.fileService.toBase64(event.currentFiles[0]).subscribe((base64) => {
-      this.file.set(base64);
+    const file = event.currentFiles[0];
+    this.fileUploadService.uploadFile(file, 'file').subscribe({
+      next: (response) => {
+        this.resourceDTO().file = response.filePath;
+        this.file.set(response.originalName);
+      },
+      error: (error) => {
+        console.error('Erro no upload:', error);
+      }
     });
-  }
-
-  onRemove() {
-    this.file.set('');
   }
 
   onVideoUpload(event: any) {
     const file = event.currentFiles[0];
     this.videoFileName.set(file.name);
-    this.fileService.toBase64(file).subscribe((base64) => {
-      this.resourceDTO().video = base64;
+    this.fileUploadService.uploadFile(file, 'video').subscribe({
+      next: (response) => {
+        this.resourceDTO().video = response.filePath;
+      },
+      error: (error) => {
+        console.error('Erro no upload do vídeo:', error);
+      }
     });
+  }
+
+  onRemove() {
+    this.file.set('');
   }
 
   onVideoRemove() {
