@@ -33,7 +33,6 @@ public class CourseController {
 
     @Inject
     CourseStudentBO courseStudentBO;
-    
 
     @POST
     @RolesAllowed(RoleEnum.ROLE_TEACHER)
@@ -55,6 +54,16 @@ public class CourseController {
         return courseStudentBO.matriculateUser(courseStudentDTO);
     }
 
+    @DELETE
+    @Path("unenroll/{uuid}")
+    @RolesAllowed(RoleEnum.ROLE_STUDENT)
+    @ActionDescription("Desmatriculou-se do curso")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response desmatricularCurso(@PathParam("uuid") UUID uuid) {
+        return courseStudentBO.desmatricularCurso(uuid);
+    }
+
     @GET
     @Path("list")
     @RolesAllowed(RoleEnum.ROLE_STUDENT)
@@ -73,7 +82,7 @@ public class CourseController {
 
     @GET
     @Path("search")
-    @RolesAllowed({RoleEnum.ROLE_STUDENT, RoleEnum.ROLE_ADMIN, RoleEnum.ROLE_SUPER_ADMIN})
+    @RolesAllowed({ RoleEnum.ROLE_STUDENT, RoleEnum.ROLE_ADMIN, RoleEnum.ROLE_SUPER_ADMIN })
     public Response searchCourses(@QueryParam("search") String search, @QueryParam("page") Integer page,
             @QueryParam("limit") Integer limit) {
         return courseBO.searchCourse(search, page, limit);
@@ -108,11 +117,11 @@ public class CourseController {
     }
 
     @DELETE
-    @RolesAllowed({RoleEnum.ROLE_TEACHER, RoleEnum.ROLE_ADMIN, RoleEnum.ROLE_SUPER_ADMIN})
+    @RolesAllowed({ RoleEnum.ROLE_TEACHER, RoleEnum.ROLE_ADMIN, RoleEnum.ROLE_SUPER_ADMIN })
     @ActionDescription("Deleteou um curso")
     @Produces(MediaType.APPLICATION_JSON)
     @Path("delete/{uuid}")
-    public Response deleteCourse(@PathParam("uuid") UUID uuid){
+    public Response deleteCourse(@PathParam("uuid") UUID uuid) {
         return courseBO.deleteCourse(uuid);
     }
 
