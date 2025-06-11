@@ -2,8 +2,7 @@ package org.du2du.ensinaplus.model.enums;
 
 public enum TypeResourceEnum {
   FILE("FILE"),
-  VIDEO("VIDEO"),
-  FORUM("FORUM");
+  VIDEO("VIDEO");
 
   private final String value;
 

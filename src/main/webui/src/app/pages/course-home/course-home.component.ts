@@ -5,6 +5,7 @@ import { AccordionModule } from 'primeng/accordion';
 import { MessageService } from 'primeng/api';
 import { BlockUIModule } from 'primeng/blockui';
 import { ButtonModule } from 'primeng/button';
+import { DialogModule } from 'primeng/dialog';
 import { DrawerModule } from 'primeng/drawer';
 import { ToastModule } from 'primeng/toast';
 import { catchError, of, Subscription, tap } from 'rxjs';
@@ -16,12 +17,13 @@ import { RoleEnum } from '../../enums/roleEnum';
 import { PersistenceService } from '../../services/persistence.service';
 import { AuthService } from './../../services/auth.service';
 import { CourseHomeModuleFormComponent } from './components/course-home-module-form/course-home-module-form.component';
-import { Location } from '@angular/common';
+import { ResourceFormComponent } from './components/resource-form/resource-form.component';
+import { AvaliationFormComponent } from './components/avaliation-form/avaliation-form.component';
 
 @Component({
   selector: 'app-course-home',
-  imports: [MainHeaderComponent, ToastModule, BlockUIModule, DragDropModule, AccordionModule, ButtonModule, CourseHomeModuleFormComponent, DrawerModule],
-  providers: [MessageService, PersistenceService],
+  imports: [MainHeaderComponent, AvaliationFormComponent, DialogModule, ToastModule, ResourceFormComponent, BlockUIModule, DragDropModule, AccordionModule, ButtonModule, CourseHomeModuleFormComponent, DrawerModule],
+  providers: [MessageService, PersistenceService, AuthService, ActivatedRoute],
   templateUrl: './course-home.component.html',
   styleUrl: './course-home.component.scss'
 })
@@ -37,8 +39,11 @@ export class CourseHomeComponent implements OnInit, OnDestroy {
   modules = signal<ModuleDTO[]>([]);
   userData = signal<UserDTO>({} as UserDTO);
   visible = signal(false);
+  visibleDialog = signal(false);
   uuidModules = signal<string[]>([]);
   selectedModule = signal<ModuleDTO>({} as ModuleDTO);
+  selectedResource = signal<any>({});
+  selectedEntity = signal<'resource' | 'module' | undefined>(undefined);
   courseId!: string;
 
   private subscriber: Subscription;
@@ -147,4 +152,13 @@ export class CourseHomeComponent implements OnInit, OnDestroy {
   generateFile() {
     window.open(`/v1/course/generate/${this.courseId}/certification`, '_blank')?.focus();
   }
+
+  goToAvaliations(){
+    this.router.navigate(['course', 'avaliation', this.courseId])
+  }
+
+  avaliate(){
+    this.visibleDialog.set(true);
+  }
+
 }

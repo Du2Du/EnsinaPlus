@@ -16,7 +16,5 @@ public class ModuleResourceUpdateFormDTO {
   private String name;
   private String file;
   private String video;
-  private String descriptioHTML;
-  private Boolean disabled;
-
+  private String descriptionHTML;
 }

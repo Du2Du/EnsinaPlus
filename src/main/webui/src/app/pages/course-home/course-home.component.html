@@ -13,7 +13,11 @@
       <p-button icon="pi pi-exclamation-triangle" label="Desmatricular-se" (click)="desmatricular()" severity="warn"
         size="small" />
       }@else if(course().concluido){
-      <p-button label="Certificado" (click)="generateFile()" severity="success" icon="pi pi-file" size="small" />
+      <div class="flex items-center gap-3">
+        <p-button label="Avaliar" variant="outlined" (click)="avaliate()" severity="info" icon="pi pi-pencil"
+          size="small" />
+        <p-button label="Certificado" (click)="generateFile()" severity="success" icon="pi pi-file" size="small" />
+      </div>
       }
     </div>
     @if(checkOwner()){
@@ -75,12 +79,30 @@
 
 <p-drawer (onHide)="onHide()" [(visible)]="visible" position="right" styleClass="!w-full md:!w-80 lg:!w-[50rem]">
   <ng-template #header>
+
+    @if(selectedEntity() === 'resource'){
+    @if(selectedResource().uuid){
+    <h1 class="text-2xl bold">Atualizar Recurso</h1>
+    }@else{
+    <h1 class="text-2xl bold">Criar Recurso</h1>
+    }
+    }@else if(selectedEntity() === 'module'){
     @if(selectedModule().uuid) {
     <h1 class="text-2xl bold">Atualizar Módulo</h1>
     } @else{
     <h1 class="text-2xl bold">Criar Módulo</h1>
     }
+    }
   </ng-template>
+  @if(selectedEntity() === 'resource'){
+  <app-resource-form (reloadData)=" loadCourseModules()" [selectedResource]="selectedResource()"></app-resource-form>
+  }@else if(selectedEntity() === 'module'){
   <app-course-home-module-form (reloadData)=" loadCourseModules()"
     [selectedModule]="selectedModule()"></app-course-home-module-form>
+  }
 </p-drawer>
+
+
+<p-dialog header="Realizar Avaliação" [modal]="true" [(visible)]="visibleDialog" [style]="{ width: '25rem' }">
+  <app-avaliation-form />
+</p-dialog>

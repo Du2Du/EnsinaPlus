@@ -11,35 +11,48 @@ import { ToastModule } from 'primeng/toast';
 import { DividerModule } from 'primeng/divider';
 import { TextareaModule } from 'primeng/textarea';
 import { ButtonModule } from 'primeng/button';
-import {cloneDeep} from 'lodash';
+import { cloneDeep } from 'lodash';
+import { SelectButtonModule } from 'primeng/selectbutton';
+import { FileUploadModule } from 'primeng/fileupload';
+import { FileUtilsService } from '../../../../services/file-utils.service';
 
 @Component({
-  selector: 'app-course-home-module-form',
+  selector: 'app-resource-form',
   providers: [MessageService, PersistenceService, ActivatedRoute],
-  imports: [FormsModule, InputTextModule, CardModule, TextareaModule, DividerModule, ToastModule, ButtonModule],
-  templateUrl: './course-home-module-form.component.html',
-  styleUrl: './course-home-module-form.component.scss'
+  imports: [FormsModule, FileUploadModule, SelectButtonModule, InputTextModule, CardModule, TextareaModule, DividerModule, ToastModule, ButtonModule], templateUrl: './resource-form.component.html',
+  styleUrl: './resource-form.component.scss'
 })
-export class CourseHomeModuleFormComponent implements OnChanges {
-  constructor( private persistenceService: PersistenceService,
+export class ResourceFormComponent {
+  constructor(private fileService: FileUtilsService, private persistenceService: PersistenceService,
     private messageService: MessageService, private route: ActivatedRoute) { }
 
   @ViewChild('form') form!: NgForm;
   isLoading = signal(false);
-  moduleDTO = signal<ModuleDTO>({} as any);
-  selectedModule = input<ModuleDTO>({} as any);
-  courseUuid!:string;
+  resourceDTO = signal<any>({});
+  selectedResource = input<any>({});
+  file = signal<string>('');
+  courseUuid!: string;
   reloadData = output();
-  
+  types = [
+    {
+      label: 'Arquivo',
+      code: 'FILE',
+    }, {
+      label: 'Vídeo',
+      code: 'VIDEO',
+    }]
+
+
   ngOnChanges(changes: SimpleChanges): void {
-      if(changes['selectedModule']){
-        this.moduleDTO.set(cloneDeep({...this.selectedModule()}))
-      }
+    if (changes['selectedResource']) {
+      this.resourceDTO.set(cloneDeep({ ...this.selectedResource() }))
+    }
   }
 
-  ngOnInit(){
-    this.route.params.subscribe((params)=>{
-      this.courseUuid = params["uuid"]});
+  ngOnInit() {
+    this.route.params.subscribe((params) => {
+      this.courseUuid = params["uuid"]
+    });
   }
 
   onSubmit() {
@@ -51,15 +64,17 @@ export class CourseHomeModuleFormComponent implements OnChanges {
         detail: this.joinFormMessages()
       });
     }
-    this.moduleDTO().courseUuid = this.courseUuid;
+    this.resourceDTO().courseUuid = this.courseUuid;
+    if (this.file())
+      this.resourceDTO().file = this.file();
     this.isLoading.set(true);
-    if(this.moduleDTO().uuid){
-       this.persistenceService.putRequest("/v1/module/update", this.moduleDTO()).pipe(tap(this.onSaveModule.bind(this)),
-      catchError(this.onSaveModuleError.bind(this))).subscribe();
-      
+    if (this.resourceDTO().uuid) {
+      this.persistenceService.putRequest("/v1/resource/update", this.resourceDTO()).pipe(tap(this.onSaveModule.bind(this)),
+        catchError(this.onSaveModuleError.bind(this))).subscribe();
+
     } else {
-      this.persistenceService.postRequest("/v1/module/create", this.moduleDTO()).pipe(tap(this.onSaveModule.bind(this)),
-      catchError(this.onSaveModuleError.bind(this))).subscribe();
+      this.persistenceService.postRequest("/v1/resource/create", this.resourceDTO()).pipe(tap(this.onSaveModule.bind(this)),
+        catchError(this.onSaveModuleError.bind(this))).subscribe();
     }
   }
 
@@ -79,5 +94,15 @@ export class CourseHomeModuleFormComponent implements OnChanges {
     if (this.form.controls['name']?.errors?.['required'] || this.form.controls['name']?.errors?.['required'])
       message += 'Nome é obrigatório. ';
     return message;
+  }
+
+  onBasicUploadAuto(event: any) {
+    this.fileService.toBase64(event.currentFiles[0]).subscribe((base64) => {
+      this.file.set(base64);
+    });
+  }
+
+  onRemove() {
+    this.file.set('');
   }
 }
