@@ -5,9 +5,12 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 import org.du2du.ensinaplus.model.entity.AbstractEntity;
+import org.du2du.ensinaplus.model.enums.TypeResourceEnum;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -41,13 +44,13 @@ public class ModuleResource extends AbstractEntity {
   @JoinColumn(name = "module_uuid", referencedColumnName = "uuid", columnDefinition = "uuid not null references tbmodule(uuid)")
   private Module module;
 
-  @ManyToOne
-  @JoinColumn(name = "type_uuid", referencedColumnName = "uuid", columnDefinition = "uuid not null references tbtype_resource(uuid)")
-  private TypeResource type;
+  @Enumerated(EnumType.STRING)
+  @Column(name = "type", nullable = false)
+  private TypeResourceEnum type;
 
   @Builder
   public ModuleResource(UUID uuid, Boolean deleted, LocalDateTime createdAt, LocalDateTime updatedAt, String name,
-      String descriptionHTML, LocalDate disabledDate, Module module, TypeResource type, String file, String video) {
+      String descriptionHTML, LocalDate disabledDate, Module module, TypeResourceEnum type, String file, String video) {
     super(uuid, deleted, createdAt, updatedAt);
     this.name = name;
     this.descriptionHTML = descriptionHTML;

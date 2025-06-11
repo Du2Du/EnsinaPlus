@@ -13,6 +13,8 @@ import { LoginComponent } from './pages/login/login.component';
 import { ProfileComponent } from './pages/profile/profile.component';
 import { RegisterComponent } from './pages/register/register.component';
 import { commonUserGuard } from './guards/common-user.guard';
+import { RoleFormComponent } from './pages/role-form/role-form.component';
+import { superAdminUserGuard } from './guards/super-admin-user.guard';
 
 export const routes: Routes = [
     {
@@ -26,6 +28,12 @@ export const routes: Routes = [
         title: 'Login',
         component: LoginComponent,
         canActivate: [redirectAuthenticationGuard]
+    },
+    {
+        path: 'roles',
+        title: 'Permissões',
+        component: RoleFormComponent,
+        canActivate: [authorizationGuard, superAdminUserGuard]
     },
     {
         path: 'register',

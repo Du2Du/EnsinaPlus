@@ -4,7 +4,7 @@ import java.util.UUID;
 
 import org.du2du.ensinaplus.model.entity.impl.Module;
 import org.du2du.ensinaplus.model.entity.impl.ModuleResource;
-import org.du2du.ensinaplus.model.entity.impl.TypeResource;
+import org.du2du.ensinaplus.model.enums.TypeResourceEnum;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -21,7 +21,7 @@ public class ModuleResourceFormDTO {
   @NotNull(message = "Modulo é obrigatório")
   private UUID moduleUUID;
   @NotNull(message = "Tipo é obrigatório")
-  private UUID typeUUID;
+  private TypeResourceEnum type;
   private String file;
   private String video;
 
@@ -32,7 +32,7 @@ public class ModuleResourceFormDTO {
       .video(video)
       .descriptionHTML(descriptioHTML)
       .module(Module.builder().uuid(moduleUUID).build())
-      .type(TypeResource.builder().uuid(typeUUID).build())
+      .type(type)
       .build();
   }
 }

@@ -10,6 +10,7 @@ import org.du2du.ensinaplus.security.ActionDescription;
 import org.du2du.ensinaplus.security.NotRequiredAudit;
 
 import io.quarkus.security.Authenticated;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
@@ -17,6 +18,7 @@ import jakarta.ws.rs.POST;
 import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
@@ -81,4 +83,13 @@ public class UserController {
   public Response getUserDTO() {
     return Response.ok().entity(sessionBO.getUserDTO()).build();
   }
+
+  @GET
+  @Path("list/role")
+  @ActionDescription("Listou os usuários")
+  @RolesAllowed(RoleEnum.ROLE_SUPER_ADMIN)
+  public Response searchCourses(@QueryParam("page") Integer page, @QueryParam("limit") Integer limit) {
+    return bo.listUsers(page, limit);
+  }
+
 }

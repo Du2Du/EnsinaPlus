@@ -2,6 +2,8 @@ package org.du2du.ensinaplus.model.dto.form;
 
 import java.util.UUID;
 
+import org.du2du.ensinaplus.model.enums.UserTypeEnum;
+
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -22,6 +24,6 @@ public class UserUpdateFormDTO {
   @NotBlank(message = "Email é obrigatório")
   @Email(message = "Email inválido")
   private String email;
-  private String picture;
   private String phone;
+  private UserTypeEnum type;
 }

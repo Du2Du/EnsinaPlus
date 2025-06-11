@@ -5,6 +5,7 @@ import org.du2du.ensinaplus.model.dto.FinalizeResourceDTO;
 import org.du2du.ensinaplus.model.dto.form.ModuleResourceFormDTO;
 import org.du2du.ensinaplus.model.dto.form.ModuleResourceUpdateFormDTO;
 import org.du2du.ensinaplus.model.enums.RoleEnum;
+import org.du2du.ensinaplus.security.ActionDescription;
 
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
@@ -21,6 +22,7 @@ public class ResourceController {
 
   @POST
   @Path("finalize")
+  @ActionDescription("Finalizou o recurso")
   @RolesAllowed(RoleEnum.ROLE_STUDENT)
   public Response finalize(FinalizeResourceDTO dto) {
     return bo.finalize(dto);
@@ -29,6 +31,7 @@ public class ResourceController {
   @POST
   @Path("save")
   @RolesAllowed(RoleEnum.ROLE_STUDENT)
+  @ActionDescription("Salvou o recurso")
   public Response save(ModuleResourceFormDTO dto) {
     return bo.save(dto);
   }
@@ -36,6 +39,7 @@ public class ResourceController {
   @PUT
   @Path("update")
   @RolesAllowed(RoleEnum.ROLE_STUDENT)
+  @ActionDescription("Atualizou o recurso")
   public Response update(ModuleResourceUpdateFormDTO dto) {
     return bo.update(dto);
   }

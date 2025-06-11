@@ -74,12 +74,18 @@ public class UserBO extends AbstractBO<User, UserDAO> {
     userEntity.setName(dto.getName());
     userEntity.setEmail(dto.getEmail());
     userEntity.setPhone(dto.getPhone());
-    try {
+    if(sessionBO.getUserDTO().getRole().equals(RoleEnum.SUPER_ADMIN))
+      userEntity.setType(dto.getType());
+
+      try {
       dao.persistAndFlush(userEntity);
+
+     if(sessionBO.getUserDTO().getUuid().equals(userEntity.getUuid())){
       UserDTO userDTO = userEntity.toDTO();
       userDTO.setRole(sessionBO.getUserDTO().getRole());
       sessionBO.updateSession(userDTO);
-      return Response.status(Response.Status.CREATED)
+     }
+      return Response.status(Response.Status.OK)
           .entity(ResponseDTO.builder().title("Usuário salvo com sucesso!").data(dto).build())
           .build();
     } catch (Exception e) {
@@ -113,7 +119,7 @@ public class UserBO extends AbstractBO<User, UserDAO> {
               .description("Senha incorreta.").build())
           .build();
     UserDTO userDTO = userEntity.toDTO();
-    
+
     if (UserTypeEnum.SUPER_ADMIN.equals(userEntity.getType()))
       userDTO.setRole(RoleEnum.SUPER_ADMIN);
     else
@@ -123,7 +129,16 @@ public class UserBO extends AbstractBO<User, UserDAO> {
 
     return Response
         .ok(ResponseDTO.builder().title("Login realizado com sucesso!")
-            .data(tokenUtils.generate(Set.of(role), sessionUUID)).build())
+            .data(tokenUtils.generate(
+                Set.of(UserTypeEnum.SUPER_ADMIN.equals(userEntity.getType()) ? "super-admin" : role), sessionUUID))
+            .build())
+        .build();
+  }
+
+  public Response listUsers(Integer page, Integer limit) {
+    return Response
+        .ok(ResponseDTO.builder().title("Usuários encontrados!")
+            .data(dao.listAll(page, limit, sessionBO.getUserDTO().getUuid())).total(dao.countOfListAll()).build())
         .build();
   }
 
