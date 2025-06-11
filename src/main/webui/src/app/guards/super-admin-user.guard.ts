@@ -11,7 +11,7 @@ export const superAdminUserGuard: CanActivateFn = (route, state) => {
   return authService.getUser().pipe(
     tap(user => {
       if (user.role !== RoleEnum.SUPER_ADMIN) {
-        router.navigate([user.role === RoleEnum.ADMIN ? '/audit' : '/home']);
+        router.navigate([user.role === RoleEnum.ADMIN ? '/search/' : '/home']);
       }
     }),
     map(user => user.role === RoleEnum.SUPER_ADMIN)

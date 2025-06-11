@@ -150,12 +150,18 @@ export class CourseHomeComponent implements OnInit, OnDestroy {
 
   generateFile() {
     this.blockPage.set(true);
-    this.persistenceService.getRequest(`/v1/course/generate/${this.courseId}/certification`).pipe(
+    this.persistenceService.getRequest(`/v1/course/generate/${this.courseId}/certification`, { responseType: 'blob' }).pipe(
       tap((response: any) => {
-        console.log(response);
+        const blobUrl = URL.createObjectURL(response);
+        window.open(blobUrl, '_blank');
+        setTimeout(() => {
+          URL.revokeObjectURL(blobUrl);
+        }, 1000);
         this.blockPage.set(false);
-        window.open(response, '_blank')?.focus();
+
       }), catchError(error => {
+        console.log(error);
+
         this.blockPage.set(false);
         this.messageService.add({ severity: 'error', summary: error.error?.title || 'Erro ao gerar certificado', key: 'message', detail: error.error?.description });
         return of(error);
@@ -171,4 +177,8 @@ export class CourseHomeComponent implements OnInit, OnDestroy {
     this.visibleDialog.set(true);
   }
 
+  showMessage(data: any) {
+    this.messageService.clear()
+    this.messageService.add(data);
+  }
 }

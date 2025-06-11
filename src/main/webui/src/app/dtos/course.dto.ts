@@ -7,5 +7,6 @@ export interface CourseDTO {
   uuid: string,
   matriculado: boolean,
   concluido: boolean,
+  avaliado: boolean,
   owner: UserDTO
 }
