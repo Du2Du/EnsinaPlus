@@ -1,0 +1,22 @@
+<app-main-header />
+
+<div class="w-[50%] mt-5 mx-auto">
+  <div class="flex gap-2 items-center">
+    <p-button (click)="back()" variant="text" icon="pi pi-arrow-left" />
+
+    <h1 class="font-bold text-2xl">Avaliações</h1>
+  </div>
+  @if(avaliations().length){
+  <div class="flex mt-3 flex-col gap-3">
+    @for(avaliation of avaliations(); track avaliation.uuid){
+    <app-avaliation-card [avaliation]="avaliation" />
+    }
+  </div>
+  }@else {
+  <p-message class="mt-3" severity="info">Nenhuma avaliação encontrada</p-message>
+  }
+</div>
+
+<p-blockui [autoZIndex]="999999" [blocked]="loading()" styleClass="flex items-center justify-center">
+  <i class="pi pi-spin pi-spinner" style="font-size: 2rem"></i>
+</p-blockui>

@@ -58,7 +58,7 @@ public class CourseBO extends AbstractBO<Course, CourseDAO> {
 
         courseEntity = course.toEntity(sessionBO.getUserDTO().getUuid());
         try {
-            courseEntity.persistAndFlush();
+            dao.persistAndFlush(courseEntity);
             return Response.status(Response.Status.CREATED)
                     .entity(ResponseDTO.builder().title("Curso criado com sucesso!").data(course).build())
                     .build();
@@ -67,6 +67,25 @@ public class CourseBO extends AbstractBO<Course, CourseDAO> {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                     .entity(ResponseDTO.builder().title("Erro ao criar curso").description(e.getMessage()).build())
                     .build();
+        }
+    }
+
+    @Transactional
+    public ResponseDTO<?> updateStarsAvg(Course course) {
+        List<CourseStudent> courseStudents = courseStudentDAO.listByCourse(course.getUuid());
+        Integer totalStars = 0;
+        for (CourseStudent courseStudent : courseStudents) {
+            if (Objects.nonNull(courseStudent.getStars())) {
+                totalStars += courseStudent.getStars();
+            }
+        }
+        course.setAvaliationAvg(totalStars == 0 ? 0F : (totalStars / courseStudents.size()));
+        try {
+            dao.persistAndFlush(course);
+            return ResponseDTO.builder().title("Média de estrelas atualizada com sucesso!").build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseDTO.builder().title("Erro ao atualizar media de avaliação do curso").description(e.getMessage()).build();
         }
     }
 
@@ -169,7 +188,7 @@ public class CourseBO extends AbstractBO<Course, CourseDAO> {
                     .build();
         }
         try {
-            courseEntity.persistAndFlush();
+            dao.persistAndFlush(courseEntity);
             return Response.status(Response.Status.OK)
                     .entity(ResponseDTO.builder().title("Curso atualizado com sucesso!").data(course).build())
                     .build();
@@ -195,7 +214,7 @@ public class CourseBO extends AbstractBO<Course, CourseDAO> {
         }
         try {
             courseEntity.setDeleted(true);
-            courseEntity.persistAndFlush();
+            dao.persistAndFlush(courseEntity);
             return Response.status(Response.Status.OK)
                     .entity(ResponseDTO.builder().title("Curso excluido com sucesso!").build())
                     .build();
@@ -235,6 +254,8 @@ public class CourseBO extends AbstractBO<Course, CourseDAO> {
         courseStudent.setAvaliation(courseStudentDTO.getComment());
         try {
             courseStudentDAO.persistAndFlush(courseStudent);
+            this.updateStarsAvg(courseStudent.getCourse());
+
             return Response.status(Response.Status.OK)
                     .entity(ResponseDTO.builder().title("Avaliação realizada com sucesso").build())
                     .build();
@@ -286,6 +307,12 @@ public class CourseBO extends AbstractBO<Course, CourseDAO> {
                             .build())
                     .build();
         }
+    }
+
+    public Response listAvaliations(UUID courseUUID) {
+        return Response.status(Response.Status.OK)
+                .entity(ResponseDTO.builder().data(courseStudentDAO.listAvaliations(courseUUID)).build())
+                .build();
     }
 
     private String loadCertificateTemplate() throws IOException {

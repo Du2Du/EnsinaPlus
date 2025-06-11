@@ -16,6 +16,7 @@ import { commonUserGuard } from './guards/common-user.guard';
 import { RoleFormComponent } from './pages/role-form/role-form.component';
 import { superAdminUserGuard } from './guards/super-admin-user.guard';
 import { courseEditAuthGuard } from './guards/course-edit-auth.guard';
+import { AvaliationListComponent } from './pages/avaliation-list/avaliation-list.component';
 
 export const routes: Routes = [
     {
@@ -78,7 +79,12 @@ export const routes: Routes = [
         component: CourseSearchComponent,
         canActivate: [authorizationGuard]
     },
-
+    {
+        path: 'course/avaliation/:courseUUID',
+        title: 'Avaliações',
+        component: AvaliationListComponent,
+        canActivate: [authorizationGuard]
+    },
     {
         path:'audit',
         title: 'Auditoria',

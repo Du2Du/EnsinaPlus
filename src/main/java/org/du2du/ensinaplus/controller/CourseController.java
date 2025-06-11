@@ -134,6 +134,15 @@ public class CourseController {
         return courseBO.generateCertification(uuid);
     }
 
+    @GET
+    @Path("avaliation/list/{courseUUID}")
+    @Authenticated
+    @ActionDescription("Listou as avalicações de um curso")
+    public Response listAvaliation(@PathParam("courseUUID") UUID courseUUID) {
+        return courseBO.listAvaliations(courseUUID);
+    }
+
+
     @POST
     @Path("avaliate")
     @RolesAllowed(RoleEnum.ROLE_STUDENT)
