@@ -83,5 +83,17 @@ public class Course extends AbstractEntity {
                 .owner(this.getOwner().toDTO())
                 .build();
     }
+    public CourseDTO toDTO(Boolean concluido, Boolean matriculado) {
+        return CourseDTO.builder()
+                .name(this.getName())
+                .description(this.getDescription())
+                .mainPicture(this.getMainPicture())
+                .uuid(this.getUuid())
+                .concluido(concluido)
+                .matriculado(matriculado)
+                .avaliationAvg(this.getAvaliationAvg())
+                .owner(this.getOwner().toDTO())
+                .build();
+    }
 
 }
