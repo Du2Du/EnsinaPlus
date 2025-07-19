@@ -34,13 +34,13 @@ public class CourseDAO extends AbstractDAO<Course> {
         return find("Select c from Course c  JOIN c.students s WHERE s.id.student = :uuidUser AND c.deleted = false", Map.of("uuidUser", uuidUser)).list();
     }
 
-    public List<CourseDTO> search(String search, Integer page, Integer limit) {
+    public List<CourseDTO> search(String search, Integer page, Integer limit, UUID userUUID) {
         String query = "select c, cs.matriculationDate " +
                 "from Course c " +
-                "left join CourseStudent cs on cs.course.uuid = c.uuid "+
+                "left join CourseStudent cs on cs.course.uuid = c.uuid and cs.student.uuid = :user "+
                 "where (lower(c.name) like lower(:search) " +
-                "or lower(c.description) like lower(:search)) and deleted is false";
-        return find(query, Map.of("search", Objects.nonNull(search) ? "%" + search + "%" : "%%")).page(page, limit).project(CourseDTO.class).list();
+                "or lower(c.description) like lower(:search)) and deleted is false and c.owner.uuid != :user";
+        return find(query, Map.of("search", Objects.nonNull(search) ? "%" + search + "%" : "%%", "user", userUUID)).page(page, limit).project(CourseDTO.class).list();
     }
 
     public Long countOfSearch(String search) {

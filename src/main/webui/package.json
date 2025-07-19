@@ -2,12 +2,11 @@
   "name": "angular",
   "version": "0.0.0",
   "scripts": {
-    "ng": "ng && npm run sentry:sourcemaps",
+    "ng": "ng",
     "start": "ng serve",
-    "build": "ng build  --configuration production && npm run sentry:sourcemaps",
+    "build": "ng build  --configuration production",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test",
-    "sentry:sourcemaps": "sentry-cli sourcemaps inject --org eduardo-hilario --project ensinaplus ./dist && sentry-cli sourcemaps upload --org eduardo-hilario --project ensinaplus ./dist"
+    "test": "ng test"
   },
   "private": true,
   "dependencies": {
@@ -20,8 +19,6 @@
     "@angular/router": "^19.2.0",
     "@ngrx/store": "^19.2.0",
     "@primeng/themes": "^19.1.2",
-    "@sentry/angular": "^9.15.0",
-    "@sentry/cli": "^2.43.1",
     "@tailwindcss/aspect-ratio": "^0.4.2",
     "@tailwindcss/forms": "^0.5.10",
     "@tailwindcss/postcss": "^4.1.5",

@@ -3,7 +3,7 @@
 .classpath
 .settings/
 bin/
-
+.quinoa
 # IntelliJ
 .idea
 *.ipr

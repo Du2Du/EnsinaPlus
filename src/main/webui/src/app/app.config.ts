@@ -1,6 +1,5 @@
 import { APP_INITIALIZER, ApplicationConfig, ErrorHandler, LOCALE_ID, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter, Router } from '@angular/router';
-import * as Sentry from "@sentry/angular";
 
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
@@ -26,19 +25,5 @@ export const appConfig: ApplicationConfig = {
       }
     }
   }),
-  {
-    provide: ErrorHandler,
-    useValue: Sentry.createErrorHandler(),
-  },
-  {
-    provide: Sentry.TraceService,
-    deps: [Router],
-  },
-  {
-    provide: APP_INITIALIZER,
-    useFactory: () => () => { },
-    deps: [Sentry.TraceService],
-    multi: true,
-  },
   ]
 };

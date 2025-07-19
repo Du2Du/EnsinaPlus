@@ -133,7 +133,7 @@ public class CourseBO extends AbstractBO<Course, CourseDAO> {
     }
 
     public Response searchCourse(String search, Integer page, Integer limit) {
-        List<CourseDTO> coursesDTO = dao.search(search, page, limit);
+        List<CourseDTO> coursesDTO = dao.search(search, page, limit, sessionBO.getUserDTO().getUuid());
         if (coursesDTO.isEmpty())
             return Response.status(Response.Status.NOT_FOUND)
                     .entity(ResponseDTO.builder().title("Nenhum curso encontrado").data(List.of()).total(0L).build())
