@@ -1,4 +1,4 @@
 export const environment = {
-    baseUrl: 'http://localhost:8081',
-    issuer: 'http://localhost:8081'
+    baseUrl: 'http://localhost:8080',
+    issuer: 'http://localhost:8080'
 };

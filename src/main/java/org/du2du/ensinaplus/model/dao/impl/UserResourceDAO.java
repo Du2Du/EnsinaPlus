@@ -12,7 +12,7 @@ import jakarta.enterprise.context.Dependent;
 public class UserResourceDAO extends AbstractBaseDAO<UserResource> {
 
   public UserResource findByUserAndResource(UUID userUUID, UUID resourceUUID) {
-    return find("user_uuid = :userUUID and resource_uuid = :resourceUUID", Map.of("userUUID", userUUID, "resourceUUID",
+    return find("user.uuid = :userUUID and resource.uuid = :resourceUUID", Map.of("userUUID", userUUID, "resourceUUID",
         resourceUUID)).firstResult();
   }
 
